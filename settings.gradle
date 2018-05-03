@@ -1,0 +1,6 @@
+rootProject.name = 'nsop-client'
+include 'nsop-client-common'
+include 'nsop-client-common'
+include 'nsop-client-serivce'
+include 'nsop-client-main'
+
