@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: nsop-client
+  rabbitmq:
+    host: 192.168.0.126
+    port: 5672

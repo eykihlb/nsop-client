@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.0.1.RELEASE'
+		springBootVersion = '1.5.12.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -30,6 +30,5 @@ repositories {
 
 dependencies {
 	compile project(":nsop-client-serivce")
-	compile('org.springframework.boot:spring-boot-starter-amqp')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
