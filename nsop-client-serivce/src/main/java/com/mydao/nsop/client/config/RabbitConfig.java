@@ -1,4 +1,4 @@
-package com.mydao.nsop.client.main.config;
+package com.mydao.nsop.client.config;
 
 import com.mydao.nsop.client.common.Constants;
 import org.springframework.amqp.core.Queue;
