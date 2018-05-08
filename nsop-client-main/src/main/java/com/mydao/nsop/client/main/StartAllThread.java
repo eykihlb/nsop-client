@@ -1,6 +1,7 @@
 package com.mydao.nsop.client.main;
 
-import com.mydao.nsop.client.service.VehicleDriveInService;
+import com.mydao.nsop.client.service.VehicleDriveInBroadcastService;
+import com.mydao.nsop.client.service.VehicleDriveInOutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,12 +15,16 @@ import javax.annotation.PostConstruct;
 public class StartAllThread {
 
     @Autowired
-    private VehicleDriveInService vehicleDriveInService;
+    private VehicleDriveInOutService vehicleDriveInService;
+    @Autowired
+    private VehicleDriveInBroadcastService vehicleDriveInBroadcastService;
 
     @PostConstruct
     public void start() {
         vehicleDriveInService.test();
         vehicleDriveInService.test2();
         vehicleDriveInService.test3();
+
+        vehicleDriveInBroadcastService.receiv();
     }
 }

@@ -3,10 +3,10 @@ package com.mydao.nsop.client.config;
 import com.mydao.nsop.client.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -56,8 +56,87 @@ public class RabbitConfig {
         return rabbitTemplate;
     }
 
-    @Bean
-    public Queue tsxJourneyQueue() {
-        return new Queue(Constants.TOPIC_TSX_JOURNEY,true);
+    /**
+     * 声明direct交换机 支持持久化.
+     *
+     * @return the exchange
+     */
+    @Bean("directExchange")
+    public Exchange directExchange() {
+        return ExchangeBuilder.directExchange(Constants.TOPIC_TSX_JOURNEY).durable(true).build();
     }
+
+    /**
+     * 声明一个车辆驶入队列 支持持久化.
+     *
+     * @return the queue
+     */
+    @Bean("entryQueue")
+    public Queue entryQueue() {
+        return QueueBuilder.durable(Constants.ENTRY_QUEUE).build();
+    }
+
+    /**
+     * 通过车辆驶入绑定键 将指定车辆驶入队列绑定到一个指定的交换机 .
+     *
+     * @param queue    the queue
+     * @param exchange the exchange
+     * @return the binding
+     */
+    @Bean
+    public Binding entryBinding(@Qualifier("entryQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.ENTRY_KEY).noargs();
+    }
+
+
+
+    @Bean("entryExQueue")
+    public Queue entryExQueue() {
+        return QueueBuilder.durable(Constants.ENTRY_EX_QUEUE).build();
+    }
+    @Bean
+    public Binding entryExBinding(@Qualifier("entryExQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.ENTRY_EX_KEY).noargs();
+    }
+
+
+    @Bean("entryDenyQueue")
+    public Queue entryDenyQueue() {
+        return QueueBuilder.durable(Constants.ENTRY_DENY_QUEUE).build();
+    }
+    @Bean
+    public Binding entryDenyBinding(@Qualifier("entryDenyQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.ENTRY_DENY_KEY).noargs();
+    }
+
+
+    @Bean("passRejectQueue")
+    public Queue passRejectQueue() {
+        return QueueBuilder.durable(Constants.PASS_REJECT_QUEUE).build();
+    }
+    @Bean
+    public Binding passRejectBinding(@Qualifier("passRejectQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.PASS_REJECT_KEY).noargs();
+    }
+
+    @Bean("exitQueue")
+    public Queue exitQueue() {
+        return QueueBuilder.durable(Constants.EXIT_QUEUE).build();
+    }
+    @Bean
+    public Binding exitBinding(@Qualifier("exitQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.EXIT_KEY).noargs();
+    }
+
+
+    @Bean("exitExQueue")
+    public Queue exitExQueue() {
+        return QueueBuilder.durable(Constants.EXIT_EX_QUEUE).build();
+    }
+    @Bean
+    public Binding exitExBinding(@Qualifier("exitExQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.EXIT_EX_KEY).noargs();
+    }
+
+
 }

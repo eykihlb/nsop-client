@@ -3,11 +3,13 @@ package com.mydao.nsop.client.config;
 import com.qcloud.cmq.Account;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author ZYW
  * @date 2018/5/8
  */
+@Configuration
 @ConfigurationProperties(prefix = "nsop.cmq")
 public class CMQConfig {
 
