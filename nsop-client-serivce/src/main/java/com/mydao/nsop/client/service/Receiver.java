@@ -26,6 +26,7 @@ public class Receiver {
      */
     @RabbitListener(queues = {Constants.TOPIC_TSX_JOURNEY})
     public void on(Message message, Channel channel) throws IOException {
+        channel.basicQos(1);
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
