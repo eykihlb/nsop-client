@@ -20,3 +20,13 @@ spring:
     publisher-confirms: true
     # 支持发布返回
     publisher-returns: true
+
+
+# 自定义配置
+nsop:
+  traffic:
+    url:
+  cmq:
+    secret-id: AKIDe8OPClQB2f3D9qtSO7bqqb6MOzMVv7ap
+    secret-key: A6oMgngOs8AxWqwmNmvoRpyrUryqTqKd
+    endpoint: https://cmq-queue-bj.api.qcloud.com
