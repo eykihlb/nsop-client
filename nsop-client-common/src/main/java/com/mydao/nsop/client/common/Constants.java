@@ -75,10 +75,22 @@ public class Constants {
      */
     public static final String TOPIC_TSX_BLACKVEH = "topic_tsx_blackveh";
 
+    public static final String ADD_BLACK_KEY = "add_black";
+    public static final String ADD_BLACK_QUEUE = "add_black_queue";
+
+    public static final String DEL_BLACK_KEY = "del_black";
+    public static final String DEL_BLACK_QUEUE = "del_black_queue";
+
     /**
      * 车辆白名单Topic
      */
     public static final String TOPIC_TSX_WHITEVEH = "topic_tsx_whiteveh";
+
+    public static final String ADD_WHITE_KEY = "add_white";
+    public static final String ADD_WHITE_QUEUE = "add_white_queue";
+
+    public static final String DEL_WHITE_KEY = "del_white";
+    public static final String DEL_WHITE_QUEUE = "del_white_queue";
 
     /**
      * 暂时的测试MQ队列

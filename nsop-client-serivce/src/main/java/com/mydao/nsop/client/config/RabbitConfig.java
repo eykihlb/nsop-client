@@ -57,12 +57,12 @@ public class RabbitConfig {
     }
 
     /**
-     * 声明direct交换机 支持持久化.
+     * 声明车辆驶入驶出direct交换机 支持持久化.
      *
      * @return the exchange
      */
-    @Bean("directExchange")
-    public Exchange directExchange() {
+    @Bean("driveInOutExchange")
+    public Exchange driveInOutExchange() {
         return ExchangeBuilder.directExchange(Constants.TOPIC_TSX_JOURNEY).durable(true).build();
     }
 
@@ -84,7 +84,7 @@ public class RabbitConfig {
      * @return the binding
      */
     @Bean
-    public Binding entryBinding(@Qualifier("entryQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+    public Binding entryBinding(@Qualifier("entryQueue") Queue queue, @Qualifier("driveInOutExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.ENTRY_KEY).noargs();
     }
 
@@ -95,7 +95,7 @@ public class RabbitConfig {
         return QueueBuilder.durable(Constants.ENTRY_EX_QUEUE).build();
     }
     @Bean
-    public Binding entryExBinding(@Qualifier("entryExQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+    public Binding entryExBinding(@Qualifier("entryExQueue") Queue queue, @Qualifier("driveInOutExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.ENTRY_EX_KEY).noargs();
     }
 
@@ -105,7 +105,7 @@ public class RabbitConfig {
         return QueueBuilder.durable(Constants.ENTRY_DENY_QUEUE).build();
     }
     @Bean
-    public Binding entryDenyBinding(@Qualifier("entryDenyQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+    public Binding entryDenyBinding(@Qualifier("entryDenyQueue") Queue queue, @Qualifier("driveInOutExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.ENTRY_DENY_KEY).noargs();
     }
 
@@ -115,7 +115,7 @@ public class RabbitConfig {
         return QueueBuilder.durable(Constants.PASS_REJECT_QUEUE).build();
     }
     @Bean
-    public Binding passRejectBinding(@Qualifier("passRejectQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+    public Binding passRejectBinding(@Qualifier("passRejectQueue") Queue queue, @Qualifier("driveInOutExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.PASS_REJECT_KEY).noargs();
     }
 
@@ -124,7 +124,7 @@ public class RabbitConfig {
         return QueueBuilder.durable(Constants.EXIT_QUEUE).build();
     }
     @Bean
-    public Binding exitBinding(@Qualifier("exitQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+    public Binding exitBinding(@Qualifier("exitQueue") Queue queue, @Qualifier("driveInOutExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.EXIT_KEY).noargs();
     }
 
@@ -134,9 +134,58 @@ public class RabbitConfig {
         return QueueBuilder.durable(Constants.EXIT_EX_QUEUE).build();
     }
     @Bean
-    public Binding exitExBinding(@Qualifier("exitExQueue") Queue queue, @Qualifier("directExchange") Exchange exchange) {
+    public Binding exitExBinding(@Qualifier("exitExQueue") Queue queue, @Qualifier("driveInOutExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.EXIT_EX_KEY).noargs();
     }
 
+    /*---------------------------------- 车辆黑名单 -----------------------------------*/
 
+    @Bean("blackExchange")
+    public Exchange blackExchange() {
+        return ExchangeBuilder.directExchange(Constants.TOPIC_TSX_BLACKVEH).durable(true).build();
+    }
+
+    @Bean("addBlackQueue")
+    public Queue addBlackQueue() {
+        return QueueBuilder.durable(Constants.ADD_BLACK_QUEUE).build();
+    }
+    @Bean
+    public Binding addBlackBinding(@Qualifier("addBlackQueue") Queue queue, @Qualifier("blackExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.ADD_BLACK_KEY).noargs();
+    }
+
+    @Bean("delBlackQueue")
+    public Queue delBlackQueue() {
+        return QueueBuilder.durable(Constants.DEL_BLACK_QUEUE).build();
+    }
+    @Bean
+    public Binding delBlackBinding(@Qualifier("delBlackQueue") Queue queue, @Qualifier("blackExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.DEL_BLACK_KEY).noargs();
+    }
+
+
+    /*---------------------------------- 车辆白名单 -----------------------------------*/
+
+    @Bean("whiteExchange")
+    public Exchange whiteExchange() {
+        return ExchangeBuilder.directExchange(Constants.TOPIC_TSX_WHITEVEH).durable(true).build();
+    }
+
+    @Bean("addWhiteQueue")
+    public Queue addWhiteQueue() {
+        return QueueBuilder.durable(Constants.ADD_WHITE_QUEUE).build();
+    }
+    @Bean
+    public Binding addWhiteBinding(@Qualifier("addWhiteQueue") Queue queue, @Qualifier("whiteExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.ADD_WHITE_KEY).noargs();
+    }
+
+    @Bean("delWhiteQueue")
+    public Queue delWhiteQueue() {
+        return QueueBuilder.durable(Constants.DEL_WHITE_QUEUE).build();
+    }
+    @Bean
+    public Binding delWhiteBinding(@Qualifier("delWhiteQueue") Queue queue, @Qualifier("whiteExchange") Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(Constants.DEL_WHITE_KEY).noargs();
+    }
 }
