@@ -92,6 +92,21 @@ public class Constants {
     public static final String DEL_WHITE_KEY = "del_white";
     public static final String DEL_WHITE_QUEUE = "del_white_queue";
 
+
+    public static final String VEHICLE_DRIVE_IN_TOPIC = "vehicle-drive-in-topic";
+    public static final String VEHICLE_WHITE_TOPIC = "vehicle-white-topic";
+    public static final String VEHICLE_BLACK_TOPIC = "vehicle-black-topic";
+
+    public static final String VEHICLE_DRIVE_IN_SUB = "vehicle-drive-in-sub-";
+    public static final String VEHICLE_WHITE_SUB = "vehicle-white-sub-";
+    public static final String VEHICLE_BLACK_SUB = "vehicle-black-sub-";
+
+    public static final String VEHICLE_DRIVE_IN_QUEUE = "vehicle-drive-in-queue-";
+    public static final String VEHICLE_WHITE_QUEUE = "vehicle-white-queue-";
+    public static final String VEHICLE_BLACK_QUEUE = "vehicle-black-queue-";
+
+
+
     /**
      * 暂时的测试MQ队列
      */

@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleDriveInBroadcastService {
     @Autowired
-    private Account account;
+    private Account accountQueue;
 
     @Async
     public void receiv() {
-        Queue queue = account.getQueue(Constants.CMQ_TOPIC_NSOP_CLOUD_MQ);
+        Queue queue = accountQueue.getQueue(Constants.CMQ_TOPIC_NSOP_CLOUD_MQ);
         try {
             while (true) {
                 Message message = queue.receiveMessage(5);

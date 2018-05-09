@@ -26,7 +26,10 @@ spring:
 nsop:
   traffic:
     url:
+    # 客户端编号
+    client-num: 001
   cmq:
     secret-id: AKIDe8OPClQB2f3D9qtSO7bqqb6MOzMVv7ap
     secret-key: A6oMgngOs8AxWqwmNmvoRpyrUryqTqKd
-    endpoint: https://cmq-queue-bj.api.qcloud.com
+    endpoint-queue: https://cmq-queue-bj.api.qcloud.com
+    endpoint-topic: https://cmq-topic-bj.api.qcloud.com

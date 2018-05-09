@@ -1,5 +1,6 @@
 package com.mydao.nsop.client.main;
 
+import com.mydao.nsop.client.service.CreateSubscriptionAndQueue;
 import com.mydao.nsop.client.service.VehicleDriveInBroadcastService;
 import com.mydao.nsop.client.service.VehicleDriveInOutService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,14 @@ public class StartAllThread {
     @Autowired
     private VehicleDriveInBroadcastService vehicleDriveInBroadcastService;
 
+    @Autowired
+    private CreateSubscriptionAndQueue createSubscriptionAndQueue;
+
     @PostConstruct
     public void start() {
+        //创建订阅和队列
+        createSubscriptionAndQueue.createSubQueue();
+
         vehicleDriveInService.test();
         vehicleDriveInService.test2();
         vehicleDriveInService.test3();
