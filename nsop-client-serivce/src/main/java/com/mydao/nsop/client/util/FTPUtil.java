@@ -67,7 +67,7 @@ public class FTPUtil {
      *
      * @param fileName 文件名称
      */
-    public static void downloadFtpFile(String ftpHost, String ftpUserName,
+    public static String downloadFtpFile(String ftpHost, String ftpUserName,
                                        String ftpPassword, int ftpPort, String ftpPath, String localPath,
                                        String fileName) {
 
@@ -95,6 +95,57 @@ public class FTPUtil {
             logger.error("文件读取错误。");
             e.printStackTrace();
         }
+        return localPath + "\\" + fileName;
 
+    }
+
+    /**
+     * Description: 向FTP服务器上传文件
+     * @param ftpHost FTP服务器hostname
+     * @param ftpUserName 账号
+     * @param ftpPassword 密码
+     * @param ftpPort 端口
+     * @param ftpPath  FTP服务器中文件所在路径 格式： ftptest/aa
+     * @param fileName ftp文件名称
+     * @param input 文件流
+     * @return 成功返回true，否则返回false
+     */
+    public static boolean uploadFile(String ftpHost, String ftpUserName,
+                                     String ftpPassword, int ftpPort, String ftpPath,
+                                     String fileName,InputStream input) {
+        boolean success = false;
+        FTPClient ftpClient = new FTPClient();
+        try {
+            int reply;
+            ftpClient = getFTPClient(ftpHost, ftpUserName, ftpPassword, ftpPort);
+            reply = ftpClient.getReplyCode();
+            if (!FTPReply.isPositiveCompletion(reply)) {
+                ftpClient.disconnect();
+                return false;
+            }
+            ftpClient.setControlEncoding("UTF-8"); // 中文支持
+            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.changeWorkingDirectory(ftpPath);
+
+            ftpClient.storeFile(fileName, input);
+
+            input.close();
+            ftpClient.logout();
+            success = true;
+        } catch (IOException e) {
+            logger.error("文件读取错误。");
+            e.printStackTrace();
+        } finally {
+            if (ftpClient.isConnected()) {
+                try {
+                    ftpClient.disconnect();
+                } catch (IOException ioe) {
+                    logger.error("链接关闭错误。");
+                    ioe.printStackTrace();
+                }
+            }
+        }
+        return success;
     }
 }
