@@ -21,7 +21,7 @@ public class CMQMain {
         {
             Account account = new Account(endpoint,secretId, secretKey);
 
-
+            
             /*account.deleteQueue("queue-test10");
             System.out.println("---------------create queue ...---------------");
             QueueMeta meta = new QueueMeta();

@@ -45,4 +45,6 @@ public class CMQConfig {
     public Account account() {
         return new Account(endpoint,secretId, secretKey);
     }
+
+
 }
