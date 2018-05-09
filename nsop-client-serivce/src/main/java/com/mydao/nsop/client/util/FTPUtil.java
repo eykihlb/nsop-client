@@ -66,6 +66,8 @@ public class FTPUtil {
      * @param localPath 下载到本地的位置 格式：H:/download
      *
      * @param fileName 文件名称
+     *
+     * @return 下载文件本地完整路径
      */
     public static String downloadFtpFile(String ftpHost, String ftpUserName,
                                        String ftpPassword, int ftpPort, String ftpPath, String localPath,
