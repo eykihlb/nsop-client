@@ -35,7 +35,7 @@ public class VehicleDriveInBroadcastService {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE);
         while(true) {
             try {
-                Message message = queue.receiveMessage(5);
+                Message message = queue.receiveMessage(30);
                 System.out.println("接收到的消息：" + message.msgBody);
                 sendVehicleDriveIn(message,queue);
             } catch (Exception e) {
@@ -45,17 +45,24 @@ public class VehicleDriveInBroadcastService {
     }
 
     private void sendVehicleDriveIn(Message message,Queue queue) {
-        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        final CorrelationData cd = new CorrelationData(UUID.randomUUID().toString());
         //发送车辆驶入信息
-        rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_BLACKVEH, Constants.ADD_BLACK_KEY, message.msgBody, correlationData);
-        //如果成功 删除消息
-        try {
-            queue.deleteMessage(message.receiptHandle);
-        } catch (Exception e) {
-            if(e instanceof CMQServerException) {
-                CMQServerException e1 = (CMQServerException) e;
-                LOGGER.error(e1.getErrorMessage());
+        rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_BLACKVEH, Constants.ADD_BLACK_KEY, message.msgBody, cd);
+
+        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+            if(ack) {
+                //如果成功 删除消息
+                try {
+                    queue.deleteMessage(message.receiptHandle);
+                } catch (Exception e) {
+                    if(e instanceof CMQServerException) {
+                        CMQServerException e1 = (CMQServerException) e;
+                        LOGGER.error(e1.getErrorMessage());
+                    }
+                }
+            } else {
+                LOGGER.info("消息发送到exchange失败,原因: {}", cause);
             }
-        }
+        });
     }
 }
