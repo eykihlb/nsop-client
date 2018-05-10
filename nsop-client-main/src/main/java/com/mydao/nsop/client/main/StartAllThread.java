@@ -33,6 +33,6 @@ public class StartAllThread {
 //        vehicleDriveInService.test2();
 //        vehicleDriveInService.test3();
 
-        vehicleDriveInBroadcastService.receiv();
+        vehicleDriveInBroadcastService.vehicleDriveIn();
     }
 }
