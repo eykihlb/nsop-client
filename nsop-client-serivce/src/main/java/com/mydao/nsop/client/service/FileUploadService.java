@@ -14,8 +14,17 @@ public class FileUploadService {
 
     @Async
     public boolean fileUpload(FTPConfig fTPConfig, String fileName) throws IOException {
-        String filePath = FTPUtil.downloadFtpFile(fTPConfig,fileName);
-        FileInputStream input = new FileInputStream(new File(filePath));
-        return FTPUtil.uploadFile(fTPConfig,fileName,input);
+        boolean flag = false;
+        int index = 0;
+        while (!flag){
+            String filePath = FTPUtil.downloadFtpFile(fTPConfig,fileName);
+            FileInputStream input = new FileInputStream(new File(filePath));
+            flag = FTPUtil.uploadFile(fTPConfig,fileName,input);
+            index ++;
+            if (index == 5){
+                break;
+            }
+        }
+        return flag;
     }
 }
