@@ -106,7 +106,16 @@ public class Constants {
     public static final String VEHICLE_BLACK_QUEUE = "vehicle-black-queue-";
 
 
+    /**
+     * 接口参数名
+     */
+    public static final String ENTRY = "entryInfo";
 
+
+    /**
+     * 文件上传失败重试次数
+     */
+    public static final Integer FILEUPLOAD_RETRY = 5;
     /**
      * 暂时的测试MQ队列
      */
