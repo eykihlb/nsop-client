@@ -49,6 +49,7 @@ public class VehicleDriveInOutService {
     private TrafficConfig trafficConfig;
     @Autowired
     private AmqpTemplate rabbitTemplate;
+    private Gson gson = new Gson();
 
     /*@Async
     public void test2() {
@@ -69,13 +70,11 @@ public class VehicleDriveInOutService {
         String result = "";
         try {
             List<NameValuePair> list = new ArrayList<>();
-            String msg = new String(message.getBody());
-            String fileName = "";
-            list.add(new BasicNameValuePair(Constants.ENTRY, msg));
+            list.add(new BasicNameValuePair(Constants.ENTRY, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,"Test.txt");
+            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -100,13 +99,11 @@ public class VehicleDriveInOutService {
         String result = "";
         try {
             List<NameValuePair> list = new ArrayList<>();
-            String msg = new String(message.getBody());
-            String fileName = "";
-            list.add(new BasicNameValuePair(Constants.ENTRY_EX, msg));
+            list.add(new BasicNameValuePair(Constants.ENTRY_EX, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,"Test.txt");
+            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -129,13 +126,11 @@ public class VehicleDriveInOutService {
         String result = "";
         try {
             List<NameValuePair> list = new ArrayList<>();
-            String msg = new String(message.getBody());
-            String fileName = "";
-            list.add(new BasicNameValuePair(Constants.ENTRY_DENY, msg));
+            list.add(new BasicNameValuePair(Constants.ENTRY_DENY, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_deny();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,"Test.txt");
+            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -157,13 +152,11 @@ public class VehicleDriveInOutService {
         String result = "";
         try {
             List<NameValuePair> list = new ArrayList<>();
-            String msg = new String(message.getBody());
-            String fileName = "";
-            list.add(new BasicNameValuePair(Constants.PASS_REJECT, msg));
+            list.add(new BasicNameValuePair(Constants.PASS_REJECT, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getPass_reject();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,"Test.txt");
+            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -186,13 +179,11 @@ public class VehicleDriveInOutService {
         String result = "";
         try {
             List<NameValuePair> list = new ArrayList<>();
-            String msg = new String(message.getBody());
-            String fileName = "";
-            list.add(new BasicNameValuePair(Constants.EXIT, msg));
+            list.add(new BasicNameValuePair(Constants.EXIT, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getExit();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,"Test.txt");
+            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -214,13 +205,11 @@ public class VehicleDriveInOutService {
         String result = "";
         try {
             List<NameValuePair> list = new ArrayList<>();
-            String msg = new String(message.getBody());
-            String fileName = "";
-            list.add(new BasicNameValuePair(Constants.EXIT_EX, msg));
+            list.add(new BasicNameValuePair(Constants.EXIT_EX, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getExit_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,"Test.txt");
+            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -237,9 +226,19 @@ public class VehicleDriveInOutService {
      * 处理Http返回值
      */
     private String httpBackCode(String result){
-        Gson gson = new Gson();
         Map<String,Object> map = gson.fromJson(result,Map.class);
         return  String.valueOf(Double.valueOf(map.get("code").toString()).intValue());
+    }
+
+    /**
+     * 获取文件名
+     */
+    private String getFileName(String msg){
+        String fileName = "";
+        Map<String,Object> map = gson.fromJson(msg,Map.class);
+        fileName = map.get("key").toString();
+        fileName += map.get("key").toString();
+        return fileName;
     }
 
 
