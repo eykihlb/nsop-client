@@ -50,21 +50,6 @@ public class VehicleDriveInOutService {
     @Autowired
     private AmqpTemplate rabbitTemplate;
 
-   /* @Async
-    public void test(){
-        *//*try {
-            while (true) {
-                Thread.sleep(1000);
-                System.out.println("test-------------------");
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*//*
-    }
-
-    *//**
-     * 发送消息
-     *//*
     @Async
     public void test2() {
         System.out.println("Sender : Hello Word！");
@@ -74,20 +59,6 @@ public class VehicleDriveInOutService {
         }
 
     }
-
-    *//**
-     * 接收消息
-     *//*
-    @Async
-    public void test3() {
-//        while(true) {
-//            Message receive = rabbitTemplate.receive(Constants.TOPIC_TSX_JOURNEY,-1);
-//            String s = new String(receive.getBody());
-//            System.out.println("接收：" + s);
-//        }
-    }*/
-
-
 
     /**
      * 车辆驶入
@@ -131,8 +102,8 @@ public class VehicleDriveInOutService {
             List<NameValuePair> list = new ArrayList<>();
             String msg = new String(message.getBody());
             String fileName = "";
-            list.add(new BasicNameValuePair("entryInfo", msg));
-            String uri = trafficConfig.getUrl() + "roadEntry/normalDriveInto";
+            list.add(new BasicNameValuePair(Constants.ENTRY_EX, msg));
+            String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
             fileUploadService.fileUpload(fTPConfig,"Test.txt");
@@ -155,13 +126,26 @@ public class VehicleDriveInOutService {
     @RabbitListener(queues = {Constants.ENTRY_DENY_QUEUE})
     public void entryDenyQueue(Message message, Channel channel) throws IOException {
         channel.basicQos(1);
+        String result = "";
         try {
+            List<NameValuePair> list = new ArrayList<>();
+            String msg = new String(message.getBody());
+            String fileName = "";
+            list.add(new BasicNameValuePair(Constants.ENTRY_DENY, msg));
+            String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_deny();
+            result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
+            //异步文件上传
+            fileUploadService.fileUpload(fTPConfig,"Test.txt");
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         log.info("ENTRY_DENY_QUEUE "+new String(message.getBody()));
-        channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        if ("200".equals(result)){//删除消息
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+        }else{
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        }
     }
 
     /**
@@ -170,13 +154,26 @@ public class VehicleDriveInOutService {
     @RabbitListener(queues = {Constants.PASS_REJECT_QUEUE})
     public void passRejectQueue(Message message, Channel channel) throws IOException {
         channel.basicQos(1);
+        String result = "";
         try {
+            List<NameValuePair> list = new ArrayList<>();
+            String msg = new String(message.getBody());
+            String fileName = "";
+            list.add(new BasicNameValuePair(Constants.PASS_REJECT, msg));
+            String uri = trafficConfig.getUrl() + interFaceConfig.getPass_reject();
+            result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
+            //异步文件上传
+            fileUploadService.fileUpload(fTPConfig,"Test.txt");
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         log.info("PASS_REJECT_QUEUE "+new String(message.getBody()));
-        channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        if ("200".equals(result)){//删除消息
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+        }else{
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        }
     }
 
 
@@ -186,13 +183,26 @@ public class VehicleDriveInOutService {
     @RabbitListener(queues = {Constants.EXIT_QUEUE})
     public void exitQueue(Message message, Channel channel) throws IOException {
         channel.basicQos(1);
+        String result = "";
         try {
+            List<NameValuePair> list = new ArrayList<>();
+            String msg = new String(message.getBody());
+            String fileName = "";
+            list.add(new BasicNameValuePair(Constants.EXIT, msg));
+            String uri = trafficConfig.getUrl() + interFaceConfig.getExit();
+            result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
+            //异步文件上传
+            fileUploadService.fileUpload(fTPConfig,"Test.txt");
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         log.info("EXIT_QUEUE "+new String(message.getBody()));
-        channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        if ("200".equals(result)){//删除消息
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+        }else{
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        }
     }
 
     /**
@@ -201,13 +211,26 @@ public class VehicleDriveInOutService {
     @RabbitListener(queues = {Constants.EXIT_EX_QUEUE})
     public void exitExQueue(Message message, Channel channel) throws IOException {
         channel.basicQos(1);
+        String result = "";
         try {
+            List<NameValuePair> list = new ArrayList<>();
+            String msg = new String(message.getBody());
+            String fileName = "";
+            list.add(new BasicNameValuePair(Constants.EXIT_EX, msg));
+            String uri = trafficConfig.getUrl() + interFaceConfig.getExit_ex();
+            result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
+            //异步文件上传
+            fileUploadService.fileUpload(fTPConfig,"Test.txt");
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         log.info("EXIT_EX_QUEUE "+new String(message.getBody()));
-        channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        if ("200".equals(result)){//删除消息
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+        }else{
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        }
     }
 
     /**
