@@ -17,6 +17,7 @@ public class StartAllThread {
 
     @Autowired
     private VehicleDriveInOutService vehicleDriveInService;
+
     @Autowired
     private VehicleDriveInBroadcastService vehicleDriveInBroadcastService;
 
@@ -28,10 +29,10 @@ public class StartAllThread {
         //创建订阅和队列
         createSubscriptionAndQueue.createSubQueue();
 
-        vehicleDriveInService.test();
-        vehicleDriveInService.test2();
-        vehicleDriveInService.test3();
+//        vehicleDriveInService.test();
+//        vehicleDriveInService.test2();
+//        vehicleDriveInService.test3();
 
-        vehicleDriveInBroadcastService.receiv();
+        vehicleDriveInBroadcastService.vehicleDriveIn();
     }
 }

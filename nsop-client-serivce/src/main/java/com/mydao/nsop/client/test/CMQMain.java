@@ -1,4 +1,4 @@
-package com.mydao.nsop.client.service;
+package com.mydao.nsop.client.test;
 
 import com.qcloud.cmq.*;
 

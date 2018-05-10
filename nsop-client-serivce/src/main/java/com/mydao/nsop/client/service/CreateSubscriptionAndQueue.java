@@ -1,7 +1,6 @@
 package com.mydao.nsop.client.service;
 
 import com.mydao.nsop.client.common.Constants;
-import com.mydao.nsop.client.config.HttpClientConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CreateSubscriptionAndQueue {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CreateSubscriptionAndQueue.class);
 
     @Autowired
     private Account accountTopic;

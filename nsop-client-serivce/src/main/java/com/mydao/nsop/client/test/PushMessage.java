@@ -1,5 +1,6 @@
-package com.mydao.nsop.client.util;
+package com.mydao.nsop.client.test;
 
+import com.mydao.nsop.client.test.CreateTopicSubTopicQueue;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.Topic;
 

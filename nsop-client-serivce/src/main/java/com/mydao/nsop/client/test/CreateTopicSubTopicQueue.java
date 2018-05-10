@@ -1,4 +1,4 @@
-package com.mydao.nsop.client.util;
+package com.mydao.nsop.client.test;
 
 import com.google.common.collect.Lists;
 import com.mydao.nsop.client.common.Constants;

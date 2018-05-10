@@ -1,7 +1,7 @@
-package com.mydao.nsop.client.util;
+package com.mydao.nsop.client.test;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
+import com.mydao.nsop.client.test.CreateTopicSubTopicQueue;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @author Administrator
  * @date 2018/5/9
  */
-public class Receiver {
+public class CMQReceiver {
     public static void main(String[] args) {
         String secretId="AKIDe8OPClQB2f3D9qtSO7bqqb6MOzMVv7ap";
         String secretKey="A6oMgngOs8AxWqwmNmvoRpyrUryqTqKd";
