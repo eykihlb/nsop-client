@@ -110,6 +110,11 @@ public class Constants {
      * 接口参数名
      */
     public static final String ENTRY = "entryInfo";
+    public static final String ENTRY_EX = "entryInfo";
+    public static final String ENTRY_DENY = "entryDenyParam";
+    public static final String PASS_REJECT = "passRejectParam";
+    public static final String EXIT = "exitParam";
+    public static final String EXIT_EX = "exitExParam";
 
 
     /**
