@@ -25,9 +25,36 @@ spring:
 # 自定义配置
 nsop:
   traffic:
-    url:
+    url: http://192.168.0.174:9099/
     # 客户端编号
     client-num: 001
+  interface:
+    entry: roadEntry/normalDriveInto
+    entry_ex:
+    entry_deny:
+    pass_reject:
+    exit:
+    exit_ex:
+    add_black:
+    del_black:
+    add_white:
+    del_white:
+
+  ftpServer:
+    download:
+      ftpHost: 192.168.0.171
+      ftpUserName: eykihlb
+      ftpPassword: 213457023
+      ftpPort: 21
+      ftpPath: ""
+      localPath: F:/download
+    upload:
+      ftpHost: 192.168.0.171
+      ftpUserName: eykihlb
+      ftpPassword: 213457023
+      ftpPort: 22
+      ftpPath: ""
+      localPath: F:/download
   cmq:
     secret-id: AKIDe8OPClQB2f3D9qtSO7bqqb6MOzMVv7ap
     secret-key: A6oMgngOs8AxWqwmNmvoRpyrUryqTqKd
