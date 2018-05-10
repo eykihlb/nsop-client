@@ -15,7 +15,8 @@ public class CMQConfig {
 
     private String secretId;
     private String secretKey;
-    private String endpoint;
+    private String endpointTopic;
+    private String endpointQueue;
 
     public String getSecretId() {
         return secretId;
@@ -33,17 +34,30 @@ public class CMQConfig {
         this.secretKey = secretKey;
     }
 
-    public String getEndpoint() {
-        return endpoint;
+    public String getEndpointTopic() {
+        return endpointTopic;
     }
 
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
+    public void setEndpointTopic(String endpointTopic) {
+        this.endpointTopic = endpointTopic;
+    }
+
+    public String getEndpointQueue() {
+        return endpointQueue;
+    }
+
+    public void setEndpointQueue(String endpointQueue) {
+        this.endpointQueue = endpointQueue;
     }
 
     @Bean
-    public Account account() {
-        return new Account(endpoint,secretId, secretKey);
+    public Account accountTopic() {
+        return new Account(endpointTopic,secretId, secretKey);
+    }
+
+    @Bean
+    public Account accountQueue() {
+        return new Account(endpointQueue,secretId, secretKey);
     }
 
 
