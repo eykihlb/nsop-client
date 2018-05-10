@@ -1,6 +1,7 @@
 package com.mydao.nsop.client.service;
 
 import com.mydao.nsop.client.common.Constants;
+import com.mydao.nsop.client.config.TrafficConfig;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
@@ -30,9 +31,12 @@ public class VehicleDriveInBroadcastService {
     @Autowired
     private Account accountQueue;
 
+    @Autowired
+    private TrafficConfig trafficConfig;
+
     @Async
     public void vehicleDriveIn() {
-        Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE);
+        Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE + trafficConfig.getClientNum());
         while(true) {
             try {
                 Message message = queue.receiveMessage(30);
@@ -49,7 +53,7 @@ public class VehicleDriveInBroadcastService {
         //发送车辆驶入信息
         rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_BLACKVEH, Constants.ADD_BLACK_KEY, message.msgBody, cd);
 
-        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+        /*rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
             if(ack) {
                 //如果成功 删除消息
                 try {
@@ -63,6 +67,6 @@ public class VehicleDriveInBroadcastService {
             } else {
                 LOGGER.info("消息发送到exchange失败,原因: {}", cause);
             }
-        });
+        });*/
     }
 }

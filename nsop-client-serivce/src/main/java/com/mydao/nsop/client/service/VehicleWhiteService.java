@@ -1,6 +1,7 @@
 package com.mydao.nsop.client.service;
 
 import com.mydao.nsop.client.common.Constants;
+import com.mydao.nsop.client.config.TrafficConfig;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
@@ -30,9 +31,12 @@ public class VehicleWhiteService {
     @Autowired
     private Account accountQueue;
 
+    @Autowired
+    private TrafficConfig trafficConfig;
+
     @Async
     public void addDelWhite() {
-        Queue queue = accountQueue.getQueue(Constants.VEHICLE_WHITE_QUEUE);
+        Queue queue = accountQueue.getQueue(Constants.VEHICLE_WHITE_QUEUE + trafficConfig.getClientNum());
         while(true) {
             try {
                 Message message = queue.receiveMessage(30);
