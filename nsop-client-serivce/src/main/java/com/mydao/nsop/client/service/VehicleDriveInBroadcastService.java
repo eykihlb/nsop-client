@@ -35,7 +35,7 @@ public class VehicleDriveInBroadcastService {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE);
         while(true) {
             try {
-                Message message = queue.receiveMessage(5);
+                Message message = queue.receiveMessage(30);
                 System.out.println("接收到的消息：" + message.msgBody);
                 sendVehicleDriveIn(message,queue);
             } catch (Exception e) {
