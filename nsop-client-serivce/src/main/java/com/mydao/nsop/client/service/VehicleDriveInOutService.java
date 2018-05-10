@@ -109,7 +109,7 @@ public class VehicleDriveInOutService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("FANOUT_QUEUE_A "+new String(message.getBody()));
+        log.info("ENTRY_QUEUE "+new String(message.getBody()));
         if ("200".equals(result)){//删除消息
             System.out.println("删除消息");
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
@@ -140,7 +140,7 @@ public class VehicleDriveInOutService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("FANOUT_QUEUE_A "+new String(message.getBody()));
+        log.info("ENTRY_EX_QUEUE "+new String(message.getBody()));
         if ("200".equals(result)){//删除消息
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
         }else{
@@ -160,7 +160,7 @@ public class VehicleDriveInOutService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("FANOUT_QUEUE_A "+new String(message.getBody()));
+        log.info("ENTRY_DENY_QUEUE "+new String(message.getBody()));
         channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
     }
 
@@ -175,7 +175,7 @@ public class VehicleDriveInOutService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("FANOUT_QUEUE_A "+new String(message.getBody()));
+        log.info("PASS_REJECT_QUEUE "+new String(message.getBody()));
         channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
     }
 
@@ -191,7 +191,7 @@ public class VehicleDriveInOutService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("FANOUT_QUEUE_A "+new String(message.getBody()));
+        log.info("EXIT_QUEUE "+new String(message.getBody()));
         channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
     }
 
@@ -206,7 +206,7 @@ public class VehicleDriveInOutService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("FANOUT_QUEUE_A "+new String(message.getBody()));
+        log.info("EXIT_EX_QUEUE "+new String(message.getBody()));
         channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
     }
 
