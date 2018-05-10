@@ -1,5 +1,6 @@
 package com.mydao.nsop.client.util;
 
+import com.mydao.nsop.client.config.FTPConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.net.ftp.FTPClient;
@@ -53,26 +54,19 @@ public class FTPUtil {
     /**
      * 从FTP服务器下载文件
      *
-     * @param ftpHost FTP IP地址
-     *
-     * @param ftpUserName FTP 用户名
-     *
-     * @param ftpPassword FTP用户名密码
-     *
-     * @param ftpPort FTP端口
-     *
-     * @param ftpPath FTP服务器中文件所在路径 格式： ftptest/aa
-     *
-     * @param localPath 下载到本地的位置 格式：H:/download
+     * @param fTPConfig FTP配置
      *
      * @param fileName 文件名称
      *
      * @return 下载文件本地完整路径
      */
-    public static String downloadFtpFile(String ftpHost, String ftpUserName,
-                                       String ftpPassword, int ftpPort, String ftpPath, String localPath,
-                                       String fileName) {
-
+    public static String downloadFtpFile(FTPConfig fTPConfig,String fileName) {
+        String ftpHost = fTPConfig.getDownload().get("ftpHost").toString();
+        String ftpUserName = fTPConfig.getDownload().get("ftpUserName").toString();
+        String ftpPassword = fTPConfig.getDownload().get("ftpPassword").toString();
+        Integer ftpPort = Integer.parseInt(fTPConfig.getDownload().get("ftpPort").toString());
+        String ftpPath = fTPConfig.getDownload().get("ftpPath").toString();
+        String localPath = fTPConfig.getDownload().get("localPath").toString();
         try {
             FTPClient ftpClient = getFTPClient(ftpHost, ftpUserName, ftpPassword, ftpPort);
             ftpClient.setControlEncoding("UTF-8"); // 中文支持
@@ -103,20 +97,19 @@ public class FTPUtil {
 
     /**
      * Description: 向FTP服务器上传文件
-     * @param ftpHost FTP服务器hostname
-     * @param ftpUserName 账号
-     * @param ftpPassword 密码
-     * @param ftpPort 端口
-     * @param ftpPath  FTP服务器中文件所在路径 格式： ftptest/aa
+     * @param fTPConfig FTP配置
      * @param fileName ftp文件名称
      * @param input 文件流
      * @return 成功返回true，否则返回false
      */
-    public static boolean uploadFile(String ftpHost, String ftpUserName,
-                                     String ftpPassword, int ftpPort, String ftpPath,
-                                     String fileName,InputStream input) {
+    public static boolean uploadFile(FTPConfig fTPConfig,String fileName,InputStream input) {
         boolean success = false;
         FTPClient ftpClient = new FTPClient();
+        String ftpHost = fTPConfig.getUpload().get("ftpHost").toString();
+        String ftpUserName = fTPConfig.getUpload().get("ftpUserName").toString();
+        String ftpPassword = fTPConfig.getUpload().get("ftpPassword").toString();
+        Integer ftpPort = Integer.parseInt(fTPConfig.getUpload().get("ftpPort").toString());
+        String ftpPath = fTPConfig.getUpload().get("ftpPath").toString();
         try {
             int reply;
             ftpClient = getFTPClient(ftpHost, ftpUserName, ftpPassword, ftpPort);
