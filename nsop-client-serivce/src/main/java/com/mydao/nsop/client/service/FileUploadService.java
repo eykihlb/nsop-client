@@ -1,5 +1,6 @@
 package com.mydao.nsop.client.service;
 
+import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.FTPConfig;
 import com.mydao.nsop.client.util.FTPUtil;
 import org.springframework.scheduling.annotation.Async;
@@ -14,7 +15,7 @@ public class FileUploadService {
     @Async
     public boolean fileUpload(FTPConfig fTPConfig, String fileName) {
         boolean flag = false;
-        int index = 0;
+        Integer index = 0;
         while (!flag){
             try{
                 String filePath = FTPUtil.downloadFtpFile(fTPConfig,fileName);
@@ -22,13 +23,13 @@ public class FileUploadService {
                 flag = FTPUtil.uploadFile(fTPConfig,fileName,input);
             }catch (Exception e){
                 index ++;
-                if (index == 5){
+                if (index.equals(Constants.FILEUPLOAD_RETRY)){
                     break;
                 }
                 continue;
             }
             index ++;
-            if (index == 5){
+            if (index.equals(Constants.FILEUPLOAD_RETRY)){
                 break;
             }
         }
