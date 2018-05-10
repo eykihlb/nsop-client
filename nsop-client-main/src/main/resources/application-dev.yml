@@ -30,7 +30,7 @@ nsop:
     client-num: 001
   interface:
     entry: roadEntry/normalDriveInto
-    entry_ex:
+    entry_ex: roadEntry/abnormalDriveInto
     entry_deny:
     pass_reject:
     exit:
