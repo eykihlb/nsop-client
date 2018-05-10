@@ -2,6 +2,9 @@ package com.mydao.nsop.client.service;
 
 import com.google.gson.Gson;
 import com.mydao.nsop.client.common.Constants;
+import com.mydao.nsop.client.config.FTPConfig;
+import com.mydao.nsop.client.config.InterFaceConfig;
+import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.util.FTPUtil;
 import com.mydao.nsop.client.util.HttpClientUtil;
 import com.qcloud.cmq.Json.JSONObject;
@@ -15,11 +18,16 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +39,14 @@ import java.util.Map;
 public class VehicleDriveInOutService {
 
     private static final Logger log = LoggerFactory.getLogger(VehicleDriveInOutService.class);
-
-    @Value("${nsop.traffic.url}")
-    private String URL;
+    @Autowired
+    private FTPConfig fTPConfig;
+    @Autowired
+    private InterFaceConfig interFaceConfig;
+    @Autowired
+    private FileUploadService fileUploadService;
+    @Autowired
+    private TrafficConfig trafficConfig;
     @Autowired
     private AmqpTemplate rabbitTemplate;
 
@@ -56,7 +69,8 @@ public class VehicleDriveInOutService {
     public void test2() {
         System.out.println("Sender : Hello Word！");
         for(int i = 0; i < 10; i++) {
-            rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_JOURNEY,"Hello Word！" + i);
+            System.out.println("message" + i);
+            rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,"{'laneNo':'65000115E0','passTime':'445555555','plateNo':'京A12345-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1'}");
         }
 
     }
@@ -84,16 +98,20 @@ public class VehicleDriveInOutService {
         String result = "";
         try {
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair("entryInfo", message.getBody().toString()));
-            String uri = URL + "roadEntry/normalDriveInto";
+            String msg = new String(message.getBody());
+            String fileName = "";
+            list.add(new BasicNameValuePair(Constants.ENTRY, msg));
+            String uri = trafficConfig.getUrl() + interFaceConfig.getEntry();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
+            //异步文件上传
+            fileUploadService.fileUpload(fTPConfig,"Test.txt");
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         log.info("FANOUT_QUEUE_A "+new String(message.getBody()));
-        if ("200".equals(result)){
-            //数据处理成功，完成图片下载上传，通知MQ删除消息
+        if ("200".equals(result)){//删除消息
+            System.out.println("删除消息");
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
         }else{
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
@@ -108,13 +126,26 @@ public class VehicleDriveInOutService {
     @RabbitListener(queues = {Constants.ENTRY_EX_QUEUE})
     public void entryExQueue(Message message, Channel channel) throws IOException {
         channel.basicQos(1);
+        String result = "";
         try {
+            List<NameValuePair> list = new ArrayList<>();
+            String msg = new String(message.getBody());
+            String fileName = "";
+            list.add(new BasicNameValuePair("entryInfo", msg));
+            String uri = trafficConfig.getUrl() + "roadEntry/normalDriveInto";
+            result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
+            //异步文件上传
+            fileUploadService.fileUpload(fTPConfig,"Test.txt");
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         log.info("FANOUT_QUEUE_A "+new String(message.getBody()));
-        channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        if ("200".equals(result)){//删除消息
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+        }else{
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        }
     }
 
 
@@ -187,4 +218,6 @@ public class VehicleDriveInOutService {
         Map<String,Object> map = gson.fromJson(result,Map.class);
         return  String.valueOf(Double.valueOf(map.get("code").toString()).intValue());
     }
+
+
 }
