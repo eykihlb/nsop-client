@@ -6,11 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.Resource;
 
 /**
  * @author ZYW
@@ -19,7 +18,9 @@ import javax.annotation.Resource;
 @Configuration
 public class RabbitConfig {
 
-    @Resource
+    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitConfig.class);
+
+    @Autowired
     private RabbitTemplate rabbitTemplate;
 
     /**
@@ -34,7 +35,6 @@ public class RabbitConfig {
      */
     @Bean
     public AmqpTemplate amqpTemplate() {
-        Logger log = LoggerFactory.getLogger(RabbitTemplate.class);
         //使用jackson 消息转换器
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         rabbitTemplate.setEncoding("UTF-8");
@@ -42,14 +42,14 @@ public class RabbitConfig {
         rabbitTemplate.setMandatory(true);
         rabbitTemplate.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
             String correlationId = message.getMessageProperties().getCorrelationIdString();
-            log.debug("消息：{} 发送失败, 应答码：{} 原因：{} 交换机: {}  路由键: {}", correlationId, replyCode, replyText, exchange, routingKey);
+            LOGGER.debug("消息：{} 发送失败, 应答码：{} 原因：{} 交换机: {}  路由键: {}", correlationId, replyCode, replyText, exchange, routingKey);
         });
         // 消息确认  yml 需要配置   publisher-returns: true
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
             if (ack) {
-                log.debug("消息发送到exchange成功,id: {}", correlationData.getId());
+                LOGGER.debug("消息发送到exchange成功,id: {}", correlationData.getId());
             } else {
-                log.debug("消息发送到exchange失败,原因: {}", cause);
+                LOGGER.debug("消息发送到exchange失败,原因: {}", cause);
             }
         });
         return rabbitTemplate;
