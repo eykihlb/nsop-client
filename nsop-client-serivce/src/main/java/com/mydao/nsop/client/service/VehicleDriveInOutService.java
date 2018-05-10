@@ -25,21 +25,21 @@ public class VehicleDriveInOutService {
     @Autowired
     private AmqpTemplate rabbitTemplate;
 
-    @Async
+   /* @Async
     public void test(){
-        /*try {
+        *//*try {
             while (true) {
                 Thread.sleep(1000);
                 System.out.println("test-------------------");
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }*//*
     }
 
-    /**
+    *//**
      * 发送消息
-     */
+     *//*
     @Async
     public void test2() {
         System.out.println("Sender : Hello Word！");
@@ -49,9 +49,9 @@ public class VehicleDriveInOutService {
 
     }
 
-    /**
+    *//**
      * 接收消息
-     */
+     *//*
     @Async
     public void test3() {
 //        while(true) {
@@ -59,7 +59,7 @@ public class VehicleDriveInOutService {
 //            String s = new String(receive.getBody());
 //            System.out.println("接收：" + s);
 //        }
-    }
+    }*/
 
 
 
