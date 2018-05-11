@@ -8,6 +8,7 @@ import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,22 +53,19 @@ public class VehicleBlackService {
     }
 
     private void sendBlack(List<Message> messageList,Queue queue) {
-        CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
-        /*if(message.msgTag.contains("aaa")) {
-            rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_BLACKVEH, Constants.ADD_BLACK_KEY, message.msgBody, correlationData);
-        } else {
-            rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_BLACKVEH, Constants.DEL_BLACK_KEY, message.msgBody, correlationData);
-        }
-
-        //如果成功 删除消息
-        try {
-            queue.deleteMessage(message.receiptHandle);
-        } catch (Exception e) {
-            if(e instanceof CMQServerException) {
-                CMQServerException e1 = (CMQServerException) e;
-                LOGGER.error(e1.getErrorMessage());
+        MessageProperties mp = new MessageProperties();
+        mp.setContentType(Constants.ADD_BLACK_KEY);
+        for (Message m : messageList) {
+            org.springframework.amqp.core.Message msg = new org.springframework.amqp.core.Message(new String(m.msgBody).getBytes(),mp);
+            rabbitTemplate.send(Constants.TOPIC_TSX_BLACKVEH,msg);
+            try {
+                queue.deleteMessage(m.receiptHandle);
+            } catch (Exception e) {
+                if(e instanceof CMQServerException) {
+                    CMQServerException e1 = (CMQServerException) e;
+                    LOGGER.error(e1.getErrorMessage());
+                }
             }
-        }*/
+        }
     }
-
 }
