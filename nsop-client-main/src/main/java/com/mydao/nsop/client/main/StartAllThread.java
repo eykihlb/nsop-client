@@ -30,7 +30,7 @@ public class StartAllThread {
         createSubscriptionAndQueue.createSubQueue();
 
 //        vehicleDriveInService.test();
-//        vehicleDriveInService.test2();
+        vehicleDriveInService.test2();
 //        vehicleDriveInService.test3();
 
         vehicleDriveInBroadcastService.vehicleDriveIn();
