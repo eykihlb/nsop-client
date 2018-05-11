@@ -52,7 +52,7 @@ public class VehicleBlackService {
     }
 
     private void sendBlack(List<Message> messageList,Queue queue) {
-        msgSort(messageList);
+        messageList.sort(Comparator.comparing((Message m) -> m.msgId ));
         MessageProperties mp = new MessageProperties();
         for (Message m : messageList) {
             mp.setContentType(m.msgBody.split("@@")[0]);
@@ -67,16 +67,5 @@ public class VehicleBlackService {
                 }
             }
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void msgSort(List<Message> mList){
-        Collections.sort(mList, new Comparator(){
-            public int compare(Object o1, Object o2) {
-                Message m1 = (Message) o1;
-                Message m2 = (Message) o2;
-                return new String(m1.msgId).compareTo(new String(m2.msgId));
-            }
-        });
     }
 }

@@ -55,7 +55,7 @@ public class VehicleWhiteService {
     }
 
     private void sendWhite(List<Message> messageList,Queue queue) {
-        msgSort(messageList);
+        messageList.sort(Comparator.comparing((Message m) -> m.msgId ));
         MessageProperties mp = new MessageProperties();
         for (Message m : messageList) {
             mp.setContentType(m.msgBody.split("@@")[0]);
@@ -72,7 +72,7 @@ public class VehicleWhiteService {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    /*@SuppressWarnings("unchecked")
     private static void msgSort(List<Message> mList){
         Collections.sort(mList, new Comparator(){
             public int compare(Object o1, Object o2) {
@@ -81,5 +81,5 @@ public class VehicleWhiteService {
                 return new String(m1.msgId).compareTo(new String(m2.msgId));
             }
         });
-    }
+    }*/
 }

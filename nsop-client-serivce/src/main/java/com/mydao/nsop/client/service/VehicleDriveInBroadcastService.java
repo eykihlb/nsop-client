@@ -43,7 +43,7 @@ public class VehicleDriveInBroadcastService {
                 System.out.println("接收到的消息：" + message.msgBody);
                 sendVehicleDriveIn(message,queue);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.error(e.getMessage());
             }
         }
     }
