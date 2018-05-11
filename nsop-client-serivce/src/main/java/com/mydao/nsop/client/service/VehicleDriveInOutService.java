@@ -54,10 +54,16 @@ public class VehicleDriveInOutService {
     @Async
     public void test2() {
         System.out.println("Sender : Hello Word！");
-        for(int i = 0; i < 10; i++) {
+        /*for(int i = 0; i < 10; i++) {
             System.out.println("message" + i);
             //rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,"{'laneNo':'65000115E01','passTime':'445555555','plateNo':'京A12345-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1'}");
-        }
+        }*/
+        rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1'}");
+        rabbitTemplate.convertAndSend(Constants.ENTRY_EX_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','clientId':'000001','clientSeq':'1'}");
+        rabbitTemplate.convertAndSend(Constants.ENTRY_DENY_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','createTime':'445555555'}");
+        rabbitTemplate.convertAndSend(Constants.PASS_REJECT_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','status':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','passType':'00'}");
+        rabbitTemplate.convertAndSend(Constants.EXIT_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','entryId':'65000207E01_126148652f91','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1','entryClientId':'000001','entryClientSeq':'1','vehClass':'13','detectWeight':'12.6','fareWeight':'12.51','detectAxles':'4','distance':'20.2','payFare':'500'}");
+        rabbitTemplate.convertAndSend(Constants.EXIT_EX_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','entryId':'a00001_126148652f91','clientId':'000001','clientSeq':'1'}");
 
     }
 
@@ -69,6 +75,7 @@ public class VehicleDriveInOutService {
         channel.basicQos(1);
         String result = "";
         try {
+            System.out.println("车辆驶入");
             List<NameValuePair> list = new ArrayList<>();
             list.add(new BasicNameValuePair(Constants.ENTRY, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry();
@@ -79,7 +86,7 @@ public class VehicleDriveInOutService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.info("ENTRY_QUEUE "+new String(message.getBody()));
+        log.info("----------------------------------------------------- "+new String(message.getBody()));
         if ("200".equals(result)){//删除消息
             System.out.println("删除消息");
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
