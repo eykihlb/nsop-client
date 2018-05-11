@@ -107,6 +107,12 @@ public class Constants {
 
 
     /**
+     * 车辆驶入本地队列
+     */
+    public static final String VEHICLE_DRIVE_IN_LOCAL_QUEUE = "vehicle-drive-in-local-queue";
+
+
+    /**
      * 接口参数名
      */
     public static final String ENTRY = "entryInfo";
@@ -121,8 +127,4 @@ public class Constants {
      * 文件上传失败重试次数
      */
     public static final Integer FILEUPLOAD_RETRY = 5;
-    /**
-     * 暂时的测试MQ队列
-     */
-    public static final String CMQ_TOPIC_NSOP_CLOUD_MQ = "nsop-cloud-mq";
 }

@@ -197,4 +197,13 @@ public class RabbitConfig {
     public Queue whiteQueue() {
         return QueueBuilder.durable(Constants.TOPIC_TSX_WHITEVEH).build();
     }
+
+    /**
+     * 车辆驶入RabbitMQ
+     * @return
+     */
+    @Bean
+    public Queue driveInLocalQueue() {
+        return QueueBuilder.durable(Constants.VEHICLE_DRIVE_IN_LOCAL_QUEUE).build();
+    }
 }
