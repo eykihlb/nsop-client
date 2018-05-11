@@ -146,7 +146,7 @@ public class VehicleDriveInOutService {
      * 车辆驶入通行拒绝
      */
     @RabbitListener(queues = {Constants.PASS_REJECT_QUEUE})
-    public void passRejectQueue(Message message, Channel channel) throws IOException {
+    public void passRejectQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
         String result = "";
         try {
@@ -156,9 +156,9 @@ public class VehicleDriveInOutService {
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
             fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             //e.printStackTrace();
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
         log.info("PASS_REJECT_QUEUE "+new String(message.getBody()));
         if ("200".equals(result)){//删除消息
@@ -173,7 +173,7 @@ public class VehicleDriveInOutService {
      * 车辆驶出
      */
     @RabbitListener(queues = {Constants.EXIT_QUEUE})
-    public void exitQueue(Message message, Channel channel) throws IOException {
+    public void exitQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
         String result = "";
         try {
@@ -183,9 +183,9 @@ public class VehicleDriveInOutService {
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
             fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
         log.info("EXIT_QUEUE "+new String(message.getBody()));
         if ("200".equals(result)){//删除消息
@@ -199,7 +199,7 @@ public class VehicleDriveInOutService {
      * 车辆驶出异常
      */
     @RabbitListener(queues = {Constants.EXIT_EX_QUEUE})
-    public void exitExQueue(Message message, Channel channel) throws IOException {
+    public void exitExQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
         String result = "";
         try {
@@ -209,9 +209,9 @@ public class VehicleDriveInOutService {
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
             fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
         log.info("EXIT_EX_QUEUE "+new String(message.getBody()));
         if ("200".equals(result)){//删除消息
