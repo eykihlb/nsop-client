@@ -66,7 +66,7 @@ public class HttpClientUtil {
 
             return requestRemote(httpget);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             String message = StringUtils.isBlank(e.getMessage()) ? e.getCause().getMessage() : e.getMessage();
             LOGGER.error("processHttpCall failed:{}, {} ", builder, message);
             throw new CallRemoteAPIException(message,e);
@@ -91,7 +91,7 @@ public class HttpClientUtil {
 
             return requestRemote(httpPost);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             String message = StringUtils.isBlank(e.getMessage()) ? e.getCause().getMessage() : e.getMessage();
             LOGGER.error("processHttpCall failed:{}, {} ", builder, message);
             throw new CallRemoteAPIException(message,e);
@@ -126,7 +126,7 @@ public class HttpClientUtil {
 
             return result;
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             String message = e.getMessage() == null ? e.getCause().getMessage() : e.getMessage();
             LOGGER.error("error message:{} ", message);
             throw new CallRemoteAPIException(message);
