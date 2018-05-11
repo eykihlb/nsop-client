@@ -3,25 +3,28 @@ package com.mydao.nsop.client.util;
 import com.mydao.nsop.client.config.ClientServiceUnavailableRetryStrategy;
 import com.mydao.nsop.client.exception.CallRemoteAPIException;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.StatusLine;
+import org.apache.http.*;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -135,5 +138,29 @@ public class HttpClientUtil {
                 response.close();
             }
         }
+    }
+
+    public static void uploadFile(String filePath,String url) throws Exception{
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(200000).setSocketTimeout(200000000).build();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setConfig(requestConfig);
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+        multipartEntityBuilder.setCharset(Charset.forName("UTF-8"));
+        File file = new File(filePath);
+        multipartEntityBuilder.addBinaryBody("file",file);
+        multipartEntityBuilder.addTextBody("fileUpload", "fileUpload");
+        HttpEntity httpEntity = multipartEntityBuilder.build();
+        httpPost.setEntity(httpEntity);
+        CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
+        //HttpEntity responseEntity = httpResponse.getEntity();
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if(statusCode == 200){
+            LOGGER.info("上传成功！");
+        }
+        httpClient.close();
+        if(httpResponse != null){
+            httpResponse.close();
+        }
+
     }
 }
