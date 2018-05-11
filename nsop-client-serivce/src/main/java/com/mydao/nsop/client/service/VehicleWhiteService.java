@@ -59,7 +59,7 @@ public class VehicleWhiteService {
         MessageProperties mp = new MessageProperties();
         for (Message m : messageList) {
             mp.setContentType(m.msgBody.split("@@")[0]);
-            org.springframework.amqp.core.Message msg = new org.springframework.amqp.core.Message(m.msgBody.getBytes(),mp);
+            org.springframework.amqp.core.Message msg = new org.springframework.amqp.core.Message(m.msgBody.split("@@")[1].getBytes(),mp);
             rabbitTemplate.send(Constants.TOPIC_TSX_WHITEVEH,msg);
             try {
                 queue.deleteMessage(m.receiptHandle);
