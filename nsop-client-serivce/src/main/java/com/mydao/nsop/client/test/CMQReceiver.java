@@ -1,8 +1,6 @@
 package com.mydao.nsop.client.test;
 
-import com.google.common.base.Joiner;
 import com.mydao.nsop.client.common.Constants;
-import com.mydao.nsop.client.test.CreateTopicSubTopicQueue;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
@@ -29,9 +27,9 @@ public class CMQReceiver {
             Queue queue = account2.getQueue(Constants.VEHICLE_BLACK_QUEUE + "1");
             List<Message> messages = queue.batchReceiveMessage(10, 20);
             for(Message message : messages) {
-                System.out.println(message.msgTag);
+                System.out.println(message.msgId);
+                System.out.println(message.msgBody);
             }
-            System.out.println("消息1：" + Joiner.on("--").join(messages.stream().map(item -> item.msgBody).collect(Collectors.toList())));
 
             queue.batchDeleteMessage(messages.stream().map(item -> item.receiptHandle).collect(Collectors.toList()));
 

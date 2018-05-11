@@ -21,7 +21,7 @@ public class PushMessage {
 
         try {
             Topic topic = account1.getTopic(Constants.VEHICLE_BLACK_TOPIC);
-            for(int i = 1; i <= 10; i++) {
+            for(int i = 1; i <= 100; i++) {
                 String message = "Hello World.==" + i;
                 if((i % 2) == 0) {
                     topic.publishMessage(message, Lists.newArrayList(Constants.ADD_BLACK_KEY),"");

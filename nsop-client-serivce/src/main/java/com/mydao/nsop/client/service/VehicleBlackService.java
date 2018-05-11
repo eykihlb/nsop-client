@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -35,8 +36,8 @@ public class VehicleBlackService {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_BLACK_QUEUE);
         while(true) {
             try {
-                Message message = queue.receiveMessage(30);
-                sendBlack(message,queue);
+                List<Message> messageList = queue.batchReceiveMessage(10, 30);
+                sendBlack(messageList,queue);
             } catch (Exception e) {
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
@@ -46,9 +47,9 @@ public class VehicleBlackService {
         }
     }
 
-    private void sendBlack(Message message,Queue queue) {
+    private void sendBlack(List<Message> messageList,Queue queue) {
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
-        if(message.msgTag.contains("aaa")) {
+        /*if(message.msgTag.contains("aaa")) {
             rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_BLACKVEH, Constants.ADD_BLACK_KEY, message.msgBody, correlationData);
         } else {
             rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_BLACKVEH, Constants.DEL_BLACK_KEY, message.msgBody, correlationData);
@@ -62,7 +63,7 @@ public class VehicleBlackService {
                 CMQServerException e1 = (CMQServerException) e;
                 LOGGER.error(e1.getErrorMessage());
             }
-        }
+        }*/
     }
 
 }
