@@ -139,7 +139,7 @@ public class RabbitConfig {
 
     /*---------------------------------- 车辆黑名单 -----------------------------------*/
 
-    @Bean("blackExchange")
+    /*@Bean("blackExchange")
     public Exchange blackExchange() {
         return ExchangeBuilder.directExchange(Constants.TOPIC_TSX_BLACKVEH).durable(true).build();
     }
@@ -160,12 +160,17 @@ public class RabbitConfig {
     @Bean
     public Binding delBlackBinding(@Qualifier("delBlackQueue") Queue queue, @Qualifier("blackExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.DEL_BLACK_KEY).noargs();
+    }*/
+
+    @Bean
+    public Queue blackQueue() {
+        return QueueBuilder.durable(Constants.TOPIC_TSX_BLACKVEH).build();
     }
 
 
     /*---------------------------------- 车辆白名单 -----------------------------------*/
 
-    @Bean("whiteExchange")
+    /*@Bean("whiteExchange")
     public Exchange whiteExchange() {
         return ExchangeBuilder.directExchange(Constants.TOPIC_TSX_WHITEVEH).durable(true).build();
     }
@@ -186,5 +191,10 @@ public class RabbitConfig {
     @Bean
     public Binding delWhiteBinding(@Qualifier("delWhiteQueue") Queue queue, @Qualifier("whiteExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.DEL_WHITE_KEY).noargs();
+    }*/
+
+    @Bean
+    public Queue whiteQueue() {
+        return QueueBuilder.durable(Constants.TOPIC_TSX_WHITEVEH).build();
     }
 }

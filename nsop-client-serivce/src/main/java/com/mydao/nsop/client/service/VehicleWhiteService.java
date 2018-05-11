@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -39,8 +40,8 @@ public class VehicleWhiteService {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_WHITE_QUEUE + trafficConfig.getClientNum());
         while(true) {
             try {
-                Message message = queue.receiveMessage(30);
-                sendWhite(message,queue);
+                List<Message> messageList = queue.batchReceiveMessage(10, 30);
+                sendWhite(messageList,queue);
             } catch (Exception e) {
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
@@ -50,10 +51,10 @@ public class VehicleWhiteService {
         }
     }
 
-    private void sendWhite(Message message,Queue queue) {
+    private void sendWhite(List<Message> messageList,Queue queue) {
         CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
         //根据消息发送到新增白名单和删除白名单中
-        if(message.msgTag.contains("aaa")) {
+       /* if(message.msgTag.contains("aaa")) {
             rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_WHITEVEH, Constants.ADD_WHITE_KEY, message.msgBody, correlationData);
         } else {
             rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_WHITEVEH, Constants.DEL_WHITE_KEY, message.msgBody, correlationData);
@@ -67,6 +68,6 @@ public class VehicleWhiteService {
                 CMQServerException e1 = (CMQServerException) e;
                 LOGGER.error(e1.getErrorMessage());
             }
-        }
+        }*/
     }
 }

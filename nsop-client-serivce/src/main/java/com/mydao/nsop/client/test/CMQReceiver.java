@@ -1,7 +1,6 @@
 package com.mydao.nsop.client.test;
 
-import com.google.common.base.Joiner;
-import com.mydao.nsop.client.test.CreateTopicSubTopicQueue;
+import com.mydao.nsop.client.common.Constants;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
@@ -25,19 +24,25 @@ public class CMQReceiver {
 
 
         try {
-            Queue queue = account2.getQueue(CreateTopicSubTopicQueue.SUB1_QUEUE_NAME);
+            Queue queue = account2.getQueue(Constants.VEHICLE_BLACK_QUEUE + "1");
             List<Message> messages = queue.batchReceiveMessage(10, 20);
-            System.out.println("消息1：" + Joiner.on("--").join(messages.stream().map(item -> item.msgBody).collect(Collectors.toList())));
+            for(Message message : messages) {
+                System.out.println(message.msgId);
+                System.out.println(message.msgBody);
+            }
 
             queue.batchDeleteMessage(messages.stream().map(item -> item.receiptHandle).collect(Collectors.toList()));
 
             System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-            Queue queue2 = account2.getQueue(CreateTopicSubTopicQueue.SUB2_QUEUE_NAME);
+            /*Queue queue2 = account2.getQueue(Constants.VEHICLE_BLACK_QUEUE + "1");
             List<Message> messages2 = queue2.batchReceiveMessage(10,20);
+            for(Message message : messages2) {
+                System.out.println(message.msgTag);
+            }
             System.out.println("消息2：" + Joiner.on("--").join(messages2.stream().map(item -> item.msgBody).collect(Collectors.toList())));
 
-            queue2.batchDeleteMessage(messages2.stream().map(item -> item.receiptHandle).collect(Collectors.toList()));
+            queue2.batchDeleteMessage(messages2.stream().map(item -> item.receiptHandle).collect(Collectors.toList()));*/
         } catch (Exception e) {
             e.printStackTrace();
         }

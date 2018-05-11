@@ -1,6 +1,7 @@
 package com.mydao.nsop.client.test;
 
-import com.mydao.nsop.client.test.CreateTopicSubTopicQueue;
+import com.google.common.collect.Lists;
+import com.mydao.nsop.client.common.Constants;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.Topic;
 
@@ -19,13 +20,15 @@ public class PushMessage {
         Account account1 = new Account(endpoint1,secretId, secretKey);
 
         try {
-            Topic topic = account1.getTopic(CreateTopicSubTopicQueue.TOPIC_NAME);
-            for(int i = 1; i <= 10; i++) {
+            Topic topic = account1.getTopic(Constants.VEHICLE_BLACK_TOPIC);
+            for(int i = 1; i <= 100; i++) {
                 String message = "Hello World.==" + i;
                 if((i % 2) == 0) {
-                    topic.publishMessage(message,CreateTopicSubTopicQueue.SUB1_KEY);
+                    topic.publishMessage(message, Lists.newArrayList(Constants.ADD_BLACK_KEY),"");
+                    //topic.publishMessage(message,CreateTopicSubTopicQueue.SUB1_KEY);
                 } else {
-                    topic.publishMessage(message,CreateTopicSubTopicQueue.SUB2_KEY);
+                    topic.publishMessage(message, Lists.newArrayList(Constants.DEL_BLACK_KEY),"");
+                    //topic.publishMessage(message,CreateTopicSubTopicQueue.SUB2_KEY);
                 }
             }
         } catch (Exception e) {
