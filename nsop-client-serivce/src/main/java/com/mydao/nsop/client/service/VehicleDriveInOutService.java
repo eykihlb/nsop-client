@@ -45,12 +45,12 @@ public class VehicleDriveInOutService {
     @Async
     public void test2() {
         System.out.println("Sender : Hello Word！");
-        for(int i = 0; i < 5; i++) {
+        /*for(int i = 0; i < 5; i++) {
             System.out.println("message" + i);
             rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,"{'laneNo':'65000115E01','passTime':'445555555','plateNo':'京A12345-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1'}");
-        }
+        }*/
         //rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1'}");
-        //rabbitTemplate.convertAndSend(Constants.ENTRY_EX_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','clientId':'000001','clientSeq':'1'}");
+        rabbitTemplate.convertAndSend(Constants.ENTRY_EX_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','clientId':'000001','clientSeq':'1'}");
         //rabbitTemplate.convertAndSend(Constants.ENTRY_DENY_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','createTime':'445555555'}");
         //rabbitTemplate.convertAndSend(Constants.PASS_REJECT_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','status':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','passType':'00'}");
         //rabbitTemplate.convertAndSend(Constants.EXIT_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','entryId':'65000207E01_126148652f91','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1','entryClientId':'000001','entryClientSeq':'1','vehClass':'13','detectWeight':'12.6','fareWeight':'12.51','detectAxles':'4','distance':'20.2','payFare':'500'}");
@@ -76,6 +76,7 @@ public class VehicleDriveInOutService {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             //e.printStackTrace();
+            log.error(e.getMessage());
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
         log.info("----------------------------------------------------- "+new String(message.getBody()));
@@ -105,7 +106,9 @@ public class VehicleDriveInOutService {
             fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            log.error(e.getMessage());
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
         log.info("ENTRY_EX_QUEUE "+new String(message.getBody()));
         if ("200".equals(result)){//删除消息
@@ -132,7 +135,9 @@ public class VehicleDriveInOutService {
             fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            log.error(e.getMessage());
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
         log.info("ENTRY_DENY_QUEUE "+new String(message.getBody()));
         if ("200".equals(result)){//删除消息
@@ -158,6 +163,7 @@ public class VehicleDriveInOutService {
             fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
         } catch (Exception e) {
             //e.printStackTrace();
+            log.error(e.getMessage());
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
         log.info("PASS_REJECT_QUEUE "+new String(message.getBody()));
@@ -185,6 +191,7 @@ public class VehicleDriveInOutService {
             fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
         } catch (Exception e) {
             //e.printStackTrace();
+            log.error(e.getMessage());
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
         log.info("EXIT_QUEUE "+new String(message.getBody()));
@@ -211,6 +218,7 @@ public class VehicleDriveInOutService {
             fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
         } catch (Exception e) {
             //e.printStackTrace();
+            log.error(e.getMessage());
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
         log.info("EXIT_EX_QUEUE "+new String(message.getBody()));
@@ -235,8 +243,8 @@ public class VehicleDriveInOutService {
     private String getFileName(String msg){
         String fileName = "";
         Map<String,Object> map = gson.fromJson(msg,Map.class);
-        fileName = map.get("key").toString();
-        fileName += map.get("key").toString();
+        //fileName = map.get("key").toString();
+        //fileName += map.get("key").toString();
         return fileName;
     }
 
