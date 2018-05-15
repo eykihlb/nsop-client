@@ -119,7 +119,7 @@ public class Constants {
     public static final String ENTRY_EX = "entryInfo";
     public static final String ENTRY_DENY = "entryDenyParam";
     public static final String PASS_REJECT = "passRejectParam";
-    public static final String EXIT = "exitParam";
+    public static final String EXIT = "roadExitVo";
     public static final String EXIT_EX = "exitExParam";
 
 
