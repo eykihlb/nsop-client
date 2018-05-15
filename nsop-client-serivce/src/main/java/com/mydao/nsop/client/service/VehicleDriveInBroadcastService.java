@@ -51,7 +51,7 @@ public class VehicleDriveInBroadcastService {
     private void sendVehicleDriveIn(Message message,Queue queue) {
         final CorrelationData cd = new CorrelationData(UUID.randomUUID().toString());
         //发送车辆驶入信息
-        rabbitTemplate.convertAndSend(Constants.TOPIC_TSX_BLACKVEH, Constants.ADD_BLACK_KEY, message.msgBody, cd);
+        rabbitTemplate.convertAndSend(Constants.VEHICLE_DRIVE_IN_LOCAL_QUEUE, "", message.msgBody, cd);
         try {
             queue.deleteMessage(message.receiptHandle);
         } catch (Exception e) {
