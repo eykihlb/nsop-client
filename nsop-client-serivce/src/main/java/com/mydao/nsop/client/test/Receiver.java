@@ -24,7 +24,7 @@ public class Receiver {
      * @param channel the channel
      * @throws IOException the io exception  这里异常需要处理
      */
-    @RabbitListener(queues = {Constants.TOPIC_TSX_JOURNEY})
+    /*@RabbitListener(queues = {Constants.TOPIC_TSX_JOURNEY})
     public void on(Message message, Channel channel) throws IOException {
         channel.basicQos(1);
         try {
@@ -34,7 +34,7 @@ public class Receiver {
         }
         log.info("FANOUT_QUEUE_A "+new String(message.getBody()));
         channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
-    }
+    }*/
 
     /**
      * FANOUT广播队列监听二.
