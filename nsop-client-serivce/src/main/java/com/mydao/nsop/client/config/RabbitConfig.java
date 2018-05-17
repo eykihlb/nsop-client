@@ -47,7 +47,7 @@ public class RabbitConfig {
         // 消息确认  yml 需要配置   publisher-returns: true
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
             if (ack) {
-                LOGGER.debug("消息发送到exchange成功,id: {}", correlationData.getId());
+                LOGGER.debug("消息发送到exchange成功,id: {}", correlationData == null ? "" : correlationData.getId());
             } else {
                 LOGGER.debug("消息发送到exchange失败,原因: {}", cause);
             }

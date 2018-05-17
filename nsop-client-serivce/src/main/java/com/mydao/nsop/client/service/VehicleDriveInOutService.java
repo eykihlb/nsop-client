@@ -19,6 +19,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,21 +43,25 @@ public class VehicleDriveInOutService {
     private AmqpTemplate rabbitTemplate;
     private Gson gson = new Gson();
 
-    @Async
+    /*@Async
     public void test2() {
-        System.out.println("Sender : Hello Word！");
-        /*for(int i = 0; i < 5; i++) {
-            System.out.println("message" + i);
-            rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,"{'laneNo':'65000115E01','passTime':'445555555','plateNo':'京A12345-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1'}");
-        }*/
-        //rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1'}");
-        //rabbitTemplate.convertAndSend(Constants.ENTRY_EX_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','clientId':'000001','clientSeq':'1'}");
-        //rabbitTemplate.convertAndSend(Constants.ENTRY_DENY_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','createTime':'445555555'}");
-        //rabbitTemplate.convertAndSend(Constants.PASS_REJECT_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','status':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','passType':'00'}");
-        //rabbitTemplate.convertAndSend(Constants.EXIT_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','entryId':'65000207E01_126148652f91','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1','entryClientId':'000001','entryClientSeq':'1','vehClass':'13','detectWeight':'12.6','fareWeight':'12.51','detectAxles':'4','distance':'20.2','payFare':'500'}");
-        //rabbitTemplate.convertAndSend(Constants.EXIT_EX_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','entryId':'a00001_126148652f91','clientId':'000001','clientSeq':'1'}");
+        for(int i = 0; i < 100; i++) {
+            String eq = "{'laneNo':'65000115E01','passTime':'445555555','plateNo':'京A12345-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'"+i+"'}";
+            String eeq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','clientId':'000001','clientSeq':'"+i+"'}";
+            String edq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','createTime':'"+new Date().getTime()+"'}";
+            String prq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','status':'00','feature':'00_00_00','cameraId':'000001','passSeq':'"+i+"','passType':'00'}";
+            String exq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','entryId':'65000207E01_126148652f91','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1','entryClientId':'000001','entryClientSeq':'1','vehClass':'13','detectWeight':'12.6','fareWeight':'12.51','detectAxles':'4','distance':'20.2','payFare':'"+i+"'}";
+            String aa = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','entryId':'a00001_126148652f91','clientId':'000001','clientSeq':'"+i+"'}";
+            rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,eq);
+            rabbitTemplate.convertAndSend(Constants.ENTRY_EX_QUEUE,eeq);
+            rabbitTemplate.convertAndSend(Constants.ENTRY_DENY_QUEUE,edq);
+            rabbitTemplate.convertAndSend(Constants.PASS_REJECT_QUEUE,prq);
+            rabbitTemplate.convertAndSend(Constants.EXIT_QUEUE,exq);
+            rabbitTemplate.convertAndSend(Constants.EXIT_EX_QUEUE,aa);
+            System.out.println(i);
+        }
 
-    }
+    }*/
 
     /**
      * 车辆驶入
@@ -116,7 +121,6 @@ public class VehicleDriveInOutService {
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
     }
-
 
     /**
      * 车辆驶入否认

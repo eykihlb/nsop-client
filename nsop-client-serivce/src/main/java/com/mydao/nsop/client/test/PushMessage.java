@@ -21,18 +21,40 @@ public class PushMessage {
 
         try {
             Topic topic = account1.getTopic(Constants.VEHICLE_BLACK_TOPIC);
+            String message = "";
             for(int i = 1; i <= 100; i++) {
-                String message = "Hello World.==" + i;
                 if((i % 2) == 0) {
-                    topic.publishMessage(message, Lists.newArrayList(Constants.ADD_BLACK_KEY),"");
-                    //topic.publishMessage(message,CreateTopicSubTopicQueue.SUB1_KEY);
+                    message = "add_black@@VEHICLE_BLACK_TOPIC.==" + i;
                 } else {
-                    topic.publishMessage(message, Lists.newArrayList(Constants.DEL_BLACK_KEY),"");
-                    //topic.publishMessage(message,CreateTopicSubTopicQueue.SUB2_KEY);
+                    message = "del_black@@VEHICLE_BLACK_TOPIC.==" + i;
                 }
+                topic.publishMessage(message,"");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        /*try {
+            Topic topic = account1.getTopic(Constants.VEHICLE_WHITE_TOPIC);
+            String message = "";
+            for(int i = 1; i <= 100; i++) {
+                if((i % 2) == 0) {
+                    message = "add_white@@VEHICLE_WHITE_TOPIC.==" + i;
+                } else {
+                    message = "del_white@@VEHICLE_WHITE_TOPIC.==" + i;
+                }
+                topic.publishMessage(message,"");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            Topic topic = account1.getTopic(Constants.VEHICLE_DRIVE_IN_TOPIC);
+            for(int i = 1; i <= 100; i++) {
+                String message = "VEHICLE_DRIVE_IN_TOPIC.==" + i;
+                topic.publishMessage(message,"");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
     }
 }

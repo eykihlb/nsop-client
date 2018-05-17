@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ZYW
@@ -58,13 +59,13 @@ public class VehicleBlackService {
             mp.setContentType(m.msgBody.split("@@")[0]);
             org.springframework.amqp.core.Message msg = new org.springframework.amqp.core.Message(m.msgBody.split("@@")[1].getBytes(),mp);
             rabbitTemplate.send(Constants.TOPIC_TSX_BLACKVEH,msg);
-            try {
-                queue.deleteMessage(m.receiptHandle);
-            } catch (Exception e) {
-                if(e instanceof CMQServerException) {
-                    CMQServerException e1 = (CMQServerException) e;
-                    LOGGER.error(e1.getErrorMessage());
-                }
+        }
+        try {
+            queue.batchDeleteMessage(messageList.stream().map(item -> item.receiptHandle).collect(Collectors.toList()));
+        } catch (Exception e) {
+            if(e instanceof CMQServerException) {
+                CMQServerException e1 = (CMQServerException) e;
+                LOGGER.error(e1.getErrorMessage());
             }
         }
     }

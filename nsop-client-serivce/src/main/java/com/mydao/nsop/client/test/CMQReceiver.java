@@ -30,7 +30,6 @@ public class CMQReceiver {
                 System.out.println(message.msgId);
                 System.out.println(message.msgBody);
             }
-
             queue.batchDeleteMessage(messages.stream().map(item -> item.receiptHandle).collect(Collectors.toList()));
 
             System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
