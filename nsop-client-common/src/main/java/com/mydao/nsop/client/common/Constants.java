@@ -26,7 +26,7 @@ public class Constants {
     /**
      * 车辆驶入异常的匹配队列名称
      */
-    public static final String ENTRY_EX_QUEUE = "entry_queue";
+    public static final String ENTRY_EX_QUEUE = "entry_ex_queue";
 
     /**
      * 车辆驶入否认的匹配Key
