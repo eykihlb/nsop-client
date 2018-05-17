@@ -1,8 +1,6 @@
 package com.mydao.nsop.client.main;
 
-import com.mydao.nsop.client.service.CreateSubscriptionAndQueue;
-import com.mydao.nsop.client.service.VehicleDriveInBroadcastService;
-import com.mydao.nsop.client.service.VehicleDriveInOutService;
+import com.mydao.nsop.client.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,15 +22,22 @@ public class StartAllThread {
     @Autowired
     private CreateSubscriptionAndQueue createSubscriptionAndQueue;
 
+    @Autowired
+    private VehicleWhiteService vehicleWhiteService;
+
+    @Autowired
+    private VehicleBlackService vehicleBlackService;
+
     @PostConstruct
     public void start() {
         //创建订阅和队列
         createSubscriptionAndQueue.createSubQueue();
 
 //        vehicleDriveInService.test();
-        vehicleDriveInService.test2();
+//        vehicleDriveInService.test2();
 //        vehicleDriveInService.test3();
-
+        vehicleBlackService.addDelBlack();
+        vehicleWhiteService.addDelWhite();
         vehicleDriveInBroadcastService.vehicleDriveIn();
     }
 }
