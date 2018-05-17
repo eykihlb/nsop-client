@@ -50,7 +50,7 @@ public class VehicleDriveInOutService {
             rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,"{'laneNo':'65000115E01','passTime':'445555555','plateNo':'京A12345-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1'}");
         }*/
         //rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1'}");
-        rabbitTemplate.convertAndSend(Constants.ENTRY_EX_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','clientId':'000001','clientSeq':'1'}");
+        //rabbitTemplate.convertAndSend(Constants.ENTRY_EX_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','clientId':'000001','clientSeq':'1'}");
         //rabbitTemplate.convertAndSend(Constants.ENTRY_DENY_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','createTime':'445555555'}");
         //rabbitTemplate.convertAndSend(Constants.PASS_REJECT_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','status':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','passType':'00'}");
         //rabbitTemplate.convertAndSend(Constants.EXIT_QUEUE,"{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','entryId':'65000207E01_126148652f91','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1','entryClientId':'000001','entryClientSeq':'1','vehClass':'13','detectWeight':'12.6','fareWeight':'12.51','detectAxles':'4','distance':'20.2','payFare':'500'}");
@@ -62,19 +62,18 @@ public class VehicleDriveInOutService {
      * 车辆驶入
      */
     @RabbitListener(queues = {Constants.ENTRY_QUEUE})
-    public void entryQueue(Message message, Channel channel) throws IOException {
+    public void entryQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
         String result = "";
         try {
             System.out.println("车辆驶入");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.ENTRY, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
+            //fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
+        } catch (Exception e) {
             //e.printStackTrace();
             log.error(e.getMessage());
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
@@ -94,18 +93,18 @@ public class VehicleDriveInOutService {
      * 车辆驶入异常
      */
     @RabbitListener(queues = {Constants.ENTRY_EX_QUEUE})
-    public void entryExQueue(Message message, Channel channel) throws IOException {
+    public void entryExQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
         String result = "";
         try {
+            System.out.println("车辆驶入异常");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.ENTRY_EX, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
+            //fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
+        } catch (Exception e) {
             //e.printStackTrace();
             log.error(e.getMessage());
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
@@ -123,18 +122,18 @@ public class VehicleDriveInOutService {
      * 车辆驶入否认
      */
     @RabbitListener(queues = {Constants.ENTRY_DENY_QUEUE})
-    public void entryDenyQueue(Message message, Channel channel) throws IOException {
+    public void entryDenyQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
         String result = "";
         try {
+            System.out.println("车辆驶入否认");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.ENTRY_DENY, new String(message.getBody())));
-            String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_deny();
+            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
+            String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
+            //fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
+        } catch (Exception e) {
             //e.printStackTrace();
             log.error(e.getMessage());
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
@@ -155,12 +154,13 @@ public class VehicleDriveInOutService {
         channel.basicQos(1);
         String result = "";
         try {
+            System.out.println("车辆驶入通行拒绝");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.PASS_REJECT, new String(message.getBody())));
-            String uri = trafficConfig.getUrl() + interFaceConfig.getPass_reject();
+            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
+            String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
+            //fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
         } catch (Exception e) {
             //e.printStackTrace();
             log.error(e.getMessage());
@@ -183,12 +183,13 @@ public class VehicleDriveInOutService {
         channel.basicQos(1);
         String result = "";
         try {
+            System.out.println("车辆驶出");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.EXIT, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getExit();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
+            //fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
         } catch (Exception e) {
             //e.printStackTrace();
             log.error(e.getMessage());
@@ -210,12 +211,13 @@ public class VehicleDriveInOutService {
         channel.basicQos(1);
         String result = "";
         try {
+            System.out.println("车辆驶出异常");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.EXIT_EX, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getExit_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
-            fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
+            //fileUploadService.fileUpload(fTPConfig,getFileName(new String(message.getBody())));
         } catch (Exception e) {
             //e.printStackTrace();
             log.error(e.getMessage());

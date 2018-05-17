@@ -25,20 +25,14 @@ spring:
 # 自定义配置
 nsop:
   traffic:
-    url: http://192.168.0.174:9099/
+    url: http://192.168.0.250:9099/
     # 客户端编号
     client-num: 001
   interface:
     entry: roadEntry/normalDriveInto
     entry_ex: roadEntry/abnormalDriveInto
-    entry_deny:
-    pass_reject:
-    exit:
-    exit_ex:
-    add_black:
-    del_black:
-    add_white:
-    del_white:
+    exit: roadExit/normal
+    exit_ex: roadExit/abnormity
 
   ftpServer:
     download:
