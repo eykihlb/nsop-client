@@ -1,6 +1,7 @@
 package com.mydao.nsop.client.main;
 
 import com.mydao.nsop.client.service.*;
+import com.rabbitmq.client.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,11 +29,15 @@ public class StartAllThread {
     @Autowired
     private VehicleBlackService vehicleBlackService;
 
+    @Autowired
+    private SystemInit systemInit;
+
     @PostConstruct
     public void start() {
         //创建订阅和队列
         createSubscriptionAndQueue.createSubQueue();
-
+        //初始化拉取全量黑白名单数据
+        systemInit.systemInit();
 //        vehicleDriveInService.test();
 //        vehicleDriveInService.test2();
 //        vehicleDriveInService.test3();

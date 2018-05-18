@@ -13,15 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ZYW
@@ -63,6 +61,37 @@ public class VehicleDriveInOutService {
 
     }*/
 
+    /**
+     * 监听拉取全量黑白名单请求
+     */
+    @RabbitListener(queues = {Constants.GET_BWLIST_QUEUE})
+    public void getWBList(Message message, Channel channel) throws Exception {
+        channel.basicQos(1);
+        String result = "";
+        String uri = "";
+        Map<String, Object> map = new HashMap<>();
+        try {
+            System.out.println("请求全量黑白名单");
+            List<NameValuePair> list = new ArrayList<>();
+            if (new String(message.getBody()).equals("black")){
+                uri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_black();
+                result = HttpClientUtil.sendHttpPostCall(uri,list);
+                map = gson.fromJson(result,Map.class);
+                Message msg = new Message(gson.toJson(map.get("data")).getBytes(),new MessageProperties());
+                rabbitTemplate.send(Constants.FULL_BLACK_LIST,msg);
+            }else{
+                uri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_white();
+                result = HttpClientUtil.sendHttpPostCall(uri,list);
+                map = gson.fromJson(result,Map.class);
+                Message msg = new Message(gson.toJson(map.get("data")).getBytes(),new MessageProperties());
+                rabbitTemplate.send(Constants.FULL_WHITE_LIST,msg);
+            }
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
+        }
+    }
     /**
      * 车辆驶入
      */

@@ -9,14 +9,26 @@ public class InterFaceConfig {
 
     private String entry;
     private String entry_ex;
-    private String entry_deny;
-    private String pass_reject;
+    private String full_quantity_black;
+    private String full_quantity_white;
     private String exit;
     private String exit_ex;
-    private String add_black;
-    private String del_black;
-    private String add_white;
-    private String del_white;
+
+    public String getFull_quantity_black() {
+        return full_quantity_black;
+    }
+
+    public void setFull_quantity_black(String full_quantity_black) {
+        this.full_quantity_black = full_quantity_black;
+    }
+
+    public String getFull_quantity_white() {
+        return full_quantity_white;
+    }
+
+    public void setFull_quantity_white(String full_quantity_white) {
+        this.full_quantity_white = full_quantity_white;
+    }
 
     public String getEntry() {
         return entry;
@@ -34,22 +46,6 @@ public class InterFaceConfig {
         this.entry_ex = entry_ex;
     }
 
-    public String getEntry_deny() {
-        return entry_deny;
-    }
-
-    public void setEntry_deny(String entry_deny) {
-        this.entry_deny = entry_deny;
-    }
-
-    public String getPass_reject() {
-        return pass_reject;
-    }
-
-    public void setPass_reject(String pass_reject) {
-        this.pass_reject = pass_reject;
-    }
-
     public String getExit() {
         return exit;
     }
@@ -64,37 +60,5 @@ public class InterFaceConfig {
 
     public void setExit_ex(String exit_ex) {
         this.exit_ex = exit_ex;
-    }
-
-    public String getAdd_black() {
-        return add_black;
-    }
-
-    public void setAdd_black(String add_black) {
-        this.add_black = add_black;
-    }
-
-    public String getDel_black() {
-        return del_black;
-    }
-
-    public void setDel_black(String del_black) {
-        this.del_black = del_black;
-    }
-
-    public String getAdd_white() {
-        return add_white;
-    }
-
-    public void setAdd_white(String add_white) {
-        this.add_white = add_white;
-    }
-
-    public String getDel_white() {
-        return del_white;
-    }
-
-    public void setDel_white(String del_white) {
-        this.del_white = del_white;
     }
 }

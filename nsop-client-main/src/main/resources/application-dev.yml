@@ -33,6 +33,8 @@ nsop:
     entry_ex: roadEntry/abnormalDriveInto
     exit: roadExit/normal
     exit_ex: roadExit/abnormity
+    full_quantity_black: vehicleBlack/list
+    full_quantity_white: vehicleWhite/list
 
   ftpServer:
     download:

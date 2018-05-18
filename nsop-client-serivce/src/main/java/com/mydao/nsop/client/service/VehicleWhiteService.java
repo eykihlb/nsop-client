@@ -56,11 +56,11 @@ public class VehicleWhiteService {
     }
 
     private void sendWhite(List<Message> messageList,Queue queue) {
-        messageList.sort(Comparator.comparing((Message m) -> m.msgId ));
+        messageList.sort(Comparator.comparing((Message m) -> m.msgBody.split("@@")[0] ));
         MessageProperties mp = new MessageProperties();
         for (Message m : messageList) {
-            mp.setContentType(m.msgBody.split("@@")[0]);
-            org.springframework.amqp.core.Message msg = new org.springframework.amqp.core.Message(m.msgBody.split("@@")[1].getBytes(),mp);
+            mp.setContentType(m.msgBody.split("@@")[1]);
+            org.springframework.amqp.core.Message msg = new org.springframework.amqp.core.Message(m.msgBody.split("@@")[2].getBytes(),mp);
             rabbitTemplate.send(Constants.TOPIC_TSX_WHITEVEH,msg);
         }
         try {
