@@ -105,6 +105,12 @@ public class Constants {
     public static final String VEHICLE_WHITE_QUEUE = "vehicle-white-queue-";
     public static final String VEHICLE_BLACK_QUEUE = "vehicle-black-queue-";
 
+    /**
+     * 车辆黑白名单全量请求队列
+     */
+    public static final String GET_BWLIST_QUEUE = "get_bwlist_queue";
+    public static final String FULL_BLACK_LIST = "full_black_list";
+    public static final String FULL_WHITE_LIST = "full_white_list";
 
     /**
      * 车辆驶入本地队列
