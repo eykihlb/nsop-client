@@ -57,6 +57,30 @@ public class CreateSubscriptionAndQueue {
                 LOGGER.error(e1.getErrorMessage());
             }
         }
+
+        //创建车辆驶出通知队列
+        queueName = Constants.VEHICLE_DRIVE_OUT_QUEUE + trafficConfig.getClientNum();
+        try {
+            accountQueue.createQueue(queueName,meta2);
+        } catch (Exception e) {
+            if(e instanceof CMQServerException) {
+                CMQServerException e1 = (CMQServerException) e;
+                LOGGER.error(e1.getErrorMessage());
+            }
+        }
+        try {
+            accountTopic.createSubscribe(Constants.VEHICLE_DRIVE_OUT_TOPIC
+                    , Constants.VEHICLE_DRIVE_OUT_SUB + trafficConfig.getClientNum()
+                    ,queueName
+                    ,"queue"
+                    ,null, null,"BACKOFF_RETRY","SIMPLIFIED");
+        } catch (Exception e) {
+            if(e instanceof CMQServerException) {
+                CMQServerException e1 = (CMQServerException) e;
+                LOGGER.error(e1.getErrorMessage());
+            }
+        }
+
         //创建车辆白名单队列
         queueName = Constants.VEHICLE_WHITE_QUEUE + trafficConfig.getClientNum();
         try {

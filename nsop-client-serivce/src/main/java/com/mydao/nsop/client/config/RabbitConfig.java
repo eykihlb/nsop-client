@@ -206,4 +206,13 @@ public class RabbitConfig {
     public Queue driveInLocalQueue() {
         return QueueBuilder.durable(Constants.VEHICLE_DRIVE_IN_LOCAL_QUEUE).build();
     }
+
+    /**
+     * 车辆驶出RabbitMQ
+     * @return
+     */
+    @Bean
+    public Queue driveOutLocalQueue() {
+        return QueueBuilder.durable(Constants.VEHICLE_DRIVE_OUT_LOCAL_QUEUE).build();
+    }
 }
