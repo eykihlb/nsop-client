@@ -41,26 +41,6 @@ public class VehicleDriveInOutService {
     private AmqpTemplate rabbitTemplate;
     private Gson gson = new Gson();
 
-    /*@Async
-    public void test2() {
-        for(int i = 0; i < 100; i++) {
-            String eq = "{'laneNo':'65000115E01','passTime':'445555555','plateNo':'京A12345-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'"+i+"'}";
-            String eeq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','clientId':'000001','clientSeq':'"+i+"'}";
-            String edq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','createTime':'"+new Date().getTime()+"'}";
-            String prq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','status':'00','feature':'00_00_00','cameraId':'000001','passSeq':'"+i+"','passType':'00'}";
-            String exq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','entryId':'65000207E01_126148652f91','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1','entryClientId':'000001','entryClientSeq':'1','vehClass':'13','detectWeight':'12.6','fareWeight':'12.51','detectAxles':'4','distance':'20.2','payFare':'"+i+"'}";
-            String aa = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','entryId':'a00001_126148652f91','clientId':'000001','clientSeq':'"+i+"'}";
-            rabbitTemplate.convertAndSend(Constants.ENTRY_QUEUE,eq);
-            rabbitTemplate.convertAndSend(Constants.ENTRY_EX_QUEUE,eeq);
-            rabbitTemplate.convertAndSend(Constants.ENTRY_DENY_QUEUE,edq);
-            rabbitTemplate.convertAndSend(Constants.PASS_REJECT_QUEUE,prq);
-            rabbitTemplate.convertAndSend(Constants.EXIT_QUEUE,exq);
-            rabbitTemplate.convertAndSend(Constants.EXIT_EX_QUEUE,aa);
-            System.out.println(i);
-        }
-
-    }*/
-
     /**
      * 监听拉取全量黑白名单请求
      */
@@ -102,7 +82,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶入");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -133,7 +113,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶入异常");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -161,7 +141,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶入否认");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -189,7 +169,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶入通行拒绝");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -218,7 +198,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶出");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.EXIT_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getExit();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -246,7 +226,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶出异常");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTERFACE_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.EXIT_PARAM, new String(message.getBody())));
             String uri = trafficConfig.getUrl() + interFaceConfig.getExit_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
