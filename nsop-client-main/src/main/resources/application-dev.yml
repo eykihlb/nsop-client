@@ -29,10 +29,10 @@ nsop:
     # 客户端编号
     client-num: 001
   interface:
-    entry: roadEntry/normalDriveInto
-    entry_ex: roadEntry/abnormalDriveInto
+    entry: roadEntry/normal
+    entry_ex: roadEntry/abnormal
     exit: roadExit/normal
-    exit_ex: roadExit/abnormity
+    exit_ex: roadExit/abnormal
     full_quantity_black: vehicleBlack/list
     full_quantity_white: vehicleWhite/list
 
