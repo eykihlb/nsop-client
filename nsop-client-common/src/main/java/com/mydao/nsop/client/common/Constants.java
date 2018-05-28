@@ -129,7 +129,8 @@ public class Constants {
     /**
      * 接口参数名
      */
-    public static final String INTERFACE_PARAM = "entryInfo";
+    public static final String INTER_PARAM = "entryInfo";
+    public static final String EXIT_PARAM = "exitInfo";
 
 
     /**
