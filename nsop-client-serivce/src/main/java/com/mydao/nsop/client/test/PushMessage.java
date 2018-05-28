@@ -23,10 +23,11 @@ public class PushMessage {
             Topic topic = account1.getTopic(Constants.VEHICLE_BLACK_TOPIC);
             String message = "";
             for(int i = 1; i <= 100; i++) {
+                Thread.sleep(2000);
                 if((i % 2) == 0) {
-                    message = "add_black@@VEHICLE_BLACK_TOPIC.==" + i;
+                    message = i + "@@add_black@@VEHICLE_BLACK_TOPIC.==" + i;
                 } else {
-                    message = "del_black@@VEHICLE_BLACK_TOPIC.==" + i;
+                    message = i + "@@del_black@@VEHICLE_BLACK_TOPIC.==" + i;
                 }
                 topic.publishMessage(message,"");
             }
