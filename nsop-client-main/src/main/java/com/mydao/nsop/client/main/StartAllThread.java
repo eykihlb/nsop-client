@@ -43,7 +43,7 @@ public class StartAllThread {
 //        vehicleDriveInService.test2();
 //        vehicleDriveInService.test3();
         vehicleBlackService.addDelBlack();
-        vehicleWhiteService.addDelWhite();
+        //vehicleWhiteService.addDelWhite();
         vehicleDriveInBroadcastService.vehicleDriveIn();
     }
 }
