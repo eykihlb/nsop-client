@@ -13,6 +13,8 @@ repositories {
 dependencies {
     compile project(":nsop-client-common")
     compile('org.springframework.boot:spring-boot-starter-amqp')
+    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'commons-net', name: 'commons-net', version: '3.6'
     compile ('com.google.code.gson:gson:2.6.2')

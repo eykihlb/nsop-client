@@ -21,6 +21,12 @@ spring:
     # 支持发布返回
     publisher-returns: true
 
+security:
+  oauth2:
+    client:
+      client-id: traffic
+      client-secret: password
+      access-token-uri: http://127.0.0.1:9090/auth/oauth/token
 
 # 自定义配置
 nsop:
