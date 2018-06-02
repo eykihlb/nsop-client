@@ -5,9 +5,7 @@ import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.InterFaceConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.util.HttpClientUtil;
-import com.rabbitmq.client.Channel;
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -71,8 +69,11 @@ public class SystemInit {
         }
     }
 
-    public void aaa(){
-        ResponseEntity<String> entity = oAuthRestTemplate.getForEntity("http://127.0.0.1:9090/pay/secretfree/contract/param", String.class);
-        System.out.println(entity.getBody());
+    public void restTemplateTest(){
+        //Get方式
+        ResponseEntity<String> getEntity = oAuthRestTemplate.getForEntity("http://127.0.0.1:9090/pay/secretfree/contract/param", String.class);
+        //Post方式，第二个参数为对象，第三个参数为返回类型
+        ResponseEntity<Object> postEntity = oAuthRestTemplate.postForEntity("http://127.0.0.1:9090/pay/secretfree/contract/param",new Object(),Object.class);
+        System.out.println(getEntity.getBody());
     }
 }
