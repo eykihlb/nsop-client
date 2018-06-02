@@ -13,6 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * 根据需求自定义重试策略
+ * @author zhuyanwei
+ */
 public class ClientServiceUnavailableRetryStrategy implements ServiceUnavailableRetryStrategy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientServiceUnavailableRetryStrategy.class);
