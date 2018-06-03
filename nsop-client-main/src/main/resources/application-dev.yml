@@ -22,6 +22,8 @@ spring:
     publisher-returns: true
 
 security:
+  basic:
+    enabled: false
   oauth2:
     client:
       client-id: traffic
