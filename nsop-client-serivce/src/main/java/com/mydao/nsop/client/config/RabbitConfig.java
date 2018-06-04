@@ -1,3 +1,4 @@
+/*
 package com.mydao.nsop.client.config;
 
 import com.mydao.nsop.client.common.Constants;
@@ -11,10 +12,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+*/
 /**
  * @author ZYW
  * @date 2018/5/7
- */
+ *//*
+
 @Configuration
 public class RabbitConfig {
 
@@ -23,7 +26,8 @@ public class RabbitConfig {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    /**
+    */
+/**
      * 定制化amqp模版      可根据需要定制多个
      *
      *
@@ -32,7 +36,8 @@ public class RabbitConfig {
      * ReturnCallback接口用于实现消息发送到RabbitMQ 交换器，但无相应队列与交换器绑定时的回调  即消息发送不到任何一个队列中  ack
      *
      * @return the amqp template
-     */
+     *//*
+
     @Bean
     public AmqpTemplate amqpTemplate() {
         //使用jackson 消息转换器
@@ -55,33 +60,39 @@ public class RabbitConfig {
         return rabbitTemplate;
     }
 
-    /**
+    */
+/**
      * 声明车辆驶入驶出direct交换机 支持持久化.
      *
      * @return the exchange
-     */
+     *//*
+
     @Bean("driveInOutExchange")
     public Exchange driveInOutExchange() {
         return ExchangeBuilder.directExchange(Constants.TOPIC_TSX_JOURNEY).durable(true).build();
     }
 
-    /**
+    */
+/**
      * 声明一个车辆驶入队列 支持持久化.
      *
      * @return the queue
-     */
+     *//*
+
     @Bean("entryQueue")
     public Queue entryQueue() {
         return QueueBuilder.durable(Constants.ENTRY_QUEUE).build();
     }
 
-    /**
+    */
+/**
      * 通过车辆驶入绑定键 将指定车辆驶入队列绑定到一个指定的交换机 .
      *
      * @param queue    the queue
      * @param exchange the exchange
      * @return the binding
-     */
+     *//*
+
     @Bean
     public Binding entryBinding(@Qualifier("entryQueue") Queue queue, @Qualifier("driveInOutExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.ENTRY_KEY).noargs();
@@ -137,9 +148,12 @@ public class RabbitConfig {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.EXIT_EX_KEY).noargs();
     }
 
-    /*---------------------------------- 车辆黑名单 -----------------------------------*/
+    */
+/*---------------------------------- 车辆黑名单 -----------------------------------*//*
 
-    /*@Bean("blackExchange")
+
+    */
+/*@Bean("blackExchange")
     public Exchange blackExchange() {
         return ExchangeBuilder.directExchange(Constants.TOPIC_TSX_BLACKVEH).durable(true).build();
     }
@@ -160,7 +174,8 @@ public class RabbitConfig {
     @Bean
     public Binding delBlackBinding(@Qualifier("delBlackQueue") Queue queue, @Qualifier("blackExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.DEL_BLACK_KEY).noargs();
-    }*/
+    }*//*
+
 
     @Bean
     public Queue blackQueue() {
@@ -168,9 +183,12 @@ public class RabbitConfig {
     }
 
 
-    /*---------------------------------- 车辆白名单 -----------------------------------*/
+    */
+/*---------------------------------- 车辆白名单 -----------------------------------*//*
 
-    /*@Bean("whiteExchange")
+
+    */
+/*@Bean("whiteExchange")
     public Exchange whiteExchange() {
         return ExchangeBuilder.directExchange(Constants.TOPIC_TSX_WHITEVEH).durable(true).build();
     }
@@ -191,28 +209,34 @@ public class RabbitConfig {
     @Bean
     public Binding delWhiteBinding(@Qualifier("delWhiteQueue") Queue queue, @Qualifier("whiteExchange") Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(Constants.DEL_WHITE_KEY).noargs();
-    }*/
+    }*//*
+
 
     @Bean
     public Queue whiteQueue() {
         return QueueBuilder.durable(Constants.TOPIC_TSX_WHITEVEH).build();
     }
 
-    /**
+    */
+/**
      * 车辆驶入RabbitMQ
      * @return
-     */
+     *//*
+
     @Bean
     public Queue driveInLocalQueue() {
         return QueueBuilder.durable(Constants.VEHICLE_DRIVE_IN_LOCAL_QUEUE).build();
     }
 
-    /**
+    */
+/**
      * 车辆驶出RabbitMQ
      * @return
-     */
+     *//*
+
     @Bean
     public Queue driveOutLocalQueue() {
         return QueueBuilder.durable(Constants.VEHICLE_DRIVE_OUT_LOCAL_QUEUE).build();
     }
 }
+*/

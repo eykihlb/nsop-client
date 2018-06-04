@@ -37,13 +37,13 @@ public class StartAllThread {
         //创建订阅和队列
         createSubscriptionAndQueue.createSubQueue();
         //初始化拉取全量黑白名单数据
-        systemInit.systemInit();
-        systemInit.restTemplateTest();
+        //systemInit.systemInit();
+        //systemInit.restTemplateTest();
 //        vehicleDriveInService.test();
 //        vehicleDriveInService.test2();
 //        vehicleDriveInService.test3();
-        vehicleBlackService.addDelBlack();
+        //vehicleBlackService.addDelBlack();
         //vehicleWhiteService.addDelWhite();
-        vehicleDriveInBroadcastService.vehicleDriveIn();
+        //vehicleDriveInBroadcastService.vehicleDriveIn();
     }
 }

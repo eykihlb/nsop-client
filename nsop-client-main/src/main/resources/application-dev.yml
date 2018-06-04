@@ -1,25 +1,25 @@
 spring:
   application:
     name: nsop-client
-  rabbitmq:
-    host: 192.168.0.126
-    port: 5672
-    # virtual-host: /nsop-client
-    listener:
-      simple:
-        # 采用手动应答
-        acknowledge-mode: manual
-        # 当前监听容器数
-        concurrency: 1
-        # 最大数
-        max-concurrency: 1
-        # 是否支持重试
-        retry:
-          enabled: true
-    # 支持发布确认
-    publisher-confirms: true
-    # 支持发布返回
-    publisher-returns: true
+#  rabbitmq:
+#    host: 192.168.0.126
+#    port: 5672
+#    # virtual-host: /nsop-client
+#    listener:
+#      simple:
+#        # 采用手动应答
+#        acknowledge-mode: manual
+#        # 当前监听容器数
+#        concurrency: 1
+#        # 最大数
+#        max-concurrency: 1
+#        # 是否支持重试
+#        retry:
+#          enabled: true
+#    # 支持发布确认
+#    publisher-confirms: true
+#    # 支持发布返回
+#    publisher-returns: true
 
 security:
   basic:
@@ -36,6 +36,7 @@ nsop:
     url: http://192.168.0.174:9099/
     # 客户端编号
     client-num: 001
+    thriftPort: 3333
   interface:
     entry: roadEntry/normal
     entry_ex: roadEntry/abnormal
