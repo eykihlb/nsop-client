@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mydao.nsop.client.dao.PayIssuedRecMapper" >
+  <resultMap id="BaseResultMap" type="com.mydao.nsop.client.domain.entity.PayIssuedRec" >
+    <result column="RECID" property="recid" jdbcType="VARCHAR" />
+    <result column="PLATENO" property="plateno" jdbcType="VARCHAR" />
+    <result column="PLATECOLOR" property="platecolor" jdbcType="VARCHAR" />
+    <result column="ENTRYTIME" property="entrytime" jdbcType="TIMESTAMP" />
+    <result column="NETNO" property="netno" jdbcType="VARCHAR" />
+    <result column="SITENO" property="siteno" jdbcType="VARCHAR" />
+    <result column="LANENO" property="laneno" jdbcType="VARCHAR" />
+    <result column="VEHCLASS" property="vehclass" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insertSelective" parameterType="com.mydao.nsop.client.domain.entity.PayIssuedRec" >
+    insert into PAY_ISSUEDREC
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="recid != null" >
+        RECID,
+      </if>
+      <if test="plateno != null" >
+        PLATENO,
+      </if>
+      <if test="platecolor != null" >
+        PLATECOLOR,
+      </if>
+      <if test="entrytime != null" >
+        ENTRYTIME,
+      </if>
+      <if test="netno != null" >
+        NETNO,
+      </if>
+      <if test="siteno != null" >
+        SITENO,
+      </if>
+      <if test="laneno != null" >
+        LANENO,
+      </if>
+      <if test="vehclass != null" >
+        VEHCLASS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="recid != null" >
+        #{recid,jdbcType=VARCHAR},
+      </if>
+      <if test="plateno != null" >
+        #{plateno,jdbcType=VARCHAR},
+      </if>
+      <if test="platecolor != null" >
+        #{platecolor,jdbcType=VARCHAR},
+      </if>
+      <if test="entrytime != null" >
+        #{entrytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="netno != null" >
+        #{netno,jdbcType=VARCHAR},
+      </if>
+      <if test="siteno != null" >
+        #{siteno,jdbcType=VARCHAR},
+      </if>
+      <if test="laneno != null" >
+        #{laneno,jdbcType=VARCHAR},
+      </if>
+      <if test="vehclass != null" >
+        #{vehclass,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mydao.nsop.client.dao.PayWhiteListMapper" >
+  <resultMap id="BaseResultMap" type="com.mydao.nsop.client.domain.entity.PayWhiteList" >
+    <id column="PLATENO" property="plateno" jdbcType="VARCHAR" />
+    <result column="UPTIME" property="uptime" jdbcType="TIMESTAMP" />
+    <result column="PLATECOLOR" property="platecolor" jdbcType="VARCHAR" />
+    <result column="VEHCLASS" property="vehclass" jdbcType="VARCHAR" />
+    <result column="BAND" property="band" jdbcType="VARCHAR" />
+    <result column="SUB_BAND" property="subBand" jdbcType="VARCHAR" />
+    <result column="BODYCOLOR" property="bodycolor" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PLATENO, UPTIME, PLATECOLOR, VEHCLASS, BAND, SUB_BAND, BODYCOLOR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PAY_WHITELIST
+    where PLATENO = #{plateno,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PAY_WHITELIST
+    where PLATENO = #{plateno,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.mydao.nsop.client.domain.entity.PayWhiteList" >
+    insert into PAY_WHITELIST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="plateno != null" >
+        PLATENO,
+      </if>
+      <if test="uptime != null" >
+        UPTIME,
+      </if>
+      <if test="platecolor != null" >
+        PLATECOLOR,
+      </if>
+      <if test="vehclass != null" >
+        VEHCLASS,
+      </if>
+      <if test="band != null" >
+        BAND,
+      </if>
+      <if test="subBand != null" >
+        SUB_BAND,
+      </if>
+      <if test="bodycolor != null" >
+        BODYCOLOR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="plateno != null" >
+        #{plateno,jdbcType=VARCHAR},
+      </if>
+      <if test="uptime != null" >
+        #{uptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="platecolor != null" >
+        #{platecolor,jdbcType=VARCHAR},
+      </if>
+      <if test="vehclass != null" >
+        #{vehclass,jdbcType=VARCHAR},
+      </if>
+      <if test="band != null" >
+        #{band,jdbcType=VARCHAR},
+      </if>
+      <if test="subBand != null" >
+        #{subBand,jdbcType=VARCHAR},
+      </if>
+      <if test="bodycolor != null" >
+        #{bodycolor,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mydao.nsop.client.domain.entity.PayWhiteList" >
+    update PAY_WHITELIST
+    <set >
+      <if test="uptime != null" >
+        UPTIME = #{uptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="platecolor != null" >
+        PLATECOLOR = #{platecolor,jdbcType=VARCHAR},
+      </if>
+      <if test="vehclass != null" >
+        VEHCLASS = #{vehclass,jdbcType=VARCHAR},
+      </if>
+      <if test="band != null" >
+        BAND = #{band,jdbcType=VARCHAR},
+      </if>
+      <if test="subBand != null" >
+        SUB_BAND = #{subBand,jdbcType=VARCHAR},
+      </if>
+      <if test="bodycolor != null" >
+        BODYCOLOR = #{bodycolor,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PLATENO = #{plateno,jdbcType=VARCHAR}
+  </update>
+</mapper>

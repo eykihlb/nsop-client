@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mydao.nsop.client.dao.PayExitRecMapper" >
+  <resultMap id="BaseResultMap" type="com.mydao.nsop.client.domain.entity.PayExitRec" >
+    <result column="RECID" property="recid" jdbcType="VARCHAR" />
+    <result column="FARE_PLATENO" property="farePlateno" jdbcType="VARCHAR" />
+    <result column="FARE_PLATECOLOR" property="farePlatecolor" jdbcType="VARCHAR" />
+    <result column="ENTRYTIME" property="entrytime" jdbcType="TIMESTAMP" />
+    <result column="NETNO" property="netno" jdbcType="VARCHAR" />
+    <result column="SITENO" property="siteno" jdbcType="VARCHAR" />
+    <result column="LANENO" property="laneno" jdbcType="VARCHAR" />
+    <result column="LPR_PLATENO" property="lprPlateno" jdbcType="VARCHAR" />
+    <result column="LPR_PLATECOLOR" property="lprPlatecolor" jdbcType="VARCHAR" />
+    <result column="CAMERANO" property="camerano" jdbcType="VARCHAR" />
+    <result column="UPFLAG" property="upflag" jdbcType="DECIMAL" />
+    <result column="TRANSNO" property="transno" jdbcType="DECIMAL" />
+    <result column="EXITTIME" property="exittime" jdbcType="TIMESTAMP" />
+    <result column="ENTRY_RECID" property="entryRecid" jdbcType="VARCHAR" />
+    <result column="FARETOTAL" property="faretotal" jdbcType="DECIMAL" />
+    <result column="VEHCLASS" property="vehclass" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insertSelective" parameterType="com.mydao.nsop.client.domain.entity.PayExitRec" >
+    insert into PAY_EXITREC
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="recid != null" >
+        RECID,
+      </if>
+      <if test="farePlateno != null" >
+        FARE_PLATENO,
+      </if>
+      <if test="farePlatecolor != null" >
+        FARE_PLATECOLOR,
+      </if>
+      <if test="entrytime != null" >
+        ENTRYTIME,
+      </if>
+      <if test="netno != null" >
+        NETNO,
+      </if>
+      <if test="siteno != null" >
+        SITENO,
+      </if>
+      <if test="laneno != null" >
+        LANENO,
+      </if>
+      <if test="lprPlateno != null" >
+        LPR_PLATENO,
+      </if>
+      <if test="lprPlatecolor != null" >
+        LPR_PLATECOLOR,
+      </if>
+      <if test="camerano != null" >
+        CAMERANO,
+      </if>
+      <if test="upflag != null" >
+        UPFLAG,
+      </if>
+      <if test="transno != null" >
+        TRANSNO,
+      </if>
+      <if test="exittime != null" >
+        EXITTIME,
+      </if>
+      <if test="entryRecid != null" >
+        ENTRY_RECID,
+      </if>
+      <if test="faretotal != null" >
+        FARETOTAL,
+      </if>
+      <if test="vehclass != null" >
+        VEHCLASS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="recid != null" >
+        #{recid,jdbcType=VARCHAR},
+      </if>
+      <if test="farePlateno != null" >
+        #{farePlateno,jdbcType=VARCHAR},
+      </if>
+      <if test="farePlatecolor != null" >
+        #{farePlatecolor,jdbcType=VARCHAR},
+      </if>
+      <if test="entrytime != null" >
+        #{entrytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="netno != null" >
+        #{netno,jdbcType=VARCHAR},
+      </if>
+      <if test="siteno != null" >
+        #{siteno,jdbcType=VARCHAR},
+      </if>
+      <if test="laneno != null" >
+        #{laneno,jdbcType=VARCHAR},
+      </if>
+      <if test="lprPlateno != null" >
+        #{lprPlateno,jdbcType=VARCHAR},
+      </if>
+      <if test="lprPlatecolor != null" >
+        #{lprPlatecolor,jdbcType=VARCHAR},
+      </if>
+      <if test="camerano != null" >
+        #{camerano,jdbcType=VARCHAR},
+      </if>
+      <if test="upflag != null" >
+        #{upflag,jdbcType=DECIMAL},
+      </if>
+      <if test="transno != null" >
+        #{transno,jdbcType=DECIMAL},
+      </if>
+      <if test="exittime != null" >
+        #{exittime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="entryRecid != null" >
+        #{entryRecid,jdbcType=VARCHAR},
+      </if>
+      <if test="faretotal != null" >
+        #{faretotal,jdbcType=DECIMAL},
+      </if>
+      <if test="vehclass != null" >
+        #{vehclass,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
