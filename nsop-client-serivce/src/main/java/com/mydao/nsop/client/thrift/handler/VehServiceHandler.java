@@ -2,7 +2,11 @@ package com.mydao.nsop.client.thrift.handler;
 
 import com.mydao.nsop.client.dao.PayBlackListMapper;
 import com.mydao.nsop.client.dao.PayEntryRecMapper;
+import com.mydao.nsop.client.dao.PayIssuedRecMapper;
+import com.mydao.nsop.client.dao.PayWhiteListMapper;
 import com.mydao.nsop.client.domain.entity.PayEntryRec;
+import com.mydao.nsop.client.domain.entity.PayIssuedRec;
+import com.mydao.nsop.client.domain.entity.PayWhiteList;
 import com.mydao.nsop.client.thrift.VehService;
 import com.mydao.nsop.client.vo.EntryInfo;
 import com.mydao.nsop.client.vo.VehInfo;
@@ -21,7 +25,9 @@ public class VehServiceHandler implements VehService.Iface {
     private PayBlackListMapper payBlackListMapper;
 
     @Autowired
-    private PayEntryRecMapper payEntryRecMapper;
+    private PayWhiteListMapper payWhiteListMapper;
+    @Autowired
+    private PayIssuedRecMapper payIssuedRecMapper;
 
     @Override
     public boolean isInBlackList(String plateno) throws TException {
@@ -31,18 +37,28 @@ public class VehServiceHandler implements VehService.Iface {
     @Override
     public EntryInfo getEntryInfo(String plateno) throws TException {
         EntryInfo entryInfo = new EntryInfo();
-        PayEntryRec payEntryRec = payEntryRecMapper.selectByPID(plateno);
-        entryInfo.setEntryLaneNo(payEntryRec.getLaneno());
-        entryInfo.setEntryNetNo(payEntryRec.getNetno());
-        entryInfo.setEntryRecID(payEntryRec.getRecid());
-        entryInfo.setEntrySiteNo(payEntryRec.getSiteno());
-        entryInfo.setEntryTime(String.valueOf(payEntryRec.getEntrytime().getTime()));
-        entryInfo.setVehClass(payEntryRec.getVehclass());
+        PayIssuedRec payIssuedRec = payIssuedRecMapper.selectById(plateno);
+        entryInfo.setEntryLaneNo(payIssuedRec.getLaneno());
+        entryInfo.setEntryNetNo(payIssuedRec.getNetno());
+        entryInfo.setEntryRecID(payIssuedRec.getRecid());
+        entryInfo.setEntrySiteNo(payIssuedRec.getSiteno());
+        entryInfo.setEntryTime(String.valueOf(payIssuedRec.getEntrytime().getTime()));
+        entryInfo.setVehClass(payIssuedRec.getVehclass());
         return entryInfo;
     }
 
     @Override
     public VehInfo getByPlateInfo(String plateno) throws TException {
-        return new VehInfo();
+        VehInfo vehInfo = new VehInfo();
+        PayWhiteList payWhiteList = payWhiteListMapper.selectByPrimaryKey(plateno);
+        if (payWhiteList != null){
+            vehInfo.setPlatecolor(Integer.parseInt(payWhiteList.getPlatecolor()));
+            vehInfo.setWhiteFlag(1);
+            vehInfo.setPlateno(plateno);
+            vehInfo.setVehClass(payWhiteList.getVehclass());
+        }else{
+            vehInfo.setWhiteFlag(0);
+        }
+        return vehInfo;
     }
 }

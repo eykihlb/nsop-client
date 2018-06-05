@@ -5,7 +5,10 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface PayIssuedRecMapper {
-    int insert(PayIssuedRec record);
 
     int insertSelective(PayIssuedRec record);
+
+    Integer deleteByPlateNo(String plateNo);
+
+    PayIssuedRec selectById(String plateNo);
 }

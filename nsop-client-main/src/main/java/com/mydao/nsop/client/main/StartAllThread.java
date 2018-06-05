@@ -39,11 +39,13 @@ public class StartAllThread {
         //初始化拉取全量黑白名单数据
         systemInit.systemInit();
         //systemInit.restTemplateTest();
-//        vehicleDriveInService.test();
-//        vehicleDriveInService.test2();
-//        vehicleDriveInService.test3();
+        //vehicleDriveInService.test();
+        //vehicleDriveInService.test2();
+        //vehicleDriveInService.test3();
         //vehicleBlackService.addDelBlack();
         //vehicleWhiteService.addDelWhite();
         //vehicleDriveInBroadcastService.vehicleDriveIn();
+        vehicleDriveInService.driveIn();
+        vehicleDriveInService.driveOut();
     }
 }

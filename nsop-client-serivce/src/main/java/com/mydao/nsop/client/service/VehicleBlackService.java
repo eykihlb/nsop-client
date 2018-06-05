@@ -1,5 +1,6 @@
 package com.mydao.nsop.client.service;
 
+import com.google.gson.Gson;
 import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.dao.PayBlackListMapper;
@@ -39,15 +40,31 @@ public class VehicleBlackService {
     @Autowired
     private PayBlackListMapper payBlackListMapper;
 
+    private Gson gson = new Gson();
+
     @Async
     public void addDelBlack() {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_BLACK_QUEUE + trafficConfig.getClientNum());
+        PayBlackList payBlackList = new PayBlackList();
         while(true) {
             try {
                 List<Message> messageList = queue.batchReceiveMessage(10, 30);
-                //sendBlack(messageList,queue);
-                PayBlackList payBlackList = new PayBlackList();
-                payBlackListMapper.insertSelective(payBlackList);
+                messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
+                for (Message msg : messageList) {
+                    Map<String,Object> map = gson.fromJson(new String(msg.msgBody.split("@@")[2]),Map.class);
+                    payBlackList.setBand(map.get("band").toString());
+                    payBlackList.setBodycolor(map.get("bodycolor").toString());
+                    payBlackList.setPlatecolor(map.get("platecolor").toString());
+                    payBlackList.setPlateno(map.get("plateno").toString());
+                    payBlackList.setSubBand(map.get("sub_band").toString());
+                    payBlackList.setUptime((Date) map.get("uptime"));
+                    payBlackList.setVehclass(map.get("vehClass").toString());
+                    if (msg.msgBody.split("@@")[1].equals("")){
+                        payBlackListMapper.insertSelective(payBlackList);
+                    }else{
+                        payBlackListMapper.deleteByPrimaryKey(payBlackList.getPlateno());
+                    }
+                }
             } catch (Exception e) {
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;

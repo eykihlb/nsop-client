@@ -1,7 +1,10 @@
 package com.mydao.nsop.client.service;
 
+import com.google.gson.Gson;
 import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.TrafficConfig;
+import com.mydao.nsop.client.dao.PayWhiteListMapper;
+import com.mydao.nsop.client.domain.entity.PayWhiteList;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
@@ -15,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,7 +31,7 @@ public class VehicleWhiteService {
     private static final Logger LOGGER = LoggerFactory.getLogger(VehicleWhiteService.class);
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private PayWhiteListMapper payWhiteListMapper;
 
     @Autowired
     private Account accountQueue;
@@ -39,13 +39,31 @@ public class VehicleWhiteService {
     @Autowired
     private TrafficConfig trafficConfig;
 
+    private Gson gson = new Gson();
+
     @Async
     public void addDelWhite() {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_WHITE_QUEUE + trafficConfig.getClientNum());
+        PayWhiteList payWhiteList = new PayWhiteList();
         while(true) {
             try {
                 List<Message> messageList = queue.batchReceiveMessage(10, 30);
-                //sendWhite(messageList,queue);
+                messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
+                for (Message msg : messageList) {
+                    Map<String,Object> map = gson.fromJson(new String(msg.msgBody.split("@@")[2]),Map.class);
+                    payWhiteList.setBand(map.get("band").toString());
+                    payWhiteList.setBodycolor(map.get("bodycolor").toString());
+                    payWhiteList.setPlatecolor(map.get("platecolor").toString());
+                    payWhiteList.setPlateno(map.get("plateno").toString());
+                    payWhiteList.setSubBand(map.get("sub_band").toString());
+                    payWhiteList.setUptime((Date) map.get("uptime"));
+                    payWhiteList.setVehclass(map.get("vehClass").toString());
+                    if (msg.msgBody.split("@@")[1].equals("")){
+                        payWhiteListMapper.insertSelective(payWhiteList);
+                    }else{
+                        payWhiteListMapper.deleteByPrimaryKey(payWhiteList.getPlateno());
+                    }
+                }
             } catch (Exception e) {
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;

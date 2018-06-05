@@ -1,7 +1,12 @@
 package com.mydao.nsop.client.service;
 
+import com.google.gson.Gson;
 import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.TrafficConfig;
+import com.mydao.nsop.client.dao.PayEntryRecMapper;
+import com.mydao.nsop.client.dao.PayIssuedRecMapper;
+import com.mydao.nsop.client.domain.entity.PayEntryRec;
+import com.mydao.nsop.client.domain.entity.PayIssuedRec;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
@@ -14,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -31,14 +38,29 @@ public class VehicleDriveInBroadcastService {
     @Autowired
     private TrafficConfig trafficConfig;
 
+    @Autowired
+    private PayIssuedRecMapper payIssuedRecMapper;
+
+    private Gson gson = new Gson();
+
     @Async
     public void vehicleDriveIn() {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE + trafficConfig.getClientNum());
         while(true) {
             try {
+                PayIssuedRec pir = new PayIssuedRec();
                 Message message = queue.receiveMessage(30);
                 System.out.println("接收到的消息：" + message.msgBody);
-                //sendVehicleDriveIn(message,queue);
+                Map<String,Object> map = gson.fromJson(new String(message.msgBody),Map.class);
+                pir.setEntrytime(new Date(map.get("enteyTime").toString()));
+                pir.setLaneno(map.get("laneNo").toString());
+                pir.setNetno(map.get("netNo").toString());
+                pir.setPlatecolor(map.get("plateColor").toString());
+                pir.setPlateno(map.get("plateNo").toString());
+                pir.setRecid(map.get("recId").toString());
+                pir.setSiteno(map.get("siteNo").toString());
+                pir.setVehclass(map.get("vehClass").toString());
+                payIssuedRecMapper.insertSelective(pir);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }

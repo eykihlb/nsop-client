@@ -18,6 +18,7 @@
     <result column="ENTRY_RECID" property="entryRecid" jdbcType="VARCHAR" />
     <result column="FARETOTAL" property="faretotal" jdbcType="DECIMAL" />
     <result column="VEHCLASS" property="vehclass" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insertSelective" parameterType="com.mydao.nsop.client.domain.entity.PayExitRec" >
     insert into PAY_EXITREC
@@ -70,6 +71,9 @@
       <if test="vehclass != null" >
         VEHCLASS,
       </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="recid != null" >
@@ -120,6 +124,17 @@
       <if test="vehclass != null" >
         #{vehclass,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        #{STATUS,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
+
+  <select id="selectList" resultMap="BaseResultMap">
+    select * from PAY_EXITREC where status = '1'
+  </select>
+  
+  <update id="updateById" parameterType="java.lang.String">
+    update PAY_EXITREC set status = '3' where RECID = #{recId}
+  </update>
 </mapper>

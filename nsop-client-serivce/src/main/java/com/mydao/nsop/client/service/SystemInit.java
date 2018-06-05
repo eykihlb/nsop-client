@@ -57,8 +57,8 @@ public class SystemInit {
             String blackUri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_white();
             String whiteUri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_black();
             ResponseEntity<PayBlackList> whiteEntity = oAuthRestTemplate.postForEntity(blackUri,new Object(),PayBlackList.class);
-            ResponseEntity<PayWhiteList> blackEntity = oAuthRestTemplate.postForEntity(whiteUri,new Object(),PayWhiteList.class);
             payBlackListMapper.insertSelective(whiteEntity.getBody());
+            ResponseEntity<PayWhiteList> blackEntity = oAuthRestTemplate.postForEntity(whiteUri,new Object(),PayWhiteList.class);
             payWhiteListMapper.insertSelective(blackEntity.getBody());
         } catch (Exception e) {
             log.error("全量黑白名单拉取失败！");
