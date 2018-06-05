@@ -3,4 +3,6 @@ include 'nsop-client-common'
 include 'nsop-client-common'
 include 'nsop-client-serivce'
 include 'nsop-client-main'
+include 'nsop-client-mapper'
+include 'nsop-client-domain'
 

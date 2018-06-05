@@ -12,6 +12,8 @@ repositories {
 
 dependencies {
     compile project(":nsop-client-common")
+    compile project(":nsop-client-mapper")
+    compile project(":nsop-client-domain")
     compile('org.springframework.boot:spring-boot-starter-amqp')
     compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'

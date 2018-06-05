@@ -32,19 +32,19 @@ public class Send {
 */
             String message = "black";
             String i = "1";
-            String eq = "{'laneNo':'65000115E01','passTime':'445555555','plateNo':'京A12345-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'"+i+"'}";
+            String eq = "{'laneNo':'65000115E01','passTime':'445555555','plateNo':'陕A6YV56-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'"+i+"'}";
             String eeq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','clientId':'000001','clientSeq':'"+i+"'}";
             String edq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','createTime':'"+new Date().getTime()+"'}";
             String prq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','status':'00','feature':'00_00_00','cameraId':'000001','passSeq':'"+i+"','passType':'00'}";
-            String exq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','entryId':'65000207E01_126148652f91','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1','entryClientId':'000001','entryClientSeq':'1','vehClass':'13','detectWeight':'12.6','fareWeight':'12.51','detectAxles':'4','distance':'20.2','payFare':'"+i+"'}";
+            String exq = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'陕A66666-1','src':'00','entryId':'65000207E01_126148652f91','feature':'00_00_00','cameraId':'000001','passSeq':'2000','clientId':'000001','clientSeq':'1','entryClientId':'000001','entryClientSeq':'1','vehClass':'13','detectWeight':'12.6','fareWeight':'12.51','detectAxles':'4','distance':'20.2','payFare':'"+i+"'}";
             String aa = "{'laneNo':'65000115B03','passTime':'445555555','plateNo':'京A00000-1','src':'00','feature':'00_00_00','cameraId':'000001','passSeq':'2000','status':'00','entryId':'a00001_126148652f91','clientId':'000001','clientSeq':'"+i+"'}";
 
-            channel.basicPublish("", Constants.ENTRY_QUEUE, null, eq.getBytes());
-            channel.basicPublish("", Constants.ENTRY_EX_QUEUE, null, eeq.getBytes());
-            channel.basicPublish("", Constants.ENTRY_DENY_QUEUE, null, edq.getBytes());
-            channel.basicPublish("", Constants.PASS_REJECT_QUEUE, null, prq.getBytes());
-            channel.basicPublish("", Constants.EXIT_QUEUE, null, exq.getBytes());
-            channel.basicPublish("", Constants.EXIT_EX_QUEUE, null, aa.getBytes());
+            channel.basicPublish("", Constants.ENTRY_QUEUE, null, eq.getBytes("UTF-8"));
+            channel.basicPublish("", Constants.ENTRY_EX_QUEUE, null, eeq.getBytes("UTF-8"));
+            channel.basicPublish("", Constants.ENTRY_DENY_QUEUE, null, edq.getBytes("UTF-8"));
+            channel.basicPublish("", Constants.PASS_REJECT_QUEUE, null, prq.getBytes("UTF-8"));
+            channel.basicPublish("", Constants.EXIT_QUEUE, null, exq.getBytes("UTF-8"));
+            channel.basicPublish("", Constants.EXIT_EX_QUEUE, null, aa.getBytes("UTF-8"));
             System.out.println(" [x] Sent '" + message + "'");
         //}
 

@@ -44,7 +44,7 @@ public class VehicleDriveInOutService {
     /**
      * 监听拉取全量黑白名单请求
      */
-    @RabbitListener(queues = {Constants.GET_BWLIST_QUEUE})
+    /*@RabbitListener(queues = {Constants.GET_BWLIST_QUEUE})
     public void getWBList(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
         String result = "";
@@ -71,10 +71,10 @@ public class VehicleDriveInOutService {
             log.error(e.getMessage());
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
-    }
+    }*/
     /**
      * 车辆驶入
-     */
+     *//*
     @RabbitListener(queues = {Constants.ENTRY_QUEUE})
     public void entryQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
@@ -82,7 +82,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶入");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody(),"UTF-8")));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -103,9 +103,9 @@ public class VehicleDriveInOutService {
     }
 
 
-    /**
+    *//**
      * 车辆驶入异常
-     */
+     *//*
     @RabbitListener(queues = {Constants.ENTRY_EX_QUEUE})
     public void entryExQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
@@ -113,7 +113,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶入异常");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody(),"UTF-8")));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -131,9 +131,9 @@ public class VehicleDriveInOutService {
         }
     }
 
-    /**
+    *//**
      * 车辆驶入否认
-     */
+     *//*
     @RabbitListener(queues = {Constants.ENTRY_DENY_QUEUE})
     public void entryDenyQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
@@ -141,7 +141,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶入否认");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody(),"UTF-8")));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -159,9 +159,9 @@ public class VehicleDriveInOutService {
         }
     }
 
-    /**
+    *//**
      * 车辆驶入通行拒绝
-     */
+     *//*
     @RabbitListener(queues = {Constants.PASS_REJECT_QUEUE})
     public void passRejectQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
@@ -169,7 +169,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶入通行拒绝");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.INTER_PARAM, new String(message.getBody(),"UTF-8")));
             String uri = trafficConfig.getUrl() + interFaceConfig.getEntry_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -185,20 +185,20 @@ public class VehicleDriveInOutService {
         }else{
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
-    }
+    }*/
 
 
     /**
      * 车辆驶出
      */
-    @RabbitListener(queues = {Constants.EXIT_QUEUE})
+    /*@RabbitListener(queues = {Constants.EXIT_QUEUE})
     public void exitQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
         String result = "";
         try {
             System.out.println("车辆驶出");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.EXIT_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.EXIT_PARAM, new String(message.getBody(),"UTF-8")));
             String uri = trafficConfig.getUrl() + interFaceConfig.getExit();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -214,11 +214,11 @@ public class VehicleDriveInOutService {
         }else{
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
-    }
+    }*/
 
     /**
      * 车辆驶出异常
-     */
+     *//*
     @RabbitListener(queues = {Constants.EXIT_EX_QUEUE})
     public void exitExQueue(Message message, Channel channel) throws Exception {
         channel.basicQos(1);
@@ -226,7 +226,7 @@ public class VehicleDriveInOutService {
         try {
             System.out.println("车辆驶出异常");
             List<NameValuePair> list = new ArrayList<>();
-            list.add(new BasicNameValuePair(Constants.EXIT_PARAM, new String(message.getBody())));
+            list.add(new BasicNameValuePair(Constants.EXIT_PARAM, new String(message.getBody(),"UTF-8")));
             String uri = trafficConfig.getUrl() + interFaceConfig.getExit_ex();
             result = httpBackCode(HttpClientUtil.sendHttpPostCall(uri,list));
             //异步文件上传
@@ -242,7 +242,7 @@ public class VehicleDriveInOutService {
         }else{
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), true,true);
         }
-    }
+    }*/
 
     /**
      * 处理Http返回值

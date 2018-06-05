@@ -92,7 +92,7 @@ public class HttpClientUtil {
             HttpPost httpPost = new HttpPost(builder.build());*/
             //2.使用设置Entity方式
             HttpPost httpPost = new HttpPost(url);
-            httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+            httpPost.setEntity(new UrlEncodedFormEntity(nvps,"UTF-8"));
 
             return requestRemote(httpPost);
         } catch (Exception e) {

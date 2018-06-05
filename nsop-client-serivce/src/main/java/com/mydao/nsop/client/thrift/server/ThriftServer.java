@@ -1,5 +1,6 @@
 package com.mydao.nsop.client.thrift.server;
 
+import com.mydao.nsop.client.dao.PayBlackListMapper;
 import com.mydao.nsop.client.thrift.VehService;
 import com.mydao.nsop.client.thrift.handler.VehServiceHandler;
 import org.apache.thrift.TProcessor;
@@ -27,6 +28,8 @@ public class ThriftServer {
     private int thriftServerPort;
 
     @Autowired
+    private PayBlackListMapper payBlackListMapper;
+    @Autowired
     private VehServiceHandler vehServiceHandler;
 
     public void startServer() {
@@ -41,6 +44,8 @@ public class ThriftServer {
 
             TServer server = new TThreadPoolServer(tpsArgs);
             LOGGER.info("start thrift server at: " + thriftServerPort);
+
+            LOGGER.info("test msg" + payBlackListMapper.selectByPrimaryKey("111").getUptime());
             server.serve();
         } catch (Exception e) {
             e.printStackTrace();

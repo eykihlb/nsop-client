@@ -1,4 +1,24 @@
 spring:
+  datasource:
+      druid:
+        driver-class-name: oracle.jdbc.driver.OracleDriver
+        url: jdbc:oracle:thin:@192.168.0.200:1521:orcl
+        username: xztollstation
+        password: qwerty
+        initial-size: 1
+        max-active: 50
+        max-wait: 60000
+        min-idle: 5
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        validation-query: SELECT * FROM DUAL
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        max-open-prepared-statements: 20
+        remove-abandoned: true
+        remove-abandoned-timeout: 1800
+        log-abandoned: true
   application:
     name: nsop-client
 #  rabbitmq:
@@ -20,6 +40,10 @@ spring:
 #    publisher-confirms: true
 #    # 支持发布返回
 #    publisher-returns: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.mydao.nsop.client.domain.entity
 
 security:
   basic:

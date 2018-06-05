@@ -1,0 +1,19 @@
+group 'com.mydao.nsop'
+version '1.0.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(":nsop-client-domain")
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2')
+    compile group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.1.9'
+    compile files('lib/ojdbc6.jar')
+}

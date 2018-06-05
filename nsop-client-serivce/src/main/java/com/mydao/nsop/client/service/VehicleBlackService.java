@@ -2,21 +2,21 @@ package com.mydao.nsop.client.service;
 
 import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.TrafficConfig;
+import com.mydao.nsop.client.dao.PayBlackListMapper;
+import com.mydao.nsop.client.domain.entity.PayBlackList;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author ZYW
@@ -36,13 +36,18 @@ public class VehicleBlackService {
     @Autowired
     private TrafficConfig trafficConfig;
 
+    @Autowired
+    private PayBlackListMapper payBlackListMapper;
+
     @Async
     public void addDelBlack() {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_BLACK_QUEUE + trafficConfig.getClientNum());
         while(true) {
             try {
                 List<Message> messageList = queue.batchReceiveMessage(10, 30);
-                sendBlack(messageList,queue);
+                //sendBlack(messageList,queue);
+                PayBlackList payBlackList = new PayBlackList();
+                payBlackListMapper.insertSelective(payBlackList);
             } catch (Exception e) {
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
@@ -52,7 +57,7 @@ public class VehicleBlackService {
         }
     }
 
-    private void sendBlack(List<Message> messageList,Queue queue) {
+    /*private void sendBlack(List<Message> messageList,Queue queue) {
         messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
         MessageProperties mp = new MessageProperties();
         for (Message m : messageList) {
@@ -69,5 +74,5 @@ public class VehicleBlackService {
                 LOGGER.error(e1.getErrorMessage());
             }
         }
-    }
+    }*/
 }

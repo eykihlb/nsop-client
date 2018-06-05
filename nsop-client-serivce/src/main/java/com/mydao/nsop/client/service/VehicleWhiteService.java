@@ -45,7 +45,7 @@ public class VehicleWhiteService {
         while(true) {
             try {
                 List<Message> messageList = queue.batchReceiveMessage(10, 30);
-                sendWhite(messageList,queue);
+                //sendWhite(messageList,queue);
             } catch (Exception e) {
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
@@ -55,7 +55,7 @@ public class VehicleWhiteService {
         }
     }
 
-    private void sendWhite(List<Message> messageList,Queue queue) {
+    /*private void sendWhite(List<Message> messageList,Queue queue) {
         messageList.sort(Comparator.comparing((Message m) -> m.msgBody.split("@@")[0] ));
         MessageProperties mp = new MessageProperties();
         for (Message m : messageList) {
@@ -71,5 +71,5 @@ public class VehicleWhiteService {
                 LOGGER.error(e1.getErrorMessage());
             }
         }
-    }
+    }*/
 }
