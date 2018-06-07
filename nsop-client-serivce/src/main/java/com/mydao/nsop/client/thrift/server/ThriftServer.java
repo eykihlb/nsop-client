@@ -45,7 +45,6 @@ public class ThriftServer {
             TServer server = new TThreadPoolServer(tpsArgs);
             LOGGER.info("start thrift server at: " + thriftServerPort);
 
-            LOGGER.info("test msg" + payBlackListMapper.selectByPrimaryKey("111").getUptime());
             server.serve();
         } catch (Exception e) {
             e.printStackTrace();
