@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -54,7 +55,9 @@ public class VehicleDriveOutBroadcastService {
                 Message message = queue.receiveMessage(30);
                 System.out.println("接收到的消息：" + message.msgBody);
                 Map<String,Object> map = gson.fromJson(new String(message.msgBody),Map.class);
-                payIssuedRecMapper.deleteByPlateNo(map.get("plateNo").toString());
+                if (payIssuedRecMapper.deleteByPlateNo(map.get("plateNo").toString().split("-")[0])>0){
+                    queue.deleteMessage(message.receiptHandle);
+                }
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }

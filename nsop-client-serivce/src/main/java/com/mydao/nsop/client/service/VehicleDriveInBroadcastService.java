@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -45,6 +47,7 @@ public class VehicleDriveInBroadcastService {
 
     @Async
     public void vehicleDriveIn() {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//这个是你要转成后的时间的格式
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE + trafficConfig.getClientNum());
         while(true) {
             try {
@@ -52,15 +55,18 @@ public class VehicleDriveInBroadcastService {
                 Message message = queue.receiveMessage(30);
                 System.out.println("接收到的消息：" + message.msgBody);
                 Map<String,Object> map = gson.fromJson(new String(message.msgBody),Map.class);
-                pir.setEntrytime(new Date(map.get("enteyTime").toString()));
+                String sd = sdf.format(new Date(Long.parseLong(String.valueOf(new BigDecimal(map.get("passTime").toString()).toPlainString()))));
+                pir.setEntrytime(new Date(sd.replace("-","/")));
                 pir.setLaneno(map.get("laneNo").toString());
                 pir.setNetno(map.get("netNo").toString());
-                pir.setPlatecolor(map.get("plateColor").toString());
-                pir.setPlateno(map.get("plateNo").toString());
-                pir.setRecid(map.get("recId").toString());
+                pir.setPlatecolor(map.get("plateNo").toString().split("-")[1]);
+                pir.setPlateno(map.get("plateNo").toString().split("-")[0]);
+                pir.setRecid("随便写的");
                 pir.setSiteno(map.get("siteNo").toString());
-                pir.setVehclass(map.get("vehClass").toString());
-                payIssuedRecMapper.insertSelective(pir);
+                pir.setVehclass("01");
+                if (payIssuedRecMapper.insertSelective(pir)>0){
+                    queue.deleteMessage(message.receiptHandle);
+                }
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }

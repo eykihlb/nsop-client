@@ -38,9 +38,7 @@
       <if test="vehclass != null" >
         VEHCLASS,
       </if>
-      <if test="band != null" >
         BAND,
-      </if>
       <if test="subBand != null" >
         SUB_BAND,
       </if>
@@ -61,9 +59,7 @@
       <if test="vehclass != null" >
         #{vehclass,jdbcType=VARCHAR},
       </if>
-      <if test="band != null" >
         #{band,jdbcType=VARCHAR},
-      </if>
       <if test="subBand != null" >
         #{subBand,jdbcType=VARCHAR},
       </if>
@@ -84,7 +80,7 @@
       <if test="vehclass != null" >
         VEHCLASS = #{vehclass,jdbcType=VARCHAR},
       </if>
-      <if test="band != null" >
+      <if test="band!=null" >
         BAND = #{band,jdbcType=VARCHAR},
       </if>
       <if test="subBand != null" >
@@ -96,4 +92,8 @@
     </set>
     where PLATENO = #{plateno,jdbcType=VARCHAR}
   </update>
+
+  <delete id="deleteAll">
+    delete from PAY_BLACKLIST
+  </delete>
 </mapper>

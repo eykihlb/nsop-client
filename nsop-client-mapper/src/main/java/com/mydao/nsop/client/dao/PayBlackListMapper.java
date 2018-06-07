@@ -12,4 +12,6 @@ public interface PayBlackListMapper {
     PayBlackList selectByPrimaryKey(String plateno);
 
     int updateByPrimaryKeySelective(PayBlackList record);
+
+    int deleteAll();
 }

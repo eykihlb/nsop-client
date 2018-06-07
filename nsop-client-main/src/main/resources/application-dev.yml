@@ -50,9 +50,9 @@ security:
     enabled: false
   oauth2:
     client:
-      client-id: traffic
-      client-secret: password
-      access-token-uri: http://127.0.0.1:9090/auth/oauth/token
+      client-id: traffic001
+      client-secret: 123456789
+      access-token-uri: http://192.168.0.174:9090/auth/oauth/token
 
 # 自定义配置
 nsop:
