@@ -54,8 +54,8 @@ public class VehicleDriveOutBroadcastService {
             try {
                 Message message = queue.receiveMessage(30);
                 System.out.println("接收到的消息：" + message.msgBody);
-                Map<String,Object> map = gson.fromJson(new String(message.msgBody),Map.class);
-                if (payIssuedRecMapper.deleteByPlateNo(map.get("plateNo").toString().split("-")[0])>0){
+                //Map<String,Object> map = gson.fromJson(message.msgBody,Map.class);
+                if (payIssuedRecMapper.deleteByPlateNo(message.msgBody)>0){
                     queue.deleteMessage(message.receiptHandle);
                 }
             } catch (Exception e) {
