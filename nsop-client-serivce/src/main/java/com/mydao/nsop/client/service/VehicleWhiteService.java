@@ -11,15 +11,11 @@ import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.MessageProperties;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author ZYW
@@ -72,22 +68,4 @@ public class VehicleWhiteService {
             }
         }
     }
-
-    /*private void sendWhite(List<Message> messageList,Queue queue) {
-        messageList.sort(Comparator.comparing((Message m) -> m.msgBody.split("@@")[0] ));
-        MessageProperties mp = new MessageProperties();
-        for (Message m : messageList) {
-            mp.setContentType(m.msgBody.split("@@")[1]);
-            org.springframework.amqp.core.Message msg = new org.springframework.amqp.core.Message(m.msgBody.split("@@")[2].getBytes(),mp);
-            rabbitTemplate.send(Constants.TOPIC_TSX_WHITEVEH,msg);
-        }
-        try {
-            queue.batchDeleteMessage(messageList.stream().map(item -> item.receiptHandle).collect(Collectors.toList()));
-        } catch (Exception e) {
-            if(e instanceof CMQServerException) {
-                CMQServerException e1 = (CMQServerException) e;
-                LOGGER.error(e1.getErrorMessage());
-            }
-        }
-    }*/
 }
