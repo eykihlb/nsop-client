@@ -59,7 +59,7 @@ public class VehicleBlackService {
                     payBlackList.setSubBand(map.get("sub_band").toString());
                     payBlackList.setUptime((Date) map.get("uptime"));
                     payBlackList.setVehclass(map.get("vehClass").toString());
-                    if (msg.msgBody.split("@@")[1].equals("")){
+                    if (msg.msgBody.split("@@")[1].equals("add_black")){
                         payBlackListMapper.insertSelective(payBlackList);
                     }else{
                         payBlackListMapper.deleteByPrimaryKey(payBlackList.getPlateno());

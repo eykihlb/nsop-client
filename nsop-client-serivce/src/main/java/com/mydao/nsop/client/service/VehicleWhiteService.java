@@ -58,7 +58,7 @@ public class VehicleWhiteService {
                     payWhiteList.setSubBand(map.get("sub_band").toString());
                     payWhiteList.setUptime((Date) map.get("uptime"));
                     payWhiteList.setVehclass(map.get("vehClass").toString());
-                    if (msg.msgBody.split("@@")[1].equals("")){
+                    if (msg.msgBody.split("@@")[1].equals("add_white")){
                         payWhiteListMapper.insertSelective(payWhiteList);
                     }else{
                         payWhiteListMapper.deleteByPrimaryKey(payWhiteList.getPlateno());
