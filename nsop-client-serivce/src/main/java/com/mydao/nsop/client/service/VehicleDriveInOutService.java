@@ -89,7 +89,10 @@ public class VehicleDriveInOutService {
                         Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
                         //List<LinkedTreeMap<String,Object>> list = (List<LinkedTreeMap<String,Object>>)map.get("data");
                         if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
+                            log.info(map.get("msg").toString());
                             payEntryRecMapper.updateById(payEntryRec.getRecid());
+                        } else {
+                            log.error(map.get("msg").toString());
                         }
                     }catch (Exception e){
                         log.error(e.getMessage());
@@ -129,7 +132,10 @@ public class VehicleDriveInOutService {
                             ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(url,rev,Object.class);
                             Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
                             if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
+                                log.info(map.get("msg").toString());
                                 payExitRecMapper.updateById(payExitRec.getRecid());
+                            } else {
+                                log.error(map.get("msg").toString());
                             }
                         }catch (Exception e){
                             log.error(e.getMessage());
