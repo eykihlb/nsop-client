@@ -1,7 +1,6 @@
 package com.mydao.nsop.client.service;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.FTPConfig;
 import com.mydao.nsop.client.config.InterFaceConfig;
@@ -12,24 +11,17 @@ import com.mydao.nsop.client.domain.entity.PayEntryRec;
 import com.mydao.nsop.client.domain.entity.PayExitRec;
 import com.mydao.nsop.client.domain.vo.RoadEntryVo;
 import com.mydao.nsop.client.domain.vo.RoadExitVo;
-import com.mydao.nsop.client.util.HttpClientUtil;
-import com.rabbitmq.client.Channel;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Component;
-import java.io.IOException;
-import java.util.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
 
 /**
  * @author ZYW

@@ -3,18 +3,13 @@ package com.mydao.nsop.client.service;
 import com.google.gson.Gson;
 import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.TrafficConfig;
-import com.mydao.nsop.client.dao.PayEntryRecMapper;
 import com.mydao.nsop.client.dao.PayIssuedRecMapper;
-import com.mydao.nsop.client.domain.entity.PayEntryRec;
 import com.mydao.nsop.client.domain.entity.PayIssuedRec;
 import com.qcloud.cmq.Account;
-import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -23,7 +18,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author ZYW
