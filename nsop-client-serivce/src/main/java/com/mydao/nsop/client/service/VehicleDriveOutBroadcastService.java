@@ -42,11 +42,21 @@ public class VehicleDriveOutBroadcastService {
         while(true) {
             try {
                 Message message = queue.receiveMessage(30);
-                System.out.println("接收到的消息：" + message.msgBody);
+                String plateNo = message.msgBody;
+                System.out.println("接收到的消息：" + plateNo);
                 //Map<String,Object> map = gson.fromJson(message.msgBody,Map.class);
-                if (payIssuedRecMapper.deleteByPlateNo(message.msgBody)>0){
+                int count = payIssuedRecMapper.selectCountByPlateNo(plateNo);
+                if(count > 0) {
+                    int result = payIssuedRecMapper.updateByStatus(2, plateNo);
+                    if(result > 0) {
+                        queue.deleteMessage(message.receiptHandle);
+                    }
+                } else {
                     queue.deleteMessage(message.receiptHandle);
                 }
+                /*if (payIssuedRecMapper.deleteByPlateNo(message.msgBody)>0){
+                    queue.deleteMessage(message.receiptHandle);
+                }*/
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }

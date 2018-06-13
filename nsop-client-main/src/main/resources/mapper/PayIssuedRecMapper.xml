@@ -66,6 +66,9 @@
       </if>
     </trim>
   </insert>
+  <update id="updateByStatus">
+    update PAY_ISSUEDREC set status = #{status} where plateno = #{plateNo}
+  </update>
 
   <delete id="deleteByPlateNo" parameterType="java.lang.String">
     delete from PAY_ISSUEDREC where PLATENO = #{plateNo}
@@ -73,5 +76,8 @@
 
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
     select * from PAY_ISSUEDREC where plateno = #{plateNo}
+  </select>
+  <select id="selectCountByPlateNo" resultType="java.lang.Integer">
+    select count(1) from PAY_ISSUEDREC where plateno = #{plateNo}
   </select>
 </mapper>
