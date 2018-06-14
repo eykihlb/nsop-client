@@ -107,12 +107,4 @@ public class SystemInit {
             log.error("全量黑白名单拉取失败！");
         }
     }
-
-    public void restTemplateTest(){
-        //Get方式
-        ResponseEntity<String> getEntity = oAuthRestTemplate.getForEntity("http://127.0.0.1:9090/pay/secretfree/contract/param", String.class);
-        //Post方式，第二个参数为对象，第三个参数为返回类型
-        ResponseEntity<Object> postEntity = oAuthRestTemplate.postForEntity("http://127.0.0.1:9090/pay/secretfree/contract/param",new Object(),Object.class);
-        System.out.println(getEntity.getBody());
-    }
 }
