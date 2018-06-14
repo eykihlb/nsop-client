@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -52,8 +53,10 @@ public class VehicleDriveInBroadcastService {
         while(true) {
             try {
                 PayIssuedRec pir = new PayIssuedRec();
+                PayIssuedRec payi = new PayIssuedRec();
+                Map<String,Object> paramMap = new HashMap<>();
                 Message message = queue.receiveMessage(30);
-                System.out.println("接收到的消息：" + message.msgBody);
+                System.out.println("接收到的驶入广播：" + message.msgBody);
                 Map<String,Object> map = gson.fromJson(new String(message.msgBody),Map.class);
                 String sd = sdf.format(new Date(Long.parseLong(String.valueOf(new BigDecimal(map.get("passTime").toString()).toPlainString()))));
                 pir.setEntrytime(new Date(sd.replace("-","/")));
@@ -64,7 +67,15 @@ public class VehicleDriveInBroadcastService {
                 pir.setRecid("随便写的");
                 pir.setSiteno(map.get("siteNo").toString());
                 pir.setVehclass("01");
-                if (payIssuedRecMapper.insertSelective(pir)>0){
+                pir.setStatus("1");
+                paramMap.put("status","1");
+                paramMap.put("plateno",pir.getPlateno());
+                payi = payIssuedRecMapper.selectById(pir.getPlateno());
+                if (payi != null){
+                    if (payIssuedRecMapper.updateByPlateNo(paramMap) > 0){
+                        queue.deleteMessage(message.receiptHandle);
+                    }
+                }else if (payIssuedRecMapper.insertSelective(pir)>0){
                     queue.deleteMessage(message.receiptHandle);
                 }
             } catch (Exception e) {

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,11 +54,13 @@ public class VehicleDriveOutBroadcastService {
         while(true) {
             try {
                 Message message = queue.receiveMessage(30);
-                System.out.println("接收到的消息：" + message.msgBody);
+                System.out.println("接收到的驶出广播：" + message.msgBody);
                 //Map<String,Object> map = gson.fromJson(message.msgBody,Map.class);
-                if (payIssuedRecMapper.deleteByPlateNo(message.msgBody)>0){
-                    queue.deleteMessage(message.receiptHandle);
-                }
+                Map<String,Object> map = new HashMap<>();
+                map.put("status","2");
+                map.put("plateno",message.msgBody);
+                payIssuedRecMapper.updateByPlateNo(map);
+                queue.deleteMessage(message.receiptHandle);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }

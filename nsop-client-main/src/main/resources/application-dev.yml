@@ -1,7 +1,7 @@
 spring:
   datasource:
       druid:
-        driver-class-name: oracle.jdbc.driver.OracleDriver
+        driver-class-name: oracle.jdbc.OracleDriver
         url: jdbc:oracle:thin:@192.168.0.200:1521:orcl
         username: xztollstation
         password: qwerty
@@ -52,12 +52,14 @@ security:
     client:
       client-id: traffic001
       client-secret: 123456789
-      access-token-uri: http://192.168.0.174:9090/auth/oauth/token
+      access-token-uri: https://traffic.qhse.cn/api/auth/oauth/token
+      # access-token-uri: http://192.168.0.113:9090/auth/oauth/token
 
 # 自定义配置
 nsop:
   traffic:
-    url: http://192.168.0.174:9099/
+    url: https://traffic.qhse.cn/api/traffic/
+    # url: http://192.168.0.113:9099/
     # 客户端编号
     client-num: 001
     thriftPort: 3333

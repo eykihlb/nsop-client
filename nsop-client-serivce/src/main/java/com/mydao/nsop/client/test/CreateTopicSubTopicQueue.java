@@ -33,9 +33,10 @@ public class CreateTopicSubTopicQueue {
         Account account2 = new Account(endpoint2,secretId, secretKey);
 
         try {
-            account1.createTopic(Constants.VEHICLE_DRIVE_IN_TOPIC,65536);
-            account1.createTopic(Constants.VEHICLE_WHITE_TOPIC,65536);
-            account1.createTopic(Constants.VEHICLE_BLACK_TOPIC,65536);
+            //account1.createTopic(Constants.VEHICLE_DRIVE_OUT_TOPIC,65536);
+            //account1.deleteTopic(Constants.VEHICLE_DRIVE_OUT_QUEUE);
+            /*account1.createTopic(Constants.VEHICLE_WHITE_TOPIC,65536);
+            account1.createTopic(Constants.VEHICLE_BLACK_TOPIC,65536);*/
             /*account2.deleteQueue(SUB1_QUEUE_NAME);
             account2.deleteQueue(SUB2_QUEUE_NAME);
             account1.deleteSubscribe(TOPIC_NAME,SUB_TOPIC1_NAME);

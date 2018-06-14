@@ -69,6 +69,7 @@ public class VehicleDriveInOutService {
     public void driveIn(){
         Timer timer = new Timer(true);
         String url = trafficConfig.getUrl() + interFaceConfig.getEntry();
+        System.out.println("驶入："+url);
         timer.schedule(
             new java.util.TimerTask() { public void run() {
                 List<PayEntryRec> perList = payEntryRecMapper.selectList();
@@ -96,7 +97,6 @@ public class VehicleDriveInOutService {
                         continue;
                     }
                 }
-                System.out.println("读取驶入记录");
             }},0,Constants.RETRY_TIMES
         );
     }
@@ -108,6 +108,7 @@ public class VehicleDriveInOutService {
     public void driveOut(){
         Timer timer = new Timer(true);
         String url = trafficConfig.getUrl() + interFaceConfig.getExit();
+        System.out.println("驶出："+url);
         timer.schedule(
                 new java.util.TimerTask() { public void run() {
                     List<PayExitRec> perList = payExitRecMapper.selectList();
@@ -136,7 +137,6 @@ public class VehicleDriveInOutService {
                             continue;
                         }
                     }
-                    System.out.println("读取驶出记录");
                 }},0,Constants.RETRY_TIMES
         );
     }

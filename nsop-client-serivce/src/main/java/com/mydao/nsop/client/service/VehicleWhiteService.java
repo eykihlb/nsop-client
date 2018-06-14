@@ -41,23 +41,30 @@ public class VehicleWhiteService {
     public void addDelWhite() {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_WHITE_QUEUE + trafficConfig.getClientNum());
         PayWhiteList payWhiteList = new PayWhiteList();
+        int flag = 0;
         while(true) {
             try {
                 List<Message> messageList = queue.batchReceiveMessage(10, 30);
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
                 for (Message msg : messageList) {
+                    System.out.println("接收到的白名单："+msg.msgBody);
                     Map<String,Object> map = gson.fromJson(new String(msg.msgBody.split("@@")[2]),Map.class);
-                    payWhiteList.setBand(map.get("band").toString());
-                    payWhiteList.setBodycolor(map.get("bodycolor").toString());
-                    payWhiteList.setPlatecolor(map.get("platecolor").toString());
-                    payWhiteList.setPlateno(map.get("plateno").toString());
-                    payWhiteList.setSubBand(map.get("sub_band").toString());
-                    payWhiteList.setUptime((Date) map.get("uptime"));
-                    payWhiteList.setVehclass(map.get("vehClass").toString());
+                    payWhiteList.setBand("暂无");
+                    payWhiteList.setBodycolor("00");
+                    payWhiteList.setPlatecolor("00");
+                    payWhiteList.setPlateno(map.get("plateNo").toString());
+                    payWhiteList.setSubBand("暂无");
+                    payWhiteList.setUptime(new Date());
+                    payWhiteList.setVehclass("01");
                     if (msg.msgBody.split("@@")[1].equals("add_white")){
-                        payWhiteListMapper.insertSelective(payWhiteList);
+                        flag = payWhiteListMapper.insertSelective(payWhiteList);
                     }else{
-                        payWhiteListMapper.deleteByPrimaryKey(payWhiteList.getPlateno());
+                        flag = payWhiteListMapper.deleteByPrimaryKey(payWhiteList.getPlateno());
+                    }
+                    //新增/删除白名单记录成功
+                    if (flag > 0){
+                        //删除消息
+                        queue.deleteMessage(msg.receiptHandle);
                     }
                 }
             } catch (Exception e) {

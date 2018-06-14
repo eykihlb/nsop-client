@@ -60,9 +60,10 @@ public class SystemInit {
         boolean blackFlag = true;
         boolean whiteFlag = true;
         try {
-            System.out.println("请求全量黑白名单");
             String whiteUri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_white();
+            System.out.println("全量白名单："+ whiteUri);
             String blackUri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_black();
+            System.out.println("全量黑名单："+ whiteUri);
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//这个是你要转成后的时间的格式
             while (blackFlag){
                 payBlackListMapper.deleteAll();

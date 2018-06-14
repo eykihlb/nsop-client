@@ -46,23 +46,30 @@ public class VehicleBlackService {
     public void addDelBlack() {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_BLACK_QUEUE + trafficConfig.getClientNum());
         PayBlackList payBlackList = new PayBlackList();
+        int flag = 0;
         while(true) {
             try {
                 List<Message> messageList = queue.batchReceiveMessage(10, 30);
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
                 for (Message msg : messageList) {
+                    System.out.println("接收到的黑名单："+msg.msgBody);
                     Map<String,Object> map = gson.fromJson(new String(msg.msgBody.split("@@")[2]),Map.class);
-                    payBlackList.setBand(map.get("band").toString());
-                    payBlackList.setBodycolor(map.get("bodycolor").toString());
-                    payBlackList.setPlatecolor(map.get("platecolor").toString());
-                    payBlackList.setPlateno(map.get("plateno").toString());
-                    payBlackList.setSubBand(map.get("sub_band").toString());
-                    payBlackList.setUptime((Date) map.get("uptime"));
-                    payBlackList.setVehclass(map.get("vehClass").toString());
+                    payBlackList.setBand("暂无");
+                    payBlackList.setBodycolor("00");
+                    payBlackList.setPlatecolor("00");
+                    payBlackList.setPlateno(map.get("plateNo").toString());
+                    payBlackList.setSubBand("暂无");
+                    payBlackList.setUptime(new Date());
+                    payBlackList.setVehclass("01");
                     if (msg.msgBody.split("@@")[1].equals("add_black")){
-                        payBlackListMapper.insertSelective(payBlackList);
+                        flag = payBlackListMapper.insertSelective(payBlackList);
                     }else{
-                        payBlackListMapper.deleteByPrimaryKey(payBlackList.getPlateno());
+                        flag = payBlackListMapper.deleteByPrimaryKey(payBlackList.getPlateno());
+                    }
+                    //新增/删除黑名单记录成功
+                    if (flag > 0){
+                        //删除消息
+                        queue.deleteMessage(msg.receiptHandle);
                     }
                 }
             } catch (Exception e) {

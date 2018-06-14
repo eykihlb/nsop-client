@@ -10,6 +10,7 @@
     <result column="SITENO" property="siteno" jdbcType="VARCHAR" />
     <result column="LANENO" property="laneno" jdbcType="VARCHAR" />
     <result column="VEHCLASS" property="vehclass" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insertSelective" parameterType="com.mydao.nsop.client.domain.entity.PayIssuedRec" >
     insert into PAY_ISSUEDREC
@@ -38,6 +39,9 @@
       <if test="vehclass != null" >
         VEHCLASS,
       </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="recid != null" >
@@ -64,9 +68,16 @@
       <if test="vehclass != null" >
         #{vehclass,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
 
+  <update id="updateByPlateNo" parameterType="java.util.Map">
+    update PAY_ISSUEDREC set status = #{status} where plateno = #{plateno}
+
+  </update>
   <delete id="deleteByPlateNo" parameterType="java.lang.String">
     delete from PAY_ISSUEDREC where PLATENO = #{plateNo}
   </delete>

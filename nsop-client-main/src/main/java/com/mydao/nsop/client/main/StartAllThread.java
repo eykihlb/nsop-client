@@ -28,11 +28,17 @@ public class StartAllThread {
     @Autowired
     private SystemInit systemInit;
 
+    @Autowired
+    private VehicleBlackService vehicleBlackService;
+
+    @Autowired
+    private VehicleWhiteService vehicleWhiteService;
+
     @PostConstruct
     public void start() {
         //创建订阅和队列
         createSubscriptionAndQueue.createSubQueue();
-        //黑白名单
+        //黑白名单初始化
         systemInit.systemInit();
         //驶入广播
         vehicleDriveInBroadcastService.vehicleDriveIn();
@@ -42,5 +48,9 @@ public class StartAllThread {
         vehicleDriveInService.driveIn();
         //驶出
         vehicleDriveInService.driveOut();
+        //黑名单
+        vehicleBlackService.addDelBlack();
+        //白名单
+        vehicleWhiteService.addDelWhite();
     }
 }
