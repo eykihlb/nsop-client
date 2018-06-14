@@ -11,7 +11,6 @@ import com.mydao.nsop.client.domain.entity.PayWhiteList;
 import com.mydao.nsop.client.domain.vo.PageVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -34,9 +33,6 @@ public class SystemInit {
 
     @Autowired
     private InterFaceConfig interFaceConfig;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private OAuth2RestTemplate oAuthRestTemplate;
