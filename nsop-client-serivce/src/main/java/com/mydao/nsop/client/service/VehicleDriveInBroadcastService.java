@@ -58,7 +58,7 @@ public class VehicleDriveInBroadcastService {
                 pir.setNetno(map.get("netNo").toString());
                 pir.setPlatecolor(map.get("plateNo").toString().split("-")[1]);
                 pir.setPlateno(map.get("plateNo").toString().split("-")[0]);
-                pir.setRecid("随便写的");
+                pir.setRecid(map.get("entryRecId").toString());
                 pir.setSiteno(map.get("siteNo").toString());
                 pir.setVehclass("01");
                 pir.setStatus("1");
