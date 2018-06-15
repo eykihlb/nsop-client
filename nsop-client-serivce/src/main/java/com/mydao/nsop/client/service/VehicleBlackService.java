@@ -9,6 +9,7 @@ import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,13 @@ public class VehicleBlackService {
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
                 for (Message msg : messageList) {
                     System.out.println("接收到的黑名单："+msg.msgBody);
-                    Map<String,Object> map = gson.fromJson(new String(msg.msgBody.split("@@")[2]),Map.class);
+                    String message = msg.msgBody.split("@@")[2];
+                    if(StringUtils.isEmpty(message)) {
+                        LOGGER.warn("接收到的主题消息为空！");
+                        queue.deleteMessage(msg.receiptHandle);
+                        continue;
+                    }
+                    Map<String,Object> map = gson.fromJson(new String(message),Map.class);
                     payBlackList.setBand("暂无");
                     payBlackList.setBodycolor("00");
                     payBlackList.setPlatecolor("00");
@@ -59,10 +66,20 @@ public class VehicleBlackService {
                     payBlackList.setSubBand("暂无");
                     payBlackList.setUptime(new Date());
                     payBlackList.setVehclass("01");
+                    int count = payBlackListMapper.selectByPlateNo(payBlackList.getPlateno());
+                    LOGGER.info("车牌：" + payBlackList.getPlateno() + "数量：" + count);
                     if (msg.msgBody.split("@@")[1].equals("add_black")){
-                        flag = payBlackListMapper.insertSelective(payBlackList);
+                        if(count > 0) {
+                            flag = 1;
+                        } else {
+                            flag = payBlackListMapper.insertSelective(payBlackList);
+                        }
                     }else{
-                        flag = payBlackListMapper.deleteByPrimaryKey(payBlackList.getPlateno());
+                        if(count > 0) {
+                            flag = payBlackListMapper.deleteByPrimaryKey(payBlackList.getPlateno());
+                        } else {
+                            flag = 1;
+                        }
                     }
                     //新增/删除黑名单记录成功
                     if (flag > 0){
