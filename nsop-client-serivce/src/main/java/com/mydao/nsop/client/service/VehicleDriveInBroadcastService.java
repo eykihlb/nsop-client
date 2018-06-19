@@ -74,9 +74,11 @@ public class VehicleDriveInBroadcastService {
                 payi = payIssuedRecMapper.selectById(pir.getPlateno());
                 if (payi != null){
                     if (payIssuedRecMapper.updateByPlateNo(paramMap) > 0){
+                        LOGGER.info("车牌号为："+message.msgBody+"的状态更新为驶入！");
                         queue.deleteMessage(message.receiptHandle);
                     }
                 }else if (payIssuedRecMapper.insertSelective(pir)>0){
+                    LOGGER.info("写入车牌号为："+message.msgBody+"的驶入记录！");
                     queue.deleteMessage(message.receiptHandle);
                 }
             } catch (Exception e) {

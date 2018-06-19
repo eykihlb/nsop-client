@@ -51,8 +51,14 @@ public class VehicleDriveOutBroadcastService {
                 }
                 map.put("status","2");
                 map.put("plateno",message.msgBody);
-                payIssuedRecMapper.updateByPlateNo(map);
-                queue.deleteMessage(message.receiptHandle);
+                if(payIssuedRecMapper.selectById(message.msgBody) != null){
+                    payIssuedRecMapper.updateByPlateNo(map);
+                    LOGGER.info("车牌号为："+message.msgBody+"的记录更新为驶出！");
+                    queue.deleteMessage(message.receiptHandle);
+                }else{
+                    LOGGER.warn("未找到车牌号为："+message.msgBody+"的驶入记录！");
+                    queue.deleteMessage(message.receiptHandle);
+                }
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }

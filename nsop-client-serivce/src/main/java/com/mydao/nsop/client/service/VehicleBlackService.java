@@ -74,17 +74,24 @@ public class VehicleBlackService {
                         } else {
                             flag = payBlackListMapper.insertSelective(payBlackList);
                         }
+                        //新增黑名单记录成功
+                        if (flag > 0){
+                            //删除消息
+                            LOGGER.info("新增黑名单：车牌号：" + payBlackList.getPlateno());
+                            queue.deleteMessage(msg.receiptHandle);
+                        }
                     }else{
                         if(count > 0) {
                             flag = payBlackListMapper.deleteByPrimaryKey(payBlackList.getPlateno());
                         } else {
                             flag = 1;
                         }
-                    }
-                    //新增/删除黑名单记录成功
-                    if (flag > 0){
-                        //删除消息
-                        queue.deleteMessage(msg.receiptHandle);
+                        //删除黑名单记录成功
+                        if (flag > 0){
+                            //删除消息
+                            LOGGER.info("移除黑名单：车牌号：" + payBlackList.getPlateno());
+                            queue.deleteMessage(msg.receiptHandle);
+                        }
                     }
                 }
             } catch (Exception e) {
