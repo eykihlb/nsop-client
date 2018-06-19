@@ -8,6 +8,7 @@ import com.mydao.nsop.client.domain.entity.PayIssuedRec;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,12 @@ public class VehicleDriveInBroadcastService {
                 Map<String,Object> paramMap = new HashMap<>();
                 Message message = queue.receiveMessage(30);
                 System.out.println("接收到的驶入广播：" + message.msgBody);
+                String messages = message.msgBody.split("@@")[2];
+                if(StringUtils.isEmpty(messages)) {
+                    LOGGER.warn("接收到的驶入消息为空！");
+                    queue.deleteMessage(message.receiptHandle);
+                    continue;
+                }
                 Map<String,Object> map = gson.fromJson(new String(message.msgBody),Map.class);
                 String sd = sdf.format(new Date(Long.parseLong(String.valueOf(new BigDecimal(map.get("passTime").toString()).toPlainString()))));
                 pir.setEntrytime(new Date(sd.replace("-","/")));

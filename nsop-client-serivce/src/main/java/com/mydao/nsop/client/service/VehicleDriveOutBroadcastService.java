@@ -7,6 +7,7 @@ import com.mydao.nsop.client.dao.PayIssuedRecMapper;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,12 @@ public class VehicleDriveOutBroadcastService {
                 Map<String,Object> map = new HashMap<>();
                 map.put("status","2");
                 map.put("plateno",message.msgBody);
+                String messages = message.msgBody.split("@@")[2];
+                if(StringUtils.isEmpty(messages)) {
+                    LOGGER.warn("接收到的驶出消息为空！");
+                    queue.deleteMessage(message.receiptHandle);
+                    continue;
+                }
                 payIssuedRecMapper.updateByPlateNo(map);
                 queue.deleteMessage(message.receiptHandle);
             } catch (Exception e) {

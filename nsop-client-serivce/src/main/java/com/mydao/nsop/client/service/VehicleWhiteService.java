@@ -9,6 +9,7 @@ import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,12 @@ public class VehicleWhiteService {
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
                 for (Message msg : messageList) {
                     System.out.println("接收到的白名单："+msg.msgBody);
+                    String message = msg.msgBody.split("@@")[2];
+                    if(StringUtils.isEmpty(message)) {
+                        LOGGER.warn("接收到的主题消息为空！");
+                        queue.deleteMessage(msg.receiptHandle);
+                        continue;
+                    }
                     Map<String,Object> map = gson.fromJson(new String(msg.msgBody.split("@@")[2]),Map.class);
                     payWhiteList.setBand("暂无");
                     payWhiteList.setBodycolor("00");
@@ -59,10 +66,20 @@ public class VehicleWhiteService {
                     payWhiteList.setSubBand("暂无");
                     payWhiteList.setUptime(new Date());
                     payWhiteList.setVehclass("01");
+                    int count = payWhiteListMapper.selectByPlateNo(payWhiteList.getPlateno());
                     if (msg.msgBody.split("@@")[1].equals("add_white")){
-                        flag = payWhiteListMapper.insertSelective(payWhiteList);
+                        if (count > 0) {
+                            flag = 1;
+                        }else{
+                            flag = payWhiteListMapper.insertSelective(payWhiteList);
+                        }
                     }else{
-                        flag = payWhiteListMapper.deleteByPrimaryKey(payWhiteList.getPlateno());
+                        if (count > 0) {
+                            flag = payWhiteListMapper.deleteByPrimaryKey(payWhiteList.getPlateno());
+                        }else{
+                            flag = 1;
+                        }
+
                     }
                     //新增/删除白名单记录成功
                     if (flag > 0){
