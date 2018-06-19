@@ -96,4 +96,8 @@
   <delete id="deleteAll">
     delete from PAY_WHITELIST
   </delete>
+
+  <select id="selectByPlateNo" resultType="int" parameterType="java.lang.String" >
+    select count(1) from PAY_WHITELIST where PLATENO = #{plateno,jdbcType=VARCHAR}
+  </select>
 </mapper>

@@ -14,4 +14,6 @@ public interface PayWhiteListMapper {
     int updateByPrimaryKeySelective(PayWhiteList record);
 
     int deleteAll();
+
+    int selectByPlateNo(String plateno);
 }

@@ -80,10 +80,10 @@ nsop:
       ftpPath: ""
       localPath: F:/download
     upload:
-      ftpHost: 192.168.0.171
-      ftpUserName: eykihlb
-      ftpPassword: 213457023
-      ftpPort: 22
+      ftpHost: 154.8.143.230
+      ftpUserName: mydaonsop
+      ftpPassword: mydao1905
+      ftpPort: 21
       ftpPath: ""
       localPath: F:/download
   cmq:

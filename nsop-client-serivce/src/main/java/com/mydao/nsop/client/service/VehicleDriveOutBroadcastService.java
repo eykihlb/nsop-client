@@ -43,16 +43,14 @@ public class VehicleDriveOutBroadcastService {
             try {
                 Message message = queue.receiveMessage(30);
                 System.out.println("接收到的驶出广播：" + message.msgBody);
-                //Map<String,Object> map = gson.fromJson(message.msgBody,Map.class);
                 Map<String,Object> map = new HashMap<>();
-                map.put("status","2");
-                map.put("plateno",message.msgBody);
-                String messages = message.msgBody.split("@@")[2];
-                if(StringUtils.isEmpty(messages)) {
+                if(StringUtils.isEmpty(message.msgBody)) {
                     LOGGER.warn("接收到的驶出消息为空！");
                     queue.deleteMessage(message.receiptHandle);
                     continue;
                 }
+                map.put("status","2");
+                map.put("plateno",message.msgBody);
                 payIssuedRecMapper.updateByPlateNo(map);
                 queue.deleteMessage(message.receiptHandle);
             } catch (Exception e) {
