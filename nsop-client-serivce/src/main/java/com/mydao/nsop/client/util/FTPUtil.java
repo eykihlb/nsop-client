@@ -106,57 +106,6 @@ public class FTPUtil {
 
     }
 
-    /** * 下载文件 *
-     * @return */
-    public static String downloadFile(FTPConfig fTPConfig,String filename){
-        boolean flag = false;
-        OutputStream os=null;
-        String ftpHost = fTPConfig.getDownload().get("ftpHost").toString();
-        String ftpUserName = fTPConfig.getDownload().get("ftpUserName").toString();
-        String ftpPassword = fTPConfig.getDownload().get("ftpPassword").toString();
-        Integer ftpPort = Integer.parseInt(fTPConfig.getDownload().get("ftpPort").toString());
-        String ftpPath = fTPConfig.getDownload().get("ftpPath").toString();
-        String localPath = fTPConfig.getDownload().get("localPath").toString();
-        FTPClient ftpClient = null;
-        try {
-            System.out.println("开始下载文件");
-            ftpClient = getFTPClient(ftpHost, ftpUserName, ftpPassword, ftpPort);
-            //切换FTP目录
-            ftpClient.changeWorkingDirectory(ftpPath);
-            FTPFile[] ftpFiles = ftpClient.listFiles();
-            for(FTPFile file : ftpFiles){
-                if(filename.equalsIgnoreCase(file.getName())){
-                    File localFile = new File(localPath + "/" + file.getName());
-                    os = new FileOutputStream(localFile);
-                    ftpClient.retrieveFile(file.getName(), os);
-                    os.close();
-                }
-            }
-            ftpClient.logout();
-            flag = true;
-            System.out.println("下载文件成功");
-        } catch (Exception e) {
-            System.out.println("下载文件失败");
-            e.printStackTrace();
-        } finally{
-            if(ftpClient.isConnected()){
-                try{
-                    ftpClient.disconnect();
-                }catch(IOException e){
-                    e.printStackTrace();
-                }
-            }
-            if(null != os){
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return localPath + "\\" + filename;
-    }
-
     /**
      * Description: 向FTP服务器上传文件
      * @param fTPConfig FTP配置
