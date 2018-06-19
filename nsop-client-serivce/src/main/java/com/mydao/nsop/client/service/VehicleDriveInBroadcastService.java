@@ -52,7 +52,7 @@ public class VehicleDriveInBroadcastService {
                 Map<String,Object> paramMap = new HashMap<>();
                 Message message = queue.receiveMessage(30);
                 System.out.println("接收到的驶入广播：" + message.msgBody);
-                String messages = message.msgBody.split("@@")[2];
+                String messages = message.msgBody;
                 if(StringUtils.isEmpty(messages)) {
                     LOGGER.warn("接收到的驶入消息为空！");
                     queue.deleteMessage(message.receiptHandle);
