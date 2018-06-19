@@ -77,8 +77,8 @@ public class VehicleDriveInOutService {
                     rev.setVehcolorId(payEntryRec.getFarePlatecolor());
                     rev.setPassTime(payEntryRec.getEntrytime());
                     rev.setVehclassId(payEntryRec.getVehclass());
-                    rev.setFileId(payEntryRec.getRecid());
-                    fileUploadService.fileUpload(fTPConfig,payEntryRec.getRecid()+".jpg");
+                    rev.setFileId(payEntryRec.getRecid()+".jpg");
+                    fileUploadService.fileUpload(fTPConfig,rev.getFileId());
                     try {
                         ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(url,rev,Object.class);
                         Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);

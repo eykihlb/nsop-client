@@ -13,7 +13,7 @@ import java.io.FileInputStream;
 public class FileUploadService {
 
     @Async
-    public boolean fileUpload(FTPConfig fTPConfig, String fileName) {
+    public void fileUpload(FTPConfig fTPConfig, String fileName) {
         boolean flag = false;
         Integer index = 0;
         while (!flag){
@@ -33,6 +33,5 @@ public class FileUploadService {
                 break;
             }
         }
-        return flag;
     }
 }

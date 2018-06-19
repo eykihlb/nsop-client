@@ -77,14 +77,14 @@ nsop:
       ftpUserName: eykihlb
       ftpPassword: 213457023
       ftpPort: 21
-      ftpPath: ""
+      ftpPath: "/"
       localPath: F:/download
     upload:
       ftpHost: 154.8.143.230
       ftpUserName: mydaonsop
       ftpPassword: mydao1905
       ftpPort: 21
-      ftpPath: ""
+      ftpPath: "/"
       localPath: F:/download
   cmq:
     secret-id: AKIDe8OPClQB2f3D9qtSO7bqqb6MOzMVv7ap
