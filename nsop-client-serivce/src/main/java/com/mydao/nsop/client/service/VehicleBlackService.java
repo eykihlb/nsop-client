@@ -48,7 +48,7 @@ public class VehicleBlackService {
         int flag = 0;
         while(true) {
             try {
-                List<Message> messageList = queue.batchReceiveMessage(10, 30);
+                List<Message> messageList = queue.batchReceiveMessage(10, 15);
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
                 for (Message msg : messageList) {
                     System.out.println("接收到的黑名单："+msg.msgBody);
@@ -95,6 +95,7 @@ public class VehicleBlackService {
                     }
                 }
             } catch (Exception e) {
+                LOGGER.error(e.getMessage());
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
