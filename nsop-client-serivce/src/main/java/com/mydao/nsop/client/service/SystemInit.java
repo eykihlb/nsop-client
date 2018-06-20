@@ -104,7 +104,7 @@ public class SystemInit {
                 }
             }
         } catch (Exception e) {
-            log.error("全量黑白名单拉取失败！");
+            log.error("全量黑白名单拉取失败！ErrorMsg:"+e.getMessage());
         }
     }
 }
