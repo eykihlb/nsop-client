@@ -72,7 +72,12 @@ public class SystemInit {
                     pbl.setVehclass("00");
                     pbl.setBodycolor("00");
                     pbl.setSubBand("00");
-                    payBlackListMapper.insertSelective(pbl);
+                    try{
+                        payBlackListMapper.insertSelective(pbl);
+                    }catch (Exception e){
+                        log.error("黑名单车牌：" + pbl.getPlateno() + "拉取失败！" + e.getMessage());
+                        continue;
+                    }
                 }
                 if (list.size()<pv.getSize()){
                     blackFlag = false;
@@ -95,7 +100,13 @@ public class SystemInit {
                     pwl.setBodycolor("00");
                     pwl.setBand("00");
                     pwl.setSubBand("00");
-                    payWhiteListMapper.insertSelective(pwl);
+                    try{
+                        payWhiteListMapper.insertSelective(pwl);
+                    }catch (Exception e){
+                        log.error("白名单车牌：" + pwl.getPlateno()+"拉取失败！" + e.getMessage());
+                        continue;
+                    }
+
                 }
                 if(list.size()<pv.getSize()){
                     whiteFlag = false;
