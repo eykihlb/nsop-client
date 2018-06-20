@@ -73,19 +73,26 @@ public class VehicleWhiteService {
                         }else{
                             flag = payWhiteListMapper.insertSelective(payWhiteList);
                         }
+                        //新增白名单记录成功
+                        if (flag > 0){
+                            //删除消息
+                            LOGGER.info("新增白名单：车牌号："+payWhiteList.getPlateno());
+                            queue.deleteMessage(msg.receiptHandle);
+                        }
                     }else{
                         if (count > 0) {
                             flag = payWhiteListMapper.deleteByPrimaryKey(payWhiteList.getPlateno());
                         }else{
                             flag = 1;
                         }
+                        //删除白名单记录成功
+                        if (flag > 0){
+                            //删除消息
+                            LOGGER.info("移除白名单：车牌号："+payWhiteList.getPlateno());
+                            queue.deleteMessage(msg.receiptHandle);
+                        }
+                    }
 
-                    }
-                    //新增/删除白名单记录成功
-                    if (flag > 0){
-                        //删除消息
-                        queue.deleteMessage(msg.receiptHandle);
-                    }
                 }
             } catch (Exception e) {
                 if(e instanceof CMQServerException) {
