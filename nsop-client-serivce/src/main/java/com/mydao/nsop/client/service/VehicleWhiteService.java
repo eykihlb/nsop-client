@@ -95,6 +95,7 @@ public class VehicleWhiteService {
 
                 }
             } catch (Exception e) {
+                LOGGER.error(e.getMessage(),e);
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
