@@ -8,6 +8,7 @@ import com.qcloud.cmq.Account;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class VehicleDriveOutBroadcastService {
     public void vehicleDriveOut() {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_OUT_QUEUE + trafficConfig.getClientNum());
         while(true) {
+            LOGGER.info("车辆驶出线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
             try {
                 Message message = queue.receiveMessage(30);
                 System.out.println("接收到的驶出广播：" + message.msgBody);

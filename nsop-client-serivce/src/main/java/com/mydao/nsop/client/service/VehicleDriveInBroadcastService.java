@@ -9,6 +9,7 @@ import com.qcloud.cmq.Account;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class VehicleDriveInBroadcastService {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//这个是你要转成后的时间的格式
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE + trafficConfig.getClientNum());
         while(true) {
+            LOGGER.info("车辆驶入线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
             try {
                 PayIssuedRec pir = new PayIssuedRec();
                 PayIssuedRec payi = new PayIssuedRec();

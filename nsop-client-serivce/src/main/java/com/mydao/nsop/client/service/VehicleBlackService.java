@@ -10,6 +10,7 @@ import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class VehicleBlackService {
         PayBlackList payBlackList = new PayBlackList();
         int flag = 0;
         while(true) {
+            LOGGER.info("黑名单线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
             try {
                 List<Message> messageList = queue.batchReceiveMessage(10, 15);
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
