@@ -14,6 +14,9 @@ import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author ZYW
  * @date 2018/6/4
@@ -36,8 +39,11 @@ public class VehServiceHandler implements VehService.Iface {
 
     @Override
     public EntryInfo getEntryInfo(String plateno) throws TException {
+        Map<String,Object> map = new HashMap<>();
+        map.put("status","1");
+        map.put("plateNo",plateno);
         EntryInfo entryInfo = new EntryInfo();
-        PayIssuedRec payIssuedRec = payIssuedRecMapper.selectById(plateno);
+        PayIssuedRec payIssuedRec = payIssuedRecMapper.selectById(map);
         entryInfo.setEntryLaneNo(payIssuedRec.getLaneno());
         entryInfo.setEntryNetNo(payIssuedRec.getNetno());
         entryInfo.setEntryRecID(payIssuedRec.getRecid());
