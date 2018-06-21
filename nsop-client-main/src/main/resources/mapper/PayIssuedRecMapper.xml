@@ -85,8 +85,8 @@
     delete from PAY_ISSUEDREC where PLATENO = #{plateNo}
   </delete>
 
-  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select * from PAY_ISSUEDREC where plateno = #{plateNo}
+  <select id="selectById" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select * from PAY_ISSUEDREC where plateno = #{plateNo} and status = #{status}
   </select>
   <select id="selectCountByPlateNo" resultType="java.lang.Integer">
     select count(1) from PAY_ISSUEDREC where plateno = #{plateNo}

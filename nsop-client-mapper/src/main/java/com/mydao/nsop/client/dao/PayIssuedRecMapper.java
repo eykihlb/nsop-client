@@ -12,7 +12,7 @@ public interface PayIssuedRecMapper {
 
     Integer deleteByPlateNo(String plateNo);
 
-    PayIssuedRec selectById(String plateNo);
+    PayIssuedRec selectById(Map<String,Object> map);
 
     int updateByPlateNo(Map<String,Object> map);
 }
