@@ -46,6 +46,7 @@ public class VehicleDriveOutBroadcastService {
                 Message message = queue.receiveMessage(30);
                 System.out.println("接收到的驶出广播：" + message.msgBody);
                 Map<String,Object> map = new HashMap<>();
+                Map<String,Object> paramMap = new HashMap<>();
                 if(StringUtils.isEmpty(message.msgBody)) {
                     LOGGER.warn("接收到的驶出消息为空！");
                     queue.deleteMessage(message.receiptHandle);
@@ -53,7 +54,9 @@ public class VehicleDriveOutBroadcastService {
                 }
                 map.put("status","2");
                 map.put("plateno",message.msgBody);
-                if(payIssuedRecMapper.selectById(message.msgBody) != null){
+                paramMap.put("status","1");
+                paramMap.put("plateno",message.msgBody);
+                if(payIssuedRecMapper.selectById(paramMap) != null){
                     payIssuedRecMapper.updateByPlateNo(map);
                     LOGGER.info("车牌号为："+message.msgBody+"的记录更新为驶出！");
                     queue.deleteMessage(message.receiptHandle);
