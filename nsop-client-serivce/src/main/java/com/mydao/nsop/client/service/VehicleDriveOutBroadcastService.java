@@ -55,7 +55,7 @@ public class VehicleDriveOutBroadcastService {
                 map.put("status","2");
                 map.put("plateno",message.msgBody);
                 paramMap.put("status","1");
-                paramMap.put("plateno",message.msgBody);
+                paramMap.put("plateNo",message.msgBody);
                 if(payIssuedRecMapper.selectById(paramMap) != null){
                     payIssuedRecMapper.updateByPlateNo(map);
                     LOGGER.info("车牌号为："+message.msgBody+"的记录更新为驶出！");
