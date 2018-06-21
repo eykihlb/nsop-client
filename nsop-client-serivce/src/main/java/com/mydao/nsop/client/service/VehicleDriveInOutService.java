@@ -123,7 +123,7 @@ public class VehicleDriveInOutService {
                         rev.setEntryRecId(payExitRec.getEntryRecid());
                         rev.setPayFare(payExitRec.getFaretotal().toString());
                         rev.setVehcolorId(payExitRec.getFarePlatecolor());
-                        rev.setFileId(payEntryRec.getRecid()+".jpg");
+                        rev.setFileId(payExitRec.getRecid()+".jpg");
                         fileUploadService.fileUpload(fTPConfig,rev.getFileId());
                         try {
                             ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(url,rev,Object.class);
