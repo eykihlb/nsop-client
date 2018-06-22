@@ -43,7 +43,7 @@ public class VehicleDriveOutBroadcastService {
         while(true) {
             LOGGER.info("车辆驶出线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
             try {
-                Message message = queue.receiveMessage(30);
+                Message message = queue.receiveMessage(15);
                 System.out.println("接收到的驶出广播：" + message.msgBody);
                 Map<String,Object> map = new HashMap<>();
                 Map<String,Object> paramMap = new HashMap<>();
