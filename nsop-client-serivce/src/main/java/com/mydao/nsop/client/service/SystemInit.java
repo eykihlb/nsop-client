@@ -26,7 +26,7 @@ import java.util.Map;
 @Component
 public class SystemInit {
 
-    private static final Logger log = LoggerFactory.getLogger(SystemInit.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemInit.class);
 
     @Autowired
     private TrafficConfig trafficConfig;
@@ -75,7 +75,7 @@ public class SystemInit {
                     try{
                         payBlackListMapper.insertSelective(pbl);
                     }catch (Exception e){
-                        log.error("黑名单车牌：" + pbl.getPlateno() + "拉取失败！" + e.getMessage());
+                        LOGGER.error("黑名单车牌：" + pbl.getPlateno() + "拉取失败！" + e.getMessage());
                         continue;
                     }
                 }
@@ -103,7 +103,7 @@ public class SystemInit {
                     try{
                         payWhiteListMapper.insertSelective(pwl);
                     }catch (Exception e){
-                        log.error("白名单车牌：" + pwl.getPlateno()+"拉取失败！" + e.getMessage());
+                        LOGGER.error("白名单车牌：" + pwl.getPlateno()+"拉取失败！" + e.getMessage());
                         continue;
                     }
 
@@ -115,7 +115,7 @@ public class SystemInit {
                 }
             }
         } catch (Exception e) {
-            log.error("全量黑白名单拉取失败！ErrorMsg:"+e.getMessage());
+            LOGGER.error("全量黑白名单拉取失败！ErrorMsg:"+e.getMessage());
         }
     }
 }

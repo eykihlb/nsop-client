@@ -53,7 +53,7 @@ public class VehicleBlackService {
                 List<Message> messageList = queue.batchReceiveMessage(10, 15);
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
                 for (Message msg : messageList) {
-                    System.out.println("接收到的黑名单："+msg.msgBody);
+                    LOGGER.info("接收到的黑名单："+msg.msgBody);
                     String message = msg.msgBody.split("@@")[2];
                     if(StringUtils.isEmpty(message)) {
                         LOGGER.warn("接收到的主题消息为空！");

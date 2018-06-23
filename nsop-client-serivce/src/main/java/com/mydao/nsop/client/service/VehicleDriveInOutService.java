@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,7 @@ import java.util.Timer;
 @Component
 public class VehicleDriveInOutService {
 
-    private static final Logger log = LoggerFactory.getLogger(VehicleDriveInOutService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VehicleDriveInOutService.class);
     @Autowired
     private FTPConfig fTPConfig;
 
@@ -54,12 +55,15 @@ public class VehicleDriveInOutService {
 
     private Gson gson = new Gson();
 
+    private final String ENTRY_URL = trafficConfig.getUrl() + interFaceConfig.getEntry();
+    private final String EXIT_URL = trafficConfig.getUrl() + interFaceConfig.getExit();
     /**
      * 驶入
      */
-    @Async
+    //@Async
+    @Scheduled(fixedRate = Constants.RETRY_TIMES)
     public void driveIn(){
-        Timer timer = new Timer(true);
+        /*Timer timer = new Timer(true);
         String url = trafficConfig.getUrl() + interFaceConfig.getEntry();
         System.out.println("驶入："+url);
         timer.schedule(
@@ -84,26 +88,55 @@ public class VehicleDriveInOutService {
                         Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
                         //List<LinkedTreeMap<String,Object>> list = (List<LinkedTreeMap<String,Object>>)map.get("data");
                         if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
-                            log.info(map.get("msg").toString());
+                            LOGGER.info(map.get("msg").toString());
                             payEntryRecMapper.updateById(payEntryRec.getRecid());
                         } else {
-                            log.error(map.get("msg").toString());
+                            LOGGER.error(map.get("msg").toString());
                         }
                     }catch (Exception e){
-                        log.error(e.getMessage());
+                        LOGGER.error(e.getMessage());
                         continue;
                     }
                 }
             }},0,Constants.RETRY_TIMES
-        );
+        );*/
+        List<PayEntryRec> perList = payEntryRecMapper.selectList();
+        RoadEntryVo rev = new RoadEntryVo();
+        for (PayEntryRec payEntryRec : perList) {
+            rev.setCameraNo(payEntryRec.getCamerano());
+            rev.setEntryRecId(payEntryRec.getRecid());
+            rev.setTolllaneNo(payEntryRec.getLaneno());
+            rev.setTollnetNo(payEntryRec.getNetno());
+            rev.setTollsiteNo(payEntryRec.getSiteno());
+            rev.setLprPlateNo(payEntryRec.getLprPlateno());
+            rev.setFarePlateNo(payEntryRec.getFarePlateno());
+            rev.setVehcolorId(payEntryRec.getFarePlatecolor());
+            rev.setPassTime(payEntryRec.getEntrytime());
+            rev.setVehclassId(payEntryRec.getVehclass());
+            rev.setFileId(payEntryRec.getRecid()+".jpg");
+            fileUploadService.fileUpload(fTPConfig,rev.getFileId());
+            try {
+                ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(ENTRY_URL,rev,Object.class);
+                Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
+                if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
+                    LOGGER.info(map.get("msg").toString());
+                    payEntryRecMapper.updateById(payEntryRec.getRecid());
+                } else {
+                    LOGGER.error(map.get("msg").toString());
+                }
+            }catch (Exception e){
+                LOGGER.error(e.getMessage());
+            }
+        }
     }
 
     /**
      * 驶出
      */
-    @Async
+    //@Async
+    @Scheduled(fixedRate = Constants.RETRY_TIMES)
     public void driveOut(){
-        Timer timer = new Timer(true);
+        /*Timer timer = new Timer(true);
         String url = trafficConfig.getUrl() + interFaceConfig.getExit();
         System.out.println("驶出："+url);
         timer.schedule(
@@ -129,18 +162,48 @@ public class VehicleDriveInOutService {
                             ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(url,rev,Object.class);
                             Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
                             if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
-                                log.info(map.get("msg").toString());
+                                LOGGER.info(map.get("msg").toString());
                                 payExitRecMapper.updateById(payExitRec.getRecid());
                             } else {
-                                log.error(map.get("msg").toString());
+                                LOGGER.error(map.get("msg").toString());
                             }
                         }catch (Exception e){
-                            log.error(e.getMessage());
+                            LOGGER.error(e.getMessage());
                             continue;
                         }
                     }
                 }},0,Constants.RETRY_TIMES
-        );
+        );*/
+        List<PayExitRec> perList = payExitRecMapper.selectList();
+        RoadExitVo rev = new RoadExitVo();
+        for (PayExitRec payExitRec : perList) {
+            rev.setCameraNo(payExitRec.getCamerano());
+            rev.setExitRecId(payExitRec.getRecid());
+            rev.setTolllaneNo(payExitRec.getLaneno());
+            rev.setTollnetNo(payExitRec.getNetno());
+            rev.setTollsiteNo(payExitRec.getSiteno());
+            rev.setLprPlateNo(payExitRec.getLprPlateno());
+            rev.setFarePlateNo(payExitRec.getFarePlateno());
+            rev.setPassTime(payExitRec.getExittime());
+            rev.setVehclassId(payExitRec.getVehclass());
+            rev.setEntryRecId(payExitRec.getEntryRecid());
+            rev.setPayFare(payExitRec.getFaretotal().toString());
+            rev.setVehcolorId(payExitRec.getFarePlatecolor());
+            rev.setFileId(payExitRec.getRecid()+".jpg");
+            fileUploadService.fileUpload(fTPConfig,rev.getFileId());
+            try {
+                ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(EXIT_URL,rev,Object.class);
+                Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
+                if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
+                    LOGGER.info(map.get("msg").toString());
+                    payExitRecMapper.updateById(payExitRec.getRecid());
+                } else {
+                    LOGGER.error(map.get("msg").toString());
+                }
+            }catch (Exception e){
+                LOGGER.error(e.getMessage());
+            }
+        }
     }
 
     /**
