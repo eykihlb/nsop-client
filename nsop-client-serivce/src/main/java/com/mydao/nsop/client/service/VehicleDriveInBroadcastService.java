@@ -80,7 +80,7 @@ public class VehicleDriveInBroadcastService {
                         queue.deleteMessage(message.receiptHandle);
                     }
                 }else if (*/payIssuedRecMapper.insertSelective(pir);/*>0){*/
-                    LOGGER.info("写入车牌号为："+message.msgBody+"的驶入记录！");
+                    LOGGER.info("写入车牌号为："+pir.getPlateno()+"的驶入记录！");
                     queue.deleteMessage(message.receiptHandle);
                 /*}*/
             } catch (Exception e) {
