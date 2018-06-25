@@ -55,13 +55,11 @@ public class VehicleDriveInOutService {
 
     private Gson gson = new Gson();
 
-    private final String ENTRY_URL = trafficConfig.getUrl() + interFaceConfig.getEntry();
-    private final String EXIT_URL = trafficConfig.getUrl() + interFaceConfig.getExit();
     /**
      * 驶入
      */
     //@Async
-    @Scheduled(fixedRate = Constants.RETRY_TIMES)
+    @Scheduled(fixedRate = 30000)
     public void driveIn(){
         /*Timer timer = new Timer(true);
         String url = trafficConfig.getUrl() + interFaceConfig.getEntry();
@@ -100,6 +98,7 @@ public class VehicleDriveInOutService {
                 }
             }},0,Constants.RETRY_TIMES
         );*/
+        final String ENTRY_URL = trafficConfig.getUrl() + interFaceConfig.getEntry();
         List<PayEntryRec> perList = payEntryRecMapper.selectList();
         RoadEntryVo rev = new RoadEntryVo();
         for (PayEntryRec payEntryRec : perList) {
@@ -134,7 +133,7 @@ public class VehicleDriveInOutService {
      * 驶出
      */
     //@Async
-    @Scheduled(fixedRate = Constants.RETRY_TIMES)
+    @Scheduled(fixedRate = 30000)
     public void driveOut(){
         /*Timer timer = new Timer(true);
         String url = trafficConfig.getUrl() + interFaceConfig.getExit();
@@ -174,6 +173,7 @@ public class VehicleDriveInOutService {
                     }
                 }},0,Constants.RETRY_TIMES
         );*/
+        final String EXIT_URL = trafficConfig.getUrl() + interFaceConfig.getExit();
         List<PayExitRec> perList = payExitRecMapper.selectList();
         RoadExitVo rev = new RoadExitVo();
         for (PayExitRec payExitRec : perList) {
