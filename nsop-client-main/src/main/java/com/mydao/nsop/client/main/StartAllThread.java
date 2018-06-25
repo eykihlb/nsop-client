@@ -13,8 +13,8 @@ import javax.annotation.PostConstruct;
 @Component
 public class StartAllThread {
 
-    @Autowired
-    private VehicleDriveInOutService vehicleDriveInService;
+//    @Autowired
+//    private VehicleDriveInOutService vehicleDriveInService;
 
     @Autowired
     private VehicleDriveInBroadcastService vehicleDriveInBroadcastService;
@@ -45,9 +45,9 @@ public class StartAllThread {
         //驶出广播
         vehicleDriveOutBroadcastService.vehicleDriveOut();
         //驶入
-        vehicleDriveInService.driveIn();
+        //vehicleDriveInService.driveIn();
         //驶出
-        vehicleDriveInService.driveOut();
+        //vehicleDriveInService.driveOut();
         //黑名单
         vehicleBlackService.addDelBlack();
         //白名单

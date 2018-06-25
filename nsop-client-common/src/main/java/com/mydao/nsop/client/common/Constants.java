@@ -3,7 +3,7 @@ package com.mydao.nsop.client.common;
 /**
  * @author zhuyanwei
  */
-public class Constants {
+public final class Constants {
     /**
      * 车辆驶入Topic
      */
@@ -141,5 +141,5 @@ public class Constants {
     /**
      * 重复读取驶入驶出记录频率(ms)
      */
-    public static final Integer RETRY_TIMES = 30000;
+    public static final int RETRY_TIMES = 30000;
 }
