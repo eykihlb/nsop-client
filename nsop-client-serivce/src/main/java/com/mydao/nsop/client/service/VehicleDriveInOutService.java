@@ -1,6 +1,7 @@
 package com.mydao.nsop.client.service;
 
 import com.google.gson.Gson;
+import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.FTPConfig;
 import com.mydao.nsop.client.config.InterFaceConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
@@ -56,7 +57,7 @@ public class VehicleDriveInOutService {
      * 驶入
      */
     //@Async
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = Constants.RETRY_TIMES)
     public void driveIn(){
         /*Timer timer = new Timer(true);
         String url = trafficConfig.getUrl() + interFaceConfig.getEntry();
@@ -130,7 +131,7 @@ public class VehicleDriveInOutService {
      * 驶出
      */
     //@Async
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = Constants.RETRY_TIMES)
     public void driveOut(){
         /*Timer timer = new Timer(true);
         String url = trafficConfig.getUrl() + interFaceConfig.getExit();
