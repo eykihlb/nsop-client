@@ -1,7 +1,6 @@
 package com.mydao.nsop.client.service;
 
 import com.google.gson.Gson;
-import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.FTPConfig;
 import com.mydao.nsop.client.config.InterFaceConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
@@ -15,14 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
 
 /**
  * @author ZYW
@@ -98,7 +95,7 @@ public class VehicleDriveInOutService {
                 }
             }},0,Constants.RETRY_TIMES
         );*/
-        final String ENTRY_URL = trafficConfig.getUrl() + interFaceConfig.getEntry();
+        final String entryUrl = trafficConfig.getUrl() + interFaceConfig.getEntry();
         List<PayEntryRec> perList = payEntryRecMapper.selectList();
         RoadEntryVo rev = new RoadEntryVo();
         for (PayEntryRec payEntryRec : perList) {
@@ -115,7 +112,7 @@ public class VehicleDriveInOutService {
             rev.setFileId(payEntryRec.getRecid()+".jpg");
             fileUploadService.fileUpload(fTPConfig,rev.getFileId());
             try {
-                ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(ENTRY_URL,rev,Object.class);
+                ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(entryUrl,rev,Object.class);
                 Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
                 if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
                     LOGGER.info(map.get("msg").toString());
@@ -173,7 +170,7 @@ public class VehicleDriveInOutService {
                     }
                 }},0,Constants.RETRY_TIMES
         );*/
-        final String EXIT_URL = trafficConfig.getUrl() + interFaceConfig.getExit();
+        final String exitUrl = trafficConfig.getUrl() + interFaceConfig.getExit();
         List<PayExitRec> perList = payExitRecMapper.selectList();
         RoadExitVo rev = new RoadExitVo();
         for (PayExitRec payExitRec : perList) {
@@ -192,7 +189,7 @@ public class VehicleDriveInOutService {
             rev.setFileId(payExitRec.getRecid()+".jpg");
             fileUploadService.fileUpload(fTPConfig,rev.getFileId());
             try {
-                ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(EXIT_URL,rev,Object.class);
+                ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(exitUrl,rev,Object.class);
                 Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
                 if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
                     LOGGER.info(map.get("msg").toString());
