@@ -4,6 +4,7 @@ import com.qcloud.cmq.Account;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 /**
  * @author ZYW
@@ -51,14 +52,18 @@ public class CMQConfig {
     }
 
     @Bean
+    @Scope("prototype")
     public Account accountTopic() {
         return new Account(endpointTopic,secretId, secretKey);
     }
 
     @Bean
+    @Scope("prototype")
     public Account accountQueue() {
         return new Account(endpointQueue,secretId, secretKey);
     }
+
+
 
 
 }
