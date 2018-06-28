@@ -17,10 +17,11 @@
 
     <!-- 文件输出格式 -->
     <property name="PATTERN" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
+    <property name="DEV_FILE_PATH" value="../logs" />
     <!-- test文件路径 -->
-    <property name="TEST_FILE_PATH" value="/mnt/nsop-client-main/logs" />
+    <property name="TEST_FILE_PATH" value="../logs" />
     <!-- pro文件路径 -->
-    <property name="PRO_FILE_PATH" value="/mnt/nsop-client-main/logs" />
+    <property name="PRO_FILE_PATH" value="../logs" />
 
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -31,26 +32,53 @@
 
 
     <!-- 开发环境 -->
-    <springProfile name="dev">
+    <!--<springProfile name="dev">
         <root level="info">
             <appender-ref ref="CONSOLE" />
         </root>
-    </springProfile>
-
-    <!-- 测试环境 -->
-    <springProfile name="test">
-        <appender name="TEST-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    </springProfile>-->
+    <springProfile name="dev">
+        <appender name="PROD-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${TEST_FILE_PATH}/logback_%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>${DEV_FILE_PATH}/logback_%d{yyyy-MM-dd}.log</fileNamePattern>
                 <MaxHistory>30</MaxHistory>
             </rollingPolicy>
             <layout class="ch.qos.logback.classic.PatternLayout">
                 <pattern>${PATTERN}</pattern>
             </layout>
         </appender>
+        <!--异步到文件-->
+        <appender name="PROD-ASYNC-FILE" class="ch.qos.logback.classic.AsyncAppender">
+            <discardingThreshold>0</discardingThreshold>
+            <queueSize>500</queueSize>
+            <appender-ref ref="PROD-FILE"/>
+        </appender>
         <root level="info">
             <appender-ref ref="CONSOLE" />
-            <appender-ref ref="TEST-FILE" />
+            <appender-ref ref="PROD-ASYNC-FILE" />
+        </root>
+    </springProfile>
+
+    <!-- 测试环境 -->
+    <springProfile name="test">
+        <appender name="PROD-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${DEV_FILE_PATH}/logback_%d{yyyy-MM-dd}.log</fileNamePattern>
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${PATTERN}</pattern>
+            </layout>
+        </appender>
+        <!--异步到文件-->
+        <appender name="PROD-ASYNC-FILE" class="ch.qos.logback.classic.AsyncAppender">
+            <discardingThreshold>0</discardingThreshold>
+            <queueSize>500</queueSize>
+            <appender-ref ref="PROD-FILE"/>
+        </appender>
+        <root level="info">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="PROD-ASYNC-FILE" />
         </root>
     </springProfile>
 
