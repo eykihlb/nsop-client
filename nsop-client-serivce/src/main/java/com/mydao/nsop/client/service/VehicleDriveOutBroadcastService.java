@@ -5,6 +5,7 @@ import com.mydao.nsop.client.common.Constants;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.dao.PayIssuedRecMapper;
 import com.qcloud.cmq.Account;
+import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
 import org.apache.commons.lang3.StringUtils;
@@ -37,10 +38,11 @@ public class VehicleDriveOutBroadcastService {
     private PayIssuedRecMapper payIssuedRecMapper;
 
     private Gson gson = new Gson();
+
     @Async
     public void vehicleDriveOut() {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_OUT_QUEUE + trafficConfig.getClientNum());
-        while(true) {
+        while(!Thread.interrupted()) {
             LOGGER.info("车辆驶出线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
             try {
                 Message message = queue.receiveMessage(15);
@@ -65,7 +67,12 @@ public class VehicleDriveOutBroadcastService {
                     queue.deleteMessage(message.receiptHandle);
                 }
             } catch (Exception e) {
-                LOGGER.error(e.getMessage());
+                if(e instanceof CMQServerException) {
+                    CMQServerException e1 = (CMQServerException) e;
+                    LOGGER.error(e1.getErrorMessage());
+                } else {
+                    LOGGER.error(e.getMessage());
+                }
             }
         }
     }

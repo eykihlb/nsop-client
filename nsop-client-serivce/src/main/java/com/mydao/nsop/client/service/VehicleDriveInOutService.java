@@ -96,6 +96,7 @@ public class VehicleDriveInOutService {
                 }
             }},0,Constants.RETRY_TIMES
         );*/
+        LOGGER.info("车辆驶入定时任务");
         final String entryUrl = trafficConfig.getUrl() + interFaceConfig.getEntry();
         List<PayEntryRec> perList = payEntryRecMapper.selectList();
         RoadEntryVo rev = new RoadEntryVo();
@@ -171,6 +172,7 @@ public class VehicleDriveInOutService {
                     }
                 }},0,Constants.RETRY_TIMES
         );*/
+        LOGGER.info("车辆驶出定时任务");
         final String exitUrl = trafficConfig.getUrl() + interFaceConfig.getExit();
         List<PayExitRec> perList = payExitRecMapper.selectList();
         RoadExitVo rev = new RoadExitVo();

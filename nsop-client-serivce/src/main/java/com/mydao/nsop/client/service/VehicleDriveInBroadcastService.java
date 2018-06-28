@@ -6,6 +6,7 @@ import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.dao.PayIssuedRecMapper;
 import com.mydao.nsop.client.domain.entity.PayIssuedRec;
 import com.qcloud.cmq.Account;
+import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
 import com.qcloud.cmq.Queue;
 import org.apache.commons.lang3.StringUtils;
@@ -46,13 +47,13 @@ public class VehicleDriveInBroadcastService {
     public void vehicleDriveIn() {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//这个是你要转成后的时间的格式
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE + trafficConfig.getClientNum());
-        while(true) {
+        while(!Thread.interrupted()) {
             LOGGER.info("车辆驶入线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
             try {
                 PayIssuedRec pir = new PayIssuedRec();
                 PayIssuedRec payi = new PayIssuedRec();
                 Map<String,Object> paramMap = new HashMap<>();
-                Message message = queue.receiveMessage(30);
+                Message message = queue.receiveMessage(15);
                 System.out.println("接收到的驶入广播：" + message.msgBody);
                 String messages = message.msgBody;
                 if(StringUtils.isEmpty(messages)) {
@@ -84,7 +85,12 @@ public class VehicleDriveInBroadcastService {
                     queue.deleteMessage(message.receiptHandle);
                 /*}*/
             } catch (Exception e) {
-                LOGGER.error(e.getMessage());
+                if(e instanceof CMQServerException) {
+                    CMQServerException e1 = (CMQServerException) e;
+                    LOGGER.error(e1.getErrorMessage());
+                } else {
+                    LOGGER.error(e.getMessage());
+                }
             }
         }
     }

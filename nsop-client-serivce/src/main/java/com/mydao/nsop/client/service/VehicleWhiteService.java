@@ -15,12 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * @author ZYW
@@ -47,13 +49,13 @@ public class VehicleWhiteService {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_WHITE_QUEUE + trafficConfig.getClientNum());
         PayWhiteList payWhiteList = new PayWhiteList();
         int flag = 0;
-        while(true) {
+        while(!Thread.interrupted()) {
             LOGGER.info("白名单线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
             try {
                 List<Message> messageList = queue.batchReceiveMessage(10, 15);
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
                 for (Message msg : messageList) {
-                    System.out.println("接收到的白名单："+msg.msgBody);
+                    LOGGER.info("接收到的白名单："+msg.msgBody);
                     String message = msg.msgBody.split("@@")[2];
                     if(StringUtils.isEmpty(message)) {
                         LOGGER.warn("接收到的主题消息为空！");
@@ -97,10 +99,11 @@ public class VehicleWhiteService {
 
                 }
             } catch (Exception e) {
-                LOGGER.error(e.getMessage());
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
+                } else {
+                    LOGGER.error(e.getMessage());
                 }
             }
         }

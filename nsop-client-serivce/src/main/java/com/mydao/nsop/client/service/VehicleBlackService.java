@@ -47,7 +47,7 @@ public class VehicleBlackService {
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_BLACK_QUEUE + trafficConfig.getClientNum());
         PayBlackList payBlackList = new PayBlackList();
         int flag = 0;
-        while(true) {
+        while(!Thread.interrupted()) {
             LOGGER.info("黑名单线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
             try {
                 List<Message> messageList = queue.batchReceiveMessage(10, 15);
@@ -97,10 +97,11 @@ public class VehicleBlackService {
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error(e.getMessage());
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
+                } else {
+                    LOGGER.error(e.getMessage());
                 }
             }
         }

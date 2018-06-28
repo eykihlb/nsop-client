@@ -28,7 +28,7 @@ public class ScheduledConfig implements SchedulingConfigurer {
     @Bean
     public AsyncTaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setThreadNamePrefix("Client-Executor");
+        executor.setThreadNamePrefix("client-executor-");
         executor.setMaxPoolSize(10);
         executor.setCorePoolSize(6);
         // 设置拒绝策略
