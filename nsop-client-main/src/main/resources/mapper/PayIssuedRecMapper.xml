@@ -73,9 +73,9 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByStatus">
+  <!--<update id="updateByStatus">
     update PAY_ISSUEDREC set status = #{status} where plateno = #{plateNo}
-  </update>
+  </update>-->
 
   <update id="updateByPlateNo" parameterType="java.util.Map">
     update PAY_ISSUEDREC set status = #{status} where plateno = #{plateno}
@@ -88,7 +88,7 @@
   <select id="selectById" parameterType="java.util.Map" resultMap="BaseResultMap">
     select * from PAY_ISSUEDREC where plateno = #{plateNo} and status = #{status}
   </select>
-  <select id="selectCountByPlateNo" resultType="java.lang.Integer">
-    select count(1) from PAY_ISSUEDREC where plateno = #{plateNo}
+  <select id="selectCountByPlateNoAndStatus" resultType="java.lang.Integer">
+    select count(1) from PAY_ISSUEDREC where plateno = #{plateNo} and STATUS = #{status}
   </select>
 </mapper>

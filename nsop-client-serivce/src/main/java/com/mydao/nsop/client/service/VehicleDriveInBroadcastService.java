@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -45,14 +44,14 @@ public class VehicleDriveInBroadcastService {
 
     @Async
     public void vehicleDriveIn() {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//这个是你要转成后的时间的格式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//这个是你要转成后的时间的格式
         Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE + trafficConfig.getClientNum());
         while(!Thread.interrupted()) {
             LOGGER.info("车辆驶入线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
             try {
                 PayIssuedRec pir = new PayIssuedRec();
-                PayIssuedRec payi = new PayIssuedRec();
-                Map<String,Object> paramMap = new HashMap<>();
+                //PayIssuedRec payi = new PayIssuedRec();
+                //Map<String,Object> paramMap = new HashMap<>();
                 Message message = queue.receiveMessage(15);
                 System.out.println("接收到的驶入广播：" + message.msgBody);
                 String messages = message.msgBody;
@@ -72,18 +71,18 @@ public class VehicleDriveInBroadcastService {
                 pir.setSiteno(map.get("siteNo").toString());
                 pir.setVehclass("01");
                 pir.setStatus("1");
-                paramMap.put("status","1");
-                paramMap.put("plateno",pir.getPlateno());
-                /*payi = payIssuedRecMapper.selectById(pir.getPlateno());
-                if (payi != null){
-                    if (payIssuedRecMapper.updateByPlateNo(paramMap) > 0){
-                        LOGGER.info("车牌号为："+message.msgBody+"的状态更新为驶入！");
+                /*paramMap.put("status","1");
+                paramMap.put("plateno",pir.getPlateno());*/
+                int count = payIssuedRecMapper.selectCountByPlateNoAndStatus(pir.getPlateno(), "1");
+                if (count == 0){
+                    int insert = payIssuedRecMapper.insertSelective(pir);
+                    if(insert > 0) {
+                        LOGGER.info("写入车牌号为："+pir.getPlateno()+"的驶入记录！");
                         queue.deleteMessage(message.receiptHandle);
                     }
-                }else if (*/payIssuedRecMapper.insertSelective(pir);/*>0){*/
-                    LOGGER.info("写入车牌号为："+pir.getPlateno()+"的驶入记录！");
-                    queue.deleteMessage(message.receiptHandle);
-                /*}*/
+                } else {
+                    LOGGER.warn("车辆驶入车牌号重复，车牌号：" + pir.getPlateno());
+                }
             } catch (Exception e) {
                 if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
