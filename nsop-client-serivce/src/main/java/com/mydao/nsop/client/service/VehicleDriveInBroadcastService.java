@@ -82,6 +82,7 @@ public class VehicleDriveInBroadcastService {
                     }
                 } else {
                     LOGGER.warn("车辆驶入车牌号重复，车牌号：" + pir.getPlateno());
+                    queue.deleteMessage(message.receiptHandle);
                 }
             } catch (Exception e) {
                 if(e instanceof CMQServerException) {
