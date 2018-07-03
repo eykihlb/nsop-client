@@ -15,7 +15,6 @@
     <result column="UPFLAG" property="upflag" jdbcType="DECIMAL" />
     <result column="TRANSNO" property="transno" jdbcType="DECIMAL" />
     <result column="VEHCLASS" property="vehclass" jdbcType="VARCHAR" />
-    <result column="STATUS" property="status" jdbcType="VARCHAR" />
   </resultMap>
   <insert id="insertSelective" parameterType="com.mydao.nsop.client.domain.entity.PayEntryRec" >
     insert into PAY_ENTRYREC
@@ -59,9 +58,6 @@
       <if test="vehclass != null" >
         VEHCLASS,
       </if>
-      <if test="status != null" >
-        STATUS,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="recid != null" >
@@ -103,9 +99,6 @@
       <if test="vehclass != null" >
         #{vehclass,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
-        #{status,jdbcType=VARCHAR},
-      </if>
     </trim>
   </insert>
 
@@ -114,10 +107,10 @@
   </select>
 
   <select id="selectList" resultMap="BaseResultMap">
-    select * from PAY_ENTRYREC where status = '1'
+    select * from PAY_ENTRYREC where upflag = '0'
   </select>
 
   <update id="updateById" parameterType="java.lang.String">
-    update PAY_ENTRYREC set status = '3' where recid = #{recid}
+    update PAY_ENTRYREC set upflag = '1' where recid = #{recid}
   </update>
 </mapper>
