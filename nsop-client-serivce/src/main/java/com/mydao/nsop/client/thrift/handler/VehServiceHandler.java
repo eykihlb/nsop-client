@@ -32,6 +32,7 @@ public class VehServiceHandler implements VehService.Iface {
 
     @Override
     public boolean isInBlackList(String plateno) throws TException {
+        System.out.println("---------------查询黑名单记录--------------" + plateno);
         return payBlackListMapper.selectByPrimaryKey(plateno) != null;
     }
 
@@ -44,6 +45,7 @@ public class VehServiceHandler implements VehService.Iface {
         if(payIssuedRec == null) {
             return null;
         }
+        System.out.println("---------------查询驶入记录--------------" + plateno);
         EntryInfo entryInfo = new EntryInfo();
         entryInfo.setEntryLaneNo(payIssuedRec.getLaneno());
         entryInfo.setEntryNetNo(payIssuedRec.getNetno());
@@ -62,7 +64,7 @@ public class VehServiceHandler implements VehService.Iface {
         if(payWhiteList == null) {
             return null;
         }
-
+        System.out.println("---------------查询白名单记录--------------" + plateno);
         VehInfo vehInfo = new VehInfo();
         vehInfo.setPlatecolor(Integer.parseInt(payWhiteList.getPlatecolor()));
         vehInfo.setWhiteFlag(1);

@@ -41,7 +41,7 @@ public class StartAllThread {
         //创建订阅和队列
         createSubscriptionAndQueue.createSubQueue();
         //黑白名单初始化
-        //systemInit.systemInit();
+        systemInit.systemInit();
         //驶入广播
         vehicleDriveInBroadcastService.vehicleDriveIn();
         //驶出广播
