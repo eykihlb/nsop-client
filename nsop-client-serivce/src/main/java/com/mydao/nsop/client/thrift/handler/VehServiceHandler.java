@@ -1,10 +1,8 @@
 package com.mydao.nsop.client.thrift.handler;
 
 import com.mydao.nsop.client.dao.PayBlackListMapper;
-import com.mydao.nsop.client.dao.PayEntryRecMapper;
 import com.mydao.nsop.client.dao.PayIssuedRecMapper;
 import com.mydao.nsop.client.dao.PayWhiteListMapper;
-import com.mydao.nsop.client.domain.entity.PayEntryRec;
 import com.mydao.nsop.client.domain.entity.PayIssuedRec;
 import com.mydao.nsop.client.domain.entity.PayWhiteList;
 import com.mydao.nsop.client.thrift.VehService;
@@ -42,8 +40,11 @@ public class VehServiceHandler implements VehService.Iface {
         Map<String,Object> map = new HashMap<>();
         map.put("status","1");
         map.put("plateNo",plateno);
-        EntryInfo entryInfo = new EntryInfo();
         PayIssuedRec payIssuedRec = payIssuedRecMapper.selectById(map);
+        if(payIssuedRec == null) {
+            return null;
+        }
+        EntryInfo entryInfo = new EntryInfo();
         entryInfo.setEntryLaneNo(payIssuedRec.getLaneno());
         entryInfo.setEntryNetNo(payIssuedRec.getNetno());
         entryInfo.setEntryRecID(payIssuedRec.getRecid());
@@ -55,16 +56,18 @@ public class VehServiceHandler implements VehService.Iface {
 
     @Override
     public VehInfo getByPlateInfo(String plateno) throws TException {
-        VehInfo vehInfo = new VehInfo();
+
         PayWhiteList payWhiteList = payWhiteListMapper.selectByPrimaryKey(plateno);
-        if (payWhiteList != null){
-            vehInfo.setPlatecolor(Integer.parseInt(payWhiteList.getPlatecolor()));
-            vehInfo.setWhiteFlag(1);
-            vehInfo.setPlateno(plateno);
-            vehInfo.setVehClass(payWhiteList.getVehclass());
-        }else{
-            vehInfo.setWhiteFlag(0);
+
+        if(payWhiteList == null) {
+            return null;
         }
+
+        VehInfo vehInfo = new VehInfo();
+        vehInfo.setPlatecolor(Integer.parseInt(payWhiteList.getPlatecolor()));
+        vehInfo.setWhiteFlag(1);
+        vehInfo.setPlateno(plateno);
+        vehInfo.setVehClass(payWhiteList.getVehclass());
         return vehInfo;
     }
 }
