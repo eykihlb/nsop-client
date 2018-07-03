@@ -2,7 +2,7 @@ spring:
   datasource:
       druid:
         driver-class-name: oracle.jdbc.OracleDriver
-        url: jdbc:oracle:thin:@192.168.0.200:1521:orcl
+        url: jdbc:oracle:thin:@192.168.0.201:1521:orcl
         username: xztollstation
         password: qwerty
         initial-size: 1
@@ -61,7 +61,7 @@ nsop:
     url: https://traffic.qhse.cn/api/traffic/
     # url: http://192.168.0.113:9099/
     # 客户端编号
-    client-num: 001
+    client-num: 003
     thriftPort: 3333
   interface:
     entry: roadEntry/normal
@@ -76,7 +76,7 @@ nsop:
       ftpHost: 192.168.0.171
       ftpUserName: eykihlb
       ftpPassword: 213457023
-      ftpPort: 21
+      ftpPort: 22
       ftpPath: "/"
       localPath: F:/download
     upload:

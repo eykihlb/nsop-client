@@ -5,10 +5,13 @@ import com.mydao.nsop.client.dao.PayIssuedRecMapper;
 import com.mydao.nsop.client.dao.PayWhiteListMapper;
 import com.mydao.nsop.client.domain.entity.PayIssuedRec;
 import com.mydao.nsop.client.domain.entity.PayWhiteList;
+import com.mydao.nsop.client.service.VehicleDriveOutBroadcastService;
 import com.mydao.nsop.client.thrift.VehService;
 import com.mydao.nsop.client.vo.EntryInfo;
 import com.mydao.nsop.client.vo.VehInfo;
 import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,7 @@ import java.util.Map;
 @Service("vehServiceHandler")
 public class VehServiceHandler implements VehService.Iface {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(VehicleDriveOutBroadcastService.class);
     @Autowired
     private PayBlackListMapper payBlackListMapper;
 
@@ -32,12 +36,14 @@ public class VehServiceHandler implements VehService.Iface {
 
     @Override
     public boolean isInBlackList(String plateno) throws TException {
-        System.out.println("---------------查询黑名单记录--------------" + plateno);
+        LOGGER.info("-----------------------------------查询黑名单");
         return payBlackListMapper.selectByPrimaryKey(plateno) != null;
     }
 
     @Override
     public EntryInfo getEntryInfo(String plateno) throws TException {
+
+        LOGGER.info("-----------------------------------查询驶入记录");
         Map<String,Object> map = new HashMap<>();
         map.put("status","1");
         map.put("plateNo",plateno);
@@ -45,7 +51,6 @@ public class VehServiceHandler implements VehService.Iface {
         if(payIssuedRec == null) {
             return null;
         }
-        System.out.println("---------------查询驶入记录--------------" + plateno);
         EntryInfo entryInfo = new EntryInfo();
         entryInfo.setEntryLaneNo(payIssuedRec.getLaneno());
         entryInfo.setEntryNetNo(payIssuedRec.getNetno());
@@ -58,13 +63,13 @@ public class VehServiceHandler implements VehService.Iface {
 
     @Override
     public VehInfo getByPlateInfo(String plateno) throws TException {
-
+        LOGGER.info("-----------------------------------查询白名单");
         PayWhiteList payWhiteList = payWhiteListMapper.selectByPrimaryKey(plateno);
 
         if(payWhiteList == null) {
             return null;
         }
-        System.out.println("---------------查询白名单记录--------------" + plateno);
+
         VehInfo vehInfo = new VehInfo();
         vehInfo.setPlatecolor(Integer.parseInt(payWhiteList.getPlatecolor()));
         vehInfo.setWhiteFlag(1);
