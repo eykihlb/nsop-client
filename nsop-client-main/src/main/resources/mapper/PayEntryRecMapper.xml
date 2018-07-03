@@ -118,6 +118,6 @@
   </select>
 
   <update id="updateById" parameterType="java.lang.String">
-    update PAY_ENTRYREC set status = '3' where recid = #{recid}
+    update PAY_ENTRYREC set upflag = '1' where recid = #{recid}
   </update>
 </mapper>

@@ -135,6 +135,6 @@
   </select>
   
   <update id="updateById" parameterType="java.lang.String">
-    update PAY_EXITREC set status = '3' where RECID = #{recId}
+    update PAY_EXITREC set upflag = '1' where RECID = #{recId}
   </update>
 </mapper>
