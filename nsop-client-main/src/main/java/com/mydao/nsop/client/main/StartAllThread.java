@@ -35,7 +35,7 @@ public class StartAllThread {
 
     @Autowired
     private VehicleWhiteService vehicleWhiteService;
-
+    Future<String> future = null;
     @PostConstruct
     public void start() {
         //创建订阅和队列

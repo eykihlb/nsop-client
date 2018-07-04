@@ -102,33 +102,4 @@ public class VehicleDriveOutBroadcastService {
             }
         }
     }
-
-    /*private void sendVehicleDriveIn(Message message,Queue queue) {
-        final CorrelationData cd = new CorrelationData(UUID.randomUUID().toString());
-        //发送车辆驶入信息
-        rabbitTemplate.convertAndSend(Constants.VEHICLE_DRIVE_OUT_LOCAL_QUEUE, "", message.msgBody, cd);
-        try {
-            queue.deleteMessage(message.receiptHandle);
-        } catch (Exception e) {
-            if(e instanceof CMQServerException) {
-                CMQServerException e1 = (CMQServerException) e;
-                LOGGER.error(e1.getErrorMessage());
-            }
-        }
-        *//*rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-            if(ack) {
-                //如果成功 删除消息
-                try {
-                    queue.deleteMessage(message.receiptHandle);
-                } catch (Exception e) {
-                    if(e instanceof CMQServerException) {
-                        CMQServerException e1 = (CMQServerException) e;
-                        LOGGER.error(e1.getErrorMessage());
-                    }
-                }
-            } else {
-                LOGGER.info("消息发送到exchange失败,原因: {}", cause);
-            }
-        });*//*
-    }*/
 }

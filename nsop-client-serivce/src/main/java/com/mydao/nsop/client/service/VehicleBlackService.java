@@ -130,23 +130,4 @@ public class VehicleBlackService {
             }
         }
     }
-
-    /*private void sendBlack(List<Message> messageList,Queue queue) {
-        messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
-        MessageProperties mp = new MessageProperties();
-        for (Message m : messageList) {
-            System.out.println(m.msgBody.split("@@")[0] +"---------------"+m.msgId);
-            mp.setContentType(m.msgBody.split("@@")[1]);
-            org.springframework.amqp.core.Message msg = new org.springframework.amqp.core.Message(m.msgBody.split("@@")[2].getBytes(),mp);
-            rabbitTemplate.send(Constants.TOPIC_TSX_BLACKVEH,msg);
-        }
-        try {
-            queue.batchDeleteMessage(messageList.stream().map(item -> item.receiptHandle).collect(Collectors.toList()));
-        } catch (Exception e) {
-            if(e instanceof CMQServerException) {
-                CMQServerException e1 = (CMQServerException) e;
-                LOGGER.error(e1.getErrorMessage());
-            }
-        }
-    }*/
 }
