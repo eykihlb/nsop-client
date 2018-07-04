@@ -48,33 +48,37 @@ public class VehServiceHandler implements VehService.Iface {
         map.put("status","1");
         map.put("plateNo",plateno);
         PayIssuedRec payIssuedRec = payIssuedRecMapper.selectById(map);
-        if(payIssuedRec == null) {
-            return null;
-        }
+
         EntryInfo entryInfo = new EntryInfo();
-        entryInfo.setEntryLaneNo(payIssuedRec.getLaneno());
-        entryInfo.setEntryNetNo(payIssuedRec.getNetno());
-        entryInfo.setEntryRecID(payIssuedRec.getRecid());
-        entryInfo.setEntrySiteNo(payIssuedRec.getSiteno());
-        entryInfo.setEntryTime(String.valueOf(payIssuedRec.getEntrytime().getTime()));
-        entryInfo.setVehClass(payIssuedRec.getVehclass());
+        if(payIssuedRec != null) {
+            entryInfo.setEntryLaneNo(payIssuedRec.getLaneno());
+            entryInfo.setEntryNetNo(payIssuedRec.getNetno());
+            entryInfo.setEntryRecID(payIssuedRec.getRecid());
+            entryInfo.setEntrySiteNo(payIssuedRec.getSiteno());
+            entryInfo.setEntryTime(String.valueOf(payIssuedRec.getEntrytime().getTime()));
+            entryInfo.setVehClass(payIssuedRec.getVehclass());
+        }
+
         return entryInfo;
     }
 
     @Override
     public VehInfo getByPlateInfo(String plateno) throws TException {
         LOGGER.info("-----------------------------------查询白名单");
-        PayWhiteList payWhiteList = payWhiteListMapper.selectByPrimaryKey(plateno);
-
-        if(payWhiteList == null) {
-            return null;
-        }
 
         VehInfo vehInfo = new VehInfo();
-        vehInfo.setPlatecolor(Integer.parseInt(payWhiteList.getPlatecolor()));
-        vehInfo.setWhiteFlag(1);
-        vehInfo.setPlateno(plateno);
-        vehInfo.setVehClass(payWhiteList.getVehclass());
+
+        PayWhiteList payWhiteList = payWhiteListMapper.selectByPrimaryKey(plateno);
+
+        if(payWhiteList != null) {
+            vehInfo.setPlatecolor(Integer.parseInt(payWhiteList.getPlatecolor()));
+            vehInfo.setWhiteFlag(1);
+            vehInfo.setPlateno(plateno);
+            vehInfo.setVehClass(payWhiteList.getVehclass());
+        } else {
+            vehInfo.setWhiteFlag(0);
+        }
+
         return vehInfo;
     }
 }
