@@ -51,14 +51,10 @@ public class CMQConfig {
         this.endpointQueue = endpointQueue;
     }
 
-    @Bean
-    @Scope("prototype")
     public Account accountTopic() {
         return new Account(endpointTopic,secretId, secretKey);
     }
 
-    @Bean
-    @Scope("prototype")
     public Account accountQueue() {
         return new Account(endpointQueue,secretId, secretKey);
     }

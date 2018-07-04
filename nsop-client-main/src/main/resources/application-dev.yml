@@ -63,6 +63,8 @@ nsop:
     # 客户端编号
     client-num: 003
     thriftPort: 3333
+    #腾讯DNS
+    qqDns: 119.29.29.29
   interface:
     entry: roadEntry/normal
     entry_ex: roadEntry/abnormal

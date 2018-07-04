@@ -2,9 +2,11 @@ package com.mydao.nsop.client.service;
 
 import com.google.gson.Gson;
 import com.mydao.nsop.client.common.Constants;
+import com.mydao.nsop.client.config.CMQConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.dao.PayBlackListMapper;
 import com.mydao.nsop.client.domain.entity.PayBlackList;
+import com.mydao.nsop.client.monitor.MonitorThread;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
@@ -21,6 +23,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * @author ZYW
@@ -28,11 +31,16 @@ import java.util.Map;
  */
 @Service
 public class VehicleBlackService {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(VehicleBlackService.class);
 
+    private static ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    public static void setExecutorService(ExecutorService executorService) {
+        VehicleBlackService.executorService = executorService;
+    }
+
     @Autowired
-    private Account accountQueue;
+    private CMQConfig config;
 
     @Autowired
     private TrafficConfig trafficConfig;
@@ -44,13 +52,17 @@ public class VehicleBlackService {
 
     @Async
     public void addDelBlack() {
-        Queue queue = accountQueue.getQueue(Constants.VEHICLE_BLACK_QUEUE + trafficConfig.getClientNum());
-        PayBlackList payBlackList = new PayBlackList();
+
         int flag = 0;
         while(!Thread.interrupted()) {
             LOGGER.info("黑名单线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
+            Future<List<Message>> futureTask = null ;
             try {
-                List<Message> messageList = queue.batchReceiveMessage(10, 15);
+                Account accountQueue = config.accountQueue();
+                Queue queue = accountQueue.getQueue(Constants.VEHICLE_BLACK_QUEUE + trafficConfig.getClientNum());
+                PayBlackList payBlackList = new PayBlackList();
+                futureTask = executorService.submit(new BlcakCmqCall(accountQueue,trafficConfig.getClientNum()));
+                List<Message> messageList = futureTask.get(20, TimeUnit.SECONDS);
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
                 for (Message msg : messageList) {
                     LOGGER.info("接收到的黑名单："+msg.msgBody);
@@ -97,7 +109,19 @@ public class VehicleBlackService {
                     }
                 }
             } catch (Exception e) {
-                if(e instanceof CMQServerException) {
+                if((e instanceof InterruptedException)||(e instanceof TimeoutException)){
+                    LOGGER.error("黑名单CMQ连接异常-------------");
+                    e.printStackTrace();
+                    MonitorThread  thread = new MonitorThread();
+                    thread.cancelBlack();
+                    Thread.currentThread().interrupt();
+                    LOGGER.error(e.getMessage());
+                    futureTask.cancel(true);
+                    LOGGER.error("线程状态："+futureTask.isDone());
+                    futureTask = null;
+                    executorService.shutdownNow();
+                    executorService = null;
+                } else if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
                 } else {

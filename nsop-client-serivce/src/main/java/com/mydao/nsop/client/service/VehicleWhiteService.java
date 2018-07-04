@@ -2,9 +2,11 @@ package com.mydao.nsop.client.service;
 
 import com.google.gson.Gson;
 import com.mydao.nsop.client.common.Constants;
+import com.mydao.nsop.client.config.CMQConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.dao.PayWhiteListMapper;
 import com.mydao.nsop.client.domain.entity.PayWhiteList;
+import com.mydao.nsop.client.monitor.MonitorThread;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
@@ -15,14 +17,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * @author ZYW
@@ -33,11 +34,16 @@ public class VehicleWhiteService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VehicleWhiteService.class);
 
+    private static ExecutorService executorService = Executors.newSingleThreadExecutor();
+    public static void setExecutorService(ExecutorService executorService) {
+        VehicleWhiteService.executorService = executorService;
+    }
+
     @Autowired
     private PayWhiteListMapper payWhiteListMapper;
 
     @Autowired
-    private Account accountQueue;
+    private CMQConfig config;
 
     @Autowired
     private TrafficConfig trafficConfig;
@@ -46,13 +52,16 @@ public class VehicleWhiteService {
 
     @Async
     public void addDelWhite() {
-        Queue queue = accountQueue.getQueue(Constants.VEHICLE_WHITE_QUEUE + trafficConfig.getClientNum());
         PayWhiteList payWhiteList = new PayWhiteList();
         int flag = 0;
         while(!Thread.interrupted()) {
             LOGGER.info("白名单线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
+            Future<List<Message>> futureTask = null ;
             try {
-                List<Message> messageList = queue.batchReceiveMessage(10, 15);
+                Account accountQueue = config.accountQueue();
+                Queue queue = accountQueue.getQueue(Constants.VEHICLE_WHITE_QUEUE + trafficConfig.getClientNum());
+                futureTask = executorService.submit(new WhiteCmqCall(accountQueue,trafficConfig.getClientNum()));
+                List<Message> messageList = futureTask.get(20, TimeUnit.SECONDS);
                 messageList.sort(Comparator.comparing((Message m) -> Integer.parseInt(m.msgBody.split("@@")[0] )) );
                 for (Message msg : messageList) {
                     LOGGER.info("接收到的白名单："+msg.msgBody);
@@ -99,7 +108,20 @@ public class VehicleWhiteService {
 
                 }
             } catch (Exception e) {
-                if(e instanceof CMQServerException) {
+                if((e instanceof InterruptedException)||(e instanceof TimeoutException)){
+                    LOGGER.error("CMQ连接异常-------------");
+                    e.printStackTrace();
+                    LOGGER.error(e.getMessage());
+                    MonitorThread thread = new MonitorThread();
+                    thread.cancelWhite();
+                    Thread.currentThread().interrupt();
+                    futureTask.cancel(true);
+                    LOGGER.error("线程状态："+futureTask.isDone());
+                    futureTask = null;
+                    executorService.shutdownNow();
+                    LOGGER.error("线程池状态："+executorService.isShutdown());
+                    executorService = null;
+                } else if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
                 } else {

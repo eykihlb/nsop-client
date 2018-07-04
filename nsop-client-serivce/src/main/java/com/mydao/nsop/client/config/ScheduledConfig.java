@@ -31,13 +31,7 @@ public class ScheduledConfig implements SchedulingConfigurer {
         executor.setThreadNamePrefix("client-executor-");
         executor.setMaxPoolSize(10);
         executor.setCorePoolSize(6);
-        // 设置拒绝策略
-        executor.setRejectedExecutionHandler(new RejectedExecutionHandler() {
-            @Override
-            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                // .....
-            }
-        });
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
         // 使用预定义的异常处理类
         return executor;
     }

@@ -2,9 +2,11 @@ package com.mydao.nsop.client.service;
 
 import com.google.gson.Gson;
 import com.mydao.nsop.client.common.Constants;
+import com.mydao.nsop.client.config.CMQConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.dao.PayIssuedRecMapper;
 import com.mydao.nsop.client.domain.entity.PayIssuedRec;
+import com.mydao.nsop.client.monitor.MonitorThread;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
@@ -21,6 +23,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * @author ZYW
@@ -28,11 +31,16 @@ import java.util.Map;
  */
 @Service
 public class VehicleDriveInBroadcastService {
+    private static ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    public static void setExecutorService(ExecutorService executorService) {
+        VehicleDriveInBroadcastService.executorService = executorService;
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VehicleDriveInBroadcastService.class);
 
     @Autowired
-    private Account accountQueue;
+    private CMQConfig config;
 
     @Autowired
     private TrafficConfig trafficConfig;
@@ -45,14 +53,17 @@ public class VehicleDriveInBroadcastService {
     @Async
     public void vehicleDriveIn() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//这个是你要转成后的时间的格式
-        Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE + trafficConfig.getClientNum());
         while(!Thread.interrupted()) {
             LOGGER.info("车辆驶入线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
+            Future<Message> futureTask = null ;
             try {
+                Account accountQueue = config.accountQueue();
+                Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_IN_QUEUE + trafficConfig.getClientNum());
                 PayIssuedRec pir = new PayIssuedRec();
                 //PayIssuedRec payi = new PayIssuedRec();
                 //Map<String,Object> paramMap = new HashMap<>();
-                Message message = queue.receiveMessage(15);
+                futureTask = executorService.submit(new DriveInCmqCall(accountQueue,trafficConfig.getClientNum()));
+                Message message = futureTask.get(20, TimeUnit.SECONDS);
                 System.out.println("接收到的驶入广播：" + message.msgBody);
                 String messages = message.msgBody;
                 if(StringUtils.isEmpty(messages)) {
@@ -85,7 +96,19 @@ public class VehicleDriveInBroadcastService {
                     queue.deleteMessage(message.receiptHandle);
                 }
             } catch (Exception e) {
-                if(e instanceof CMQServerException) {
+                if((e instanceof InterruptedException)||(e instanceof TimeoutException)){
+                    LOGGER.error("驶入CMQ连接异常-------------");
+                    e.printStackTrace();
+                    LOGGER.error(e.getMessage());
+                    futureTask.cancel(true);
+                    LOGGER.error("线程状态："+futureTask.isDone());
+                    futureTask = null;
+                    MonitorThread thread = new MonitorThread();
+                    thread.cancelIn();
+                    Thread.currentThread().interrupt();
+                    executorService.shutdownNow();
+                    executorService = null;
+                } else if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
                 } else {

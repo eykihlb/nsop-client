@@ -2,8 +2,10 @@ package com.mydao.nsop.client.service;
 
 import com.google.gson.Gson;
 import com.mydao.nsop.client.common.Constants;
+import com.mydao.nsop.client.config.CMQConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.dao.PayIssuedRecMapper;
+import com.mydao.nsop.client.monitor.MonitorThread;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
 import com.qcloud.cmq.Message;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * @author ZYW
@@ -26,10 +29,16 @@ import java.util.Map;
 @Service
 public class VehicleDriveOutBroadcastService {
 
+    private static ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    public static void setExecutorService(ExecutorService executorService) {
+        VehicleDriveOutBroadcastService.executorService = executorService;
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(VehicleDriveOutBroadcastService.class);
 
     @Autowired
-    private Account accountQueue;
+    private CMQConfig config;
 
     @Autowired
     private TrafficConfig trafficConfig;
@@ -41,11 +50,14 @@ public class VehicleDriveOutBroadcastService {
 
     @Async
     public void vehicleDriveOut() {
-        Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_OUT_QUEUE + trafficConfig.getClientNum());
         while(!Thread.interrupted()) {
             LOGGER.info("车辆驶出线程，时间：" + DateTime.now().toString("YYYY-MM-dd HH:mm:ss"));
+            Future<Message> futureTask = null ;
             try {
-                Message message = queue.receiveMessage(15);
+                Account accountQueue = config.accountQueue();
+                Queue queue = accountQueue.getQueue(Constants.VEHICLE_DRIVE_OUT_QUEUE + trafficConfig.getClientNum());
+                futureTask = executorService.submit(new DirveOutCmqCall(accountQueue,trafficConfig.getClientNum()));
+                Message message =  futureTask.get(20, TimeUnit.SECONDS);
                 System.out.println("接收到的驶出广播：" + message.msgBody);
                 Map<String,Object> map = new HashMap<>();
                 Map<String,Object> paramMap = new HashMap<>();
@@ -66,8 +78,22 @@ public class VehicleDriveOutBroadcastService {
                     LOGGER.warn("未找到车牌号为："+message.msgBody+"的驶入记录！");
                     queue.deleteMessage(message.receiptHandle);
                 }
+
             } catch (Exception e) {
-                if(e instanceof CMQServerException) {
+                if((e instanceof InterruptedException)||(e instanceof TimeoutException)){
+                    LOGGER.error("驶出CMQ连接异常-------------");
+                    e.printStackTrace();
+                    LOGGER.error(e.getMessage());
+                    futureTask.cancel(true);
+                    LOGGER.error("线程状态："+futureTask.isDone());
+                    futureTask = null;
+                    executorService.shutdownNow();
+                    MonitorThread thread = new MonitorThread();
+                    thread.cancelOut();
+                    Thread.currentThread().interrupt();
+                    LOGGER.error("线程池状态："+executorService.isShutdown());
+                    executorService = null;
+                } else if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
                 } else {

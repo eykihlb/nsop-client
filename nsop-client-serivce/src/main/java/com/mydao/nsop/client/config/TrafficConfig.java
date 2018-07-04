@@ -15,6 +15,16 @@ public class TrafficConfig {
 
     private String clientNum;
 
+    private String qqDns;
+
+    public String getQqDns() {
+        return qqDns;
+    }
+
+    public void setQqDns(String qqDns) {
+        this.qqDns = qqDns;
+    }
+
     public String getUrl() {
         return url;
     }
