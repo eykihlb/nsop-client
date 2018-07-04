@@ -1,6 +1,7 @@
 package com.mydao.nsop.client.service;
 
 import com.mydao.nsop.client.common.Constants;
+import com.mydao.nsop.client.config.CMQConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.qcloud.cmq.Account;
 import com.qcloud.cmq.CMQServerException;
@@ -20,10 +21,7 @@ public class CreateSubscriptionAndQueue {
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateSubscriptionAndQueue.class);
 
     @Autowired
-    private Account accountTopic;
-
-    @Autowired
-    private Account accountQueue;
+    private CMQConfig config;
 
     @Autowired
     private TrafficConfig trafficConfig;
@@ -34,11 +32,12 @@ public class CreateSubscriptionAndQueue {
         meta2.visibilityTimeout = 10;
         meta2.maxMsgSize = 65536;
         meta2.msgRetentionSeconds = 345600;
-
+        Account accountQueue = config.accountQueue();
+        Account accountTopic = config.accountTopic();
         //创建车辆驶入通知队列
         String queueName = Constants.VEHICLE_DRIVE_IN_QUEUE + trafficConfig.getClientNum();
         try {
-            accountQueue.createQueue(queueName,meta2);
+            config.accountQueue().createQueue(queueName,meta2);
         } catch (Exception e) {
             if(e instanceof CMQServerException) {
                 CMQServerException e1 = (CMQServerException) e;
