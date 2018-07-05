@@ -80,7 +80,7 @@ public class VehicleDriveInBroadcastService {
                 pir.setPlateno(map.get("plateNo").toString().split("-")[0]);
                 pir.setRecid(map.get("entryRecId").toString());
                 pir.setSiteno(map.get("siteNo").toString());
-                pir.setVehclass("01");
+                pir.setVehclass(map.get("vehclass").toString());
                 pir.setStatus("1");
                 /*paramMap.put("status","1");
                 paramMap.put("plateno",pir.getPlateno());*/
