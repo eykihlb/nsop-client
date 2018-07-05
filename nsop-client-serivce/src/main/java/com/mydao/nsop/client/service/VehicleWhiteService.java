@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -78,7 +75,7 @@ public class VehicleWhiteService {
                     payWhiteList.setPlateno(map.get("plateno").toString());
                     payWhiteList.setSubBand(map.get("subBand").toString());
                     payWhiteList.setUptime(new Date());
-                    payWhiteList.setVehclass(map.get("vehclass").toString());
+                    payWhiteList.setVehclass(Objects.toString(map.get("vehclass"),"0"));
                     int count = payWhiteListMapper.selectByPlateNo(payWhiteList.getPlateno());
                     if (msg.msgBody.split("@@")[1].equals("add_white")){
                         if (count > 0) {
@@ -124,8 +121,10 @@ public class VehicleWhiteService {
                 } else if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
+                } else if(e instanceof ExecutionException) {
+                    LOGGER.error("没有消息：" + e.getMessage());
                 } else {
-                    LOGGER.error(e.getMessage());
+                    LOGGER.error(e.getMessage(),e);
                 }
             }
         }
