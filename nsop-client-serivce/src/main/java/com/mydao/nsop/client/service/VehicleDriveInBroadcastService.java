@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
@@ -72,15 +73,15 @@ public class VehicleDriveInBroadcastService {
                     continue;
                 }
                 Map<String,Object> map = gson.fromJson(new String(message.msgBody),Map.class);
-                String sd = sdf.format(new Date(Long.parseLong(String.valueOf(new BigDecimal(map.get("passTime").toString()).toPlainString()))));
+                String sd = sdf.format(new Date(Long.parseLong(String.valueOf(new BigDecimal(Objects.toString(map.get("passTime"),"")).toPlainString()))));
                 pir.setEntrytime(new Date(sd.replace("-","/")));
-                pir.setLaneno(map.get("laneNo").toString());
-                pir.setNetno(map.get("netNo").toString());
-                pir.setPlatecolor(map.get("plateNo").toString().split("-")[1]);
-                pir.setPlateno(map.get("plateNo").toString().split("-")[0]);
-                pir.setRecid(map.get("entryRecId").toString());
-                pir.setSiteno(map.get("siteNo").toString());
-                pir.setVehclass(map.get("vehclass").toString());
+                pir.setLaneno(Objects.toString(map.get("laneNo"),""));
+                pir.setNetno(Objects.toString(map.get("netNo"),""));
+                pir.setPlatecolor(Objects.toString(map.get("plateNo"),"").split("-")[1]);
+                pir.setPlateno(Objects.toString(map.get("plateNo"),"").split("-")[0]);
+                pir.setRecid(Objects.toString(map.get("entryRecId"),""));
+                pir.setSiteno(Objects.toString(map.get("siteNo"),""));
+                pir.setVehclass(Objects.toString(map.get("vehclassId"),""));
                 pir.setStatus("1");
                 /*paramMap.put("status","1");
                 paramMap.put("plateno",pir.getPlateno());*/
