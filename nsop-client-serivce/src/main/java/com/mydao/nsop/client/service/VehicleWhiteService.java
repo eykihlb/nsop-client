@@ -72,13 +72,13 @@ public class VehicleWhiteService {
                         continue;
                     }
                     Map<String,Object> map = gson.fromJson(new String(msg.msgBody.split("@@")[2]),Map.class);
-                    payWhiteList.setBand("暂无");
-                    payWhiteList.setBodycolor("00");
-                    payWhiteList.setPlatecolor("00");
-                    payWhiteList.setPlateno(map.get("plateNo").toString());
-                    payWhiteList.setSubBand("暂无");
+                    payWhiteList.setBand(map.get("band").toString());
+                    payWhiteList.setBodycolor(map.get("bodycolor").toString());
+                    payWhiteList.setPlatecolor(map.get("platecolor").toString());
+                    payWhiteList.setPlateno(map.get("plateno").toString());
+                    payWhiteList.setSubBand(map.get("subBand").toString());
                     payWhiteList.setUptime(new Date());
-                    payWhiteList.setVehclass("01");
+                    payWhiteList.setVehclass(map.get("vehclass").toString());
                     int count = payWhiteListMapper.selectByPlateNo(payWhiteList.getPlateno());
                     if (msg.msgBody.split("@@")[1].equals("add_white")){
                         if (count > 0) {

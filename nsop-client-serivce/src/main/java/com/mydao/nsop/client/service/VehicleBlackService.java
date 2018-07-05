@@ -73,13 +73,13 @@ public class VehicleBlackService {
                         continue;
                     }
                     Map<String,Object> map = gson.fromJson(new String(message),Map.class);
-                    payBlackList.setBand("暂无");
-                    payBlackList.setBodycolor("00");
-                    payBlackList.setPlatecolor("00");
-                    payBlackList.setPlateno(map.get("plateNo").toString());
-                    payBlackList.setSubBand("暂无");
+                    payBlackList.setBand(map.get("band").toString());
+                    payBlackList.setBodycolor(map.get("bodycolor").toString());
+                    payBlackList.setPlatecolor(map.get("platecolor").toString());
+                    payBlackList.setPlateno(map.get("plateno").toString());
+                    payBlackList.setSubBand(map.get("subBand").toString());
                     payBlackList.setUptime(new Date());
-                    payBlackList.setVehclass("01");
+                    payBlackList.setVehclass(map.get("vehclass").toString());
                     int count = payBlackListMapper.selectByPlateNo(payBlackList.getPlateno());
                     LOGGER.info("车牌：" + payBlackList.getPlateno() + "数量：" + count);
                     if (msg.msgBody.split("@@")[1].equals("add_black")){

@@ -65,17 +65,19 @@ public class VehServiceHandler implements VehService.Iface {
     @Override
     public VehInfo getByPlateInfo(String plateno) throws TException {
         LOGGER.info("-----------------------------------查询白名单");
-
+        LOGGER.info("-----------------------------------车牌号："+plateno );
         VehInfo vehInfo = new VehInfo();
 
         PayWhiteList payWhiteList = payWhiteListMapper.selectByPrimaryKey(plateno);
 
         if(payWhiteList != null) {
+            LOGGER.info("-----------------------------------查询到车牌号：" + plateno + "的白名单记录！");
             vehInfo.setPlatecolor(Integer.parseInt(payWhiteList.getPlatecolor()));
             vehInfo.setWhiteFlag(1);
             vehInfo.setPlateno(plateno);
             vehInfo.setVehClass(payWhiteList.getVehclass());
         } else {
+            LOGGER.info("-----------------------------------未查询到车牌号：" + plateno + "的白名单记录！");
             vehInfo.setWhiteFlag(0);
         }
 
