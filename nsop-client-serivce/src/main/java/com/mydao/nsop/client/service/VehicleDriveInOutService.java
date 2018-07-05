@@ -110,7 +110,7 @@ public class VehicleDriveInOutService {
             rev.setPassTime(payExitRec.getExittime());
             rev.setVehclassId(payExitRec.getVehclass());
             rev.setEntryRecId(payExitRec.getEntryRecid());
-            rev.setPayFare(payExitRec.getFaretotal().toString());
+            rev.setPayFare("0.01");
             rev.setVehcolorId(payExitRec.getFarePlatecolor());
             rev.setFileId(payExitRec.getRecid()+".jpg");
             fileUploadService.fileUpload(fTPConfig,rev.getFileId());
