@@ -66,12 +66,12 @@ public class SystemInit {
                     pbl.setVehclass(new BigDecimal(red.get("vehicleId").toString()).toPlainString());
                     String sd = sdf.format(new Date(Long.parseLong(String.valueOf(new BigDecimal(red.get("createTime").toString()).toPlainString()))));
                     pbl.setUptime(new Date(sd.replace("-","/")));
-                    pbl.setPlateno(red.get("plateNo").toString());
-                    pbl.setPlatecolor(red.get("vehcolorId").toString().length()>2?"01":"00");
-                    pbl.setBand("00");
-                    pbl.setVehclass("00");
-                    pbl.setBodycolor("00");
-                    pbl.setSubBand("00");
+                    pbl.setPlateno(red.get("plateno").toString());
+                    pbl.setPlatecolor(red.get("platecolor").toString());
+                    pbl.setBand(red.get("band").toString());
+                    pbl.setVehclass(red.get("vehclass").toString());
+                    pbl.setBodycolor(red.get("bodycolor").toString());
+                    pbl.setSubBand(red.get("subBand").toString());
                     try{
                         payBlackListMapper.insertSelective(pbl);
                     }catch (Exception e){
@@ -93,13 +93,13 @@ public class SystemInit {
                 List<LinkedTreeMap<String,Object>> list = (List<LinkedTreeMap<String,Object>>)map.get("data");
                 for (LinkedTreeMap<String,Object> rad : list) {
                     String sd = sdf.format(new Date(Long.parseLong(String.valueOf(new BigDecimal(rad.get("createTime").toString()).toPlainString()))));
-                    pwl.setPlatecolor(rad.get("vehcolorId").toString().length()>2?"01":"00");
-                    pwl.setPlateno(rad.get("plateNo").toString());
                     pwl.setUptime(new Date(sd.replace("-","/")));
-                    pwl.setVehclass("00");
-                    pwl.setBodycolor("00");
-                    pwl.setBand("00");
-                    pwl.setSubBand("00");
+                    pwl.setPlateno(rad.get("plateno").toString());
+                    pwl.setPlatecolor(rad.get("platecolor").toString());
+                    pwl.setBand(rad.get("band").toString());
+                    pwl.setVehclass(rad.get("vehclass").toString());
+                    pwl.setBodycolor(rad.get("bodycolor").toString());
+                    pwl.setSubBand(rad.get("subBand").toString());
                     try{
                         payWhiteListMapper.insertSelective(pwl);
                     }catch (Exception e){

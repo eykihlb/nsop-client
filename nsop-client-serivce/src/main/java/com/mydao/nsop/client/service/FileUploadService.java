@@ -26,6 +26,9 @@ public class FileUploadService {
                     String filePath = FTPUtil.downloadFtpFile(fTPConfig,fileName);
                     FileInputStream input = new FileInputStream(new File(filePath));
                     flag = FTPUtil.uploadFile(fTPConfig,fileName,input);
+                    if (flag) {
+                        new File(filePath).delete();
+                    }
                 }catch (Exception e){
                     index ++;
                     if (index.equals(Constants.FILEUPLOAD_RETRY)){
