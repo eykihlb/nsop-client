@@ -9,6 +9,9 @@ import com.mydao.nsop.client.dao.PayWhiteListMapper;
 import com.mydao.nsop.client.domain.entity.PayBlackList;
 import com.mydao.nsop.client.domain.entity.PayWhiteList;
 import com.mydao.nsop.client.domain.vo.PageVo;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class SystemInit {
@@ -55,17 +56,25 @@ public class SystemInit {
             System.out.println("全量白名单："+ whiteUri);
             String blackUri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_black();
             System.out.println("全量黑名单："+ whiteUri);
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//这个是你要转成后的时间的格式
             while (blackFlag){
                 payBlackListMapper.deleteAll();
                 PayBlackList pbl = new PayBlackList();
-                ResponseEntity<Object> blackEntity = oAuthRestTemplate.postForEntity(blackUri,pv,Object.class);
-                Map<String,Object> map = gson.fromJson(blackEntity.getBody().toString(),Map.class);
-                List<LinkedTreeMap<String,Object>> list = (List<LinkedTreeMap<String,Object>>)map.get("data");
-                for (LinkedTreeMap<String,Object> red : list) {
-                    pbl.setVehclass(new BigDecimal(red.get("vehicleId").toString()).toPlainString());
-                    String sd = sdf.format(new Date(Long.parseLong(String.valueOf(new BigDecimal(red.get("createTime").toString()).toPlainString()))));
-                    pbl.setUptime(new Date(sd.replace("-","/")));
+                ResponseEntity<Map> blackEntity = oAuthRestTemplate.postForEntity(blackUri,pv,Map.class);
+                Map<String,Object> map = blackEntity.getBody();
+                Integer code = Integer.valueOf(Objects.toString(map.get("code"), "0"));
+                if(code != 200) {
+                    LOGGER.error("全量黑名单拉取失败！");
+                    break;
+                }
+                Object data = map.get("data");
+                if(data == null) {
+                    LOGGER.warn("没有全量黑名单！");
+                    break;
+                }
+                List<LinkedHashMap<String,Object>> list = (List<LinkedHashMap<String,Object>>)data;
+                for (LinkedHashMap<String,Object> red : list) {
+                    pbl.setVehclass(Objects.toString(red.get("vehclass"),""));
+                    pbl.setUptime(DateTime.parse(Objects.toString(red.get("uptime"),""), DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")).toDate());
                     pbl.setPlateno(red.get("plateno").toString());
                     pbl.setPlatecolor(red.get("platecolor").toString());
                     pbl.setBand(red.get("band").toString());
@@ -88,12 +97,21 @@ public class SystemInit {
             while (whiteFlag){
                 payWhiteListMapper.deleteAll();
                 PayWhiteList pwl = new PayWhiteList();
-                ResponseEntity<Object> whiteEntity = oAuthRestTemplate.postForEntity(whiteUri,pv,Object.class);
-                Map<String,Object> map = gson.fromJson(whiteEntity.getBody().toString(),Map.class);
-                List<LinkedTreeMap<String,Object>> list = (List<LinkedTreeMap<String,Object>>)map.get("data");
-                for (LinkedTreeMap<String,Object> rad : list) {
-                    String sd = sdf.format(new Date(Long.parseLong(String.valueOf(new BigDecimal(rad.get("createTime").toString()).toPlainString()))));
-                    pwl.setUptime(new Date(sd.replace("-","/")));
+                ResponseEntity<Map> whiteEntity = oAuthRestTemplate.postForEntity(whiteUri,pv,Map.class);
+                Map<String,Object> map = whiteEntity.getBody();
+                Integer code = Integer.valueOf(Objects.toString(map.get("code"), "0"));
+                if(code != 200) {
+                    LOGGER.error("全量白名单拉取失败！");
+                    break;
+                }
+                Object data = map.get("data");
+                if(data == null) {
+                    LOGGER.warn("没有全量白名单！");
+                    break;
+                }
+                List<LinkedHashMap<String,Object>> list = (List<LinkedHashMap<String,Object>>)data;
+                for (LinkedHashMap<String,Object> rad : list) {
+                    pwl.setUptime(DateTime.parse(Objects.toString(rad.get("uptime"),""), DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")).toDate());
                     pwl.setPlateno(rad.get("plateno").toString());
                     pwl.setPlatecolor(rad.get("platecolor").toString());
                     pwl.setBand(rad.get("band").toString());

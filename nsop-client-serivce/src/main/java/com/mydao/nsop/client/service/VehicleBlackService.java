@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -79,7 +76,7 @@ public class VehicleBlackService {
                     payBlackList.setPlateno(map.get("plateno").toString());
                     payBlackList.setSubBand(map.get("subBand").toString());
                     payBlackList.setUptime(new Date());
-                    payBlackList.setVehclass(map.get("vehclass").toString());
+                    payBlackList.setVehclass(Objects.toString(map.get("vehclass"),"0"));
                     int count = payBlackListMapper.selectByPlateNo(payBlackList.getPlateno());
                     LOGGER.info("车牌：" + payBlackList.getPlateno() + "数量：" + count);
                     if (msg.msgBody.split("@@")[1].equals("add_black")){
@@ -124,8 +121,10 @@ public class VehicleBlackService {
                 } else if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
+                } else if(e instanceof ExecutionException) {
+                    LOGGER.error("没有消息：" + e.getMessage());
                 } else {
-                    LOGGER.error(e.getMessage());
+                    LOGGER.error(e.getMessage(),e);
                 }
             }
         }

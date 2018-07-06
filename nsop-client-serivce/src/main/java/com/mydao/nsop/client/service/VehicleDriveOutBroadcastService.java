@@ -96,8 +96,10 @@ public class VehicleDriveOutBroadcastService {
                 } else if(e instanceof CMQServerException) {
                     CMQServerException e1 = (CMQServerException) e;
                     LOGGER.error(e1.getErrorMessage());
+                }  else if(e instanceof ExecutionException) {
+                    LOGGER.error("没有消息：" + e.getMessage());
                 } else {
-                    LOGGER.error(e.getMessage());
+                    LOGGER.error(e.getMessage(),e);
                 }
             }
         }
