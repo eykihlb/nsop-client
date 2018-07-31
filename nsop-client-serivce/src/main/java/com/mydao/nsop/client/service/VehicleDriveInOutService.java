@@ -109,7 +109,7 @@ public class VehicleDriveInOutService {
             rev.setFarePlateNo(payExitRec.getFarePlateno());
             rev.setPassTime(payExitRec.getExittime());
             rev.setVehclassId(payExitRec.getVehclass());
-            rev.setEntryRecId(payExitRec.getEntryRecid());
+            rev.setEntryRecId("000000000000000000000".equals(payExitRec.getEntryRecid())?"":payExitRec.getEntryRecid());
             rev.setPayFare("0.01");
             rev.setVehcolorId(payExitRec.getFarePlatecolor());
             rev.setFileId(payExitRec.getRecid()+".jpg");
