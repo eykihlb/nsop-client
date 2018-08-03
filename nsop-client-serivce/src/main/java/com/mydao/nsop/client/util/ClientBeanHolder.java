@@ -5,24 +5,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-
-/** 【工程名】
- *     vms
- * 【版权所有】
- *     Copyright ? 2017 蓝盾股份 
- * 【类文件名称】
- *     YggdrasillBeanHolder.java
- * 【类文件描述】
- *     
- *
- * 【历史信息】
- *      版本      日期      作者/修改者     内容描述
- *     -------- ---------   ---------- ------------------------
- *      1.0.0    2017年4月19日     miao        最初版本
- */
- 
-
- 
 @Component
 public class ClientBeanHolder implements ApplicationContextAware{
 
