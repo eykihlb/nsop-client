@@ -11,6 +11,7 @@ import com.mydao.nsop.client.domain.entity.PayEntryRec;
 import com.mydao.nsop.client.domain.entity.PayExitRec;
 import com.mydao.nsop.client.domain.vo.RoadEntryVo;
 import com.mydao.nsop.client.domain.vo.RoadExitVo;
+import com.mydao.nsop.client.util.ThreadPoolFtp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,8 @@ public class VehicleDriveInOutService {
             rev.setPassTime(payEntryRec.getEntrytime());
             rev.setVehclassId(payEntryRec.getVehclass());
             rev.setFileId(payEntryRec.getRecid()+".jpg");
-            fileUploadService.fileUpload(fTPConfig,rev.getFileId());
+            ThreadPoolFtp.ftpThreadPool().execute(new FtpThread(fTPConfig,rev.getFileId()));
+            //fileUploadService.fileUpload(fTPConfig,rev.getFileId());
             try {
                 ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(entryUrl,rev,Object.class);
                 Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
@@ -113,7 +115,8 @@ public class VehicleDriveInOutService {
             rev.setPayFare("0.01");
             rev.setVehcolorId(payExitRec.getFarePlatecolor());
             rev.setFileId(payExitRec.getRecid()+".jpg");
-            fileUploadService.fileUpload(fTPConfig,rev.getFileId());
+            ThreadPoolFtp.ftpThreadPool().execute(new FtpThread(fTPConfig,rev.getFileId()));
+            //fileUploadService.fileUpload(fTPConfig,rev.getFileId());
             try {
                 ResponseEntity<Object> getEntity = oAuthRestTemplate.postForEntity(exitUrl,rev,Object.class);
                 Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
