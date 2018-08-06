@@ -1,6 +1,7 @@
-package com.mydao.nsop.client.vo;
+package com.mydao.nsop.client.test;
 
 import com.mydao.nsop.client.thrift.VehService;
+import com.mydao.nsop.client.vo.EntryInfo;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
