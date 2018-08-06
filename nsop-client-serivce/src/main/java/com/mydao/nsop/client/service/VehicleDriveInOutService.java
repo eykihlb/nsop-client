@@ -116,7 +116,8 @@ public class VehicleDriveInOutService {
             rev.setVehclassId(payExitRec.getVehclass());
             rev.setEntryRecId("000000000000000000000".equals(payExitRec.getEntryRecid())?"":payExitRec.getEntryRecid());
             //设置收费金额
-            rev.setPayFare(format(payExitRec.getFaretotal()));
+            //rev.setPayFare(format(payExitRec.getFaretotal()));
+            rev.setPayFare("0.01");
             rev.setVehcolorId(payExitRec.getFarePlatecolor());
             rev.setFileId(payExitRec.getRecid()+".jpg");
             //上传图片到FTP
