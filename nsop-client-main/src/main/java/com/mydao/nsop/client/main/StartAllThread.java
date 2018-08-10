@@ -40,8 +40,10 @@ public class StartAllThread {
     public void start() {
         //创建订阅和队列
         createSubscriptionAndQueue.createSubQueue();
-        //黑白名单初始化
-        systemInit.systemInit();
+        //黑白初始化
+        systemInit.systemInitBlack();
+        //白名单初始化
+        systemInit.systemInitWhite();
         //驶入广播
         vehicleDriveInBroadcastService.vehicleDriveIn();
         //驶出广播

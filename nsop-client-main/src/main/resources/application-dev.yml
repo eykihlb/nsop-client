@@ -2,7 +2,7 @@ spring:
   datasource:
       druid:
         driver-class-name: oracle.jdbc.OracleDriver
-        url: jdbc:oracle:thin:@192.168.0.201:1521:orcl
+        url: jdbc:oracle:thin:@192.168.0.241:1521:orcl
         username: xztollstation
         password: qwerty
         initial-size: 1
@@ -65,6 +65,10 @@ nsop:
     thriftPort: 3333
     #腾讯DNS
     qqDns: 119.29.29.29
+    #黑名单拉取开关 true：开 false：关
+    blackOn: true
+    #白名单拉取开关  true：开 false：关
+    whiteOn: true
   interface:
     entry: roadEntry/normal
     entry_ex: roadEntry/abnormal

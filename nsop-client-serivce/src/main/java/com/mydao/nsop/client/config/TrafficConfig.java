@@ -17,6 +17,26 @@ public class TrafficConfig {
 
     private String qqDns;
 
+    private boolean blackOn;
+
+    private boolean whiteOn;
+
+    public boolean getBlackOn() {
+        return blackOn;
+    }
+
+    public void setBlackOn(boolean blackOn) {
+        this.blackOn = blackOn;
+    }
+
+    public boolean getWhiteOn() {
+        return whiteOn;
+    }
+
+    public void setWhiteOn(boolean whiteOn) {
+        this.whiteOn = whiteOn;
+    }
+
     public String getQqDns() {
         return qqDns;
     }

@@ -99,6 +99,6 @@
   </update>
 
   <delete id="deleteAll">
-    delete from PAY_BLACKLIST
+    truncate table PAY_BLACKLIST
   </delete>
 </mapper>

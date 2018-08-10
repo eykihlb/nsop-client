@@ -13,7 +13,7 @@ public class ThreadPoolFtp {
     public static synchronized ThreadPoolExecutor ftpThreadPool(){
         if(ftpPool==null){
             logger.debug("线程池启动》》》》》》》");
-            ftpPool = new ThreadPoolExecutor(4, 8, 200, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100));
+            ftpPool = new ThreadPoolExecutor(2, 5, 200, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(500));
         }
         return ftpPool;
     }
