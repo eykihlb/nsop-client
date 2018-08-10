@@ -54,7 +54,7 @@ public class SystemInit {
     public void systemInitBlack(){
         PageVo pv = new PageVo(1,1500);
         boolean blackFlag = false;
-        boolean whiteFlag = false;
+        boolean flag = true;
         SqlSession sqlSession =null;
             String blackUri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_black();
             LOGGER.info("全量黑名单：" + blackUri + "    开始时间 " + System.currentTimeMillis());
@@ -68,21 +68,26 @@ public class SystemInit {
             }
             while (blackFlag) {
                 PayBlackList pbl = new PayBlackList();
-                ResponseEntity<Map> blackEntity = oAuthRestTemplate.postForEntity(blackUri, pv, Map.class);
-                Map<String, Object> map = blackEntity.getBody();
-                Integer code = Integer.valueOf(Objects.toString(map.get("code"), "0"));
-                if (code != 200) {
-                    LOGGER.error("全量黑名单拉取失败！");
-                    break;
-                }
-                Object data = map.get("data");
-                if (data == null) {
-                    LOGGER.warn("没有全量黑名单！");
-                    break;
+                Object data = new Object();
+                try {
+                    ResponseEntity<Map> blackEntity = oAuthRestTemplate.postForEntity(blackUri, pv, Map.class);
+                    Map<String, Object> map = blackEntity.getBody();
+                    Integer code = Integer.valueOf(Objects.toString(map.get("code"), "0"));
+                    if (code != 200) {
+                        LOGGER.error("全量黑名单拉取失败！");
+                        break;
+                    }
+                     data = map.get("data");
+                    if (data == null) {
+                        LOGGER.warn("没有全量黑名单！");
+                        break;
+                    }
+                }catch (Exception e){
+                    flag = false;
+                    LOGGER.error("黑名单拉取失败！ErrorMsg:"+e.getMessage());
                 }
                 PayBlackListMapper blackMapper = sqlSession.getMapper(PayBlackListMapper.class);
                 List<LinkedHashMap<String, Object>> list = (List<LinkedHashMap<String, Object>>) data;
-                try{
                     for (LinkedHashMap<String, Object> red : list) {
                         pbl.setVehclass(Objects.toString(red.get("vehclass"), ""));
                         pbl.setUptime(DateTime.parse(Objects.toString(red.get("uptime"), ""), DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")).toDate());
@@ -95,15 +100,13 @@ public class SystemInit {
                         blackMapper.insertSelective(pbl);
                     }
                     sqlSession.commit();
-                }catch (Exception e){
-                    sqlSession.rollback();
-                }
                 if (list.size() < pv.getSize()) {
                     blackFlag = false;
                     if (null != sqlSession) {
                         sqlSession.close();
                     }
                 } else {
+                    if(flag)
                     pv.setCurrent(pv.getCurrent() + 1);
                 }
             }
@@ -113,6 +116,7 @@ public class SystemInit {
     public void systemInitWhite(){
         PageVo pv = new PageVo(1,1500);
         boolean whiteFlag = false;
+        boolean flag = true;
         SqlSession sqlSession =null;
         try {
             String whiteUri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_white();
@@ -127,17 +131,23 @@ public class SystemInit {
             }
             while (whiteFlag){
                 PayWhiteList pwl = new PayWhiteList();
-                ResponseEntity<Map> whiteEntity = oAuthRestTemplate.postForEntity(whiteUri,pv,Map.class);
-                Map<String,Object> map = whiteEntity.getBody();
-                Integer code = Integer.valueOf(Objects.toString(map.get("code"), "0"));
-                if(code != 200) {
-                    LOGGER.error("全量白名单拉取失败！");
-                    break;
-                }
-                Object data = map.get("data");
-                if(data == null) {
-                    LOGGER.warn("没有全量白名单！");
-                    break;
+                Object data = new Object();
+                try {
+                    ResponseEntity<Map> whiteEntity = oAuthRestTemplate.postForEntity(whiteUri,pv,Map.class);
+                    Map<String,Object> map = whiteEntity.getBody();
+                    Integer code = Integer.valueOf(Objects.toString(map.get("code"), "0"));
+                    if(code != 200) {
+                        LOGGER.error("全量白名单拉取失败！");
+                        break;
+                    }
+                    data = map.get("data");
+                    if(data == null) {
+                        LOGGER.warn("没有全量白名单！");
+                        break;
+                    }
+                }catch (Exception e){
+                    LOGGER.error("白名单拉取失败！ErrorMsg:"+e.getMessage());
+                    flag = false;
                 }
                 PayWhiteListMapper whiteMapper = sqlSession.getMapper(PayWhiteListMapper.class);
                 List<LinkedHashMap<String,Object>> list = (List<LinkedHashMap<String,Object>>)data;
@@ -158,7 +168,8 @@ public class SystemInit {
                         sqlSession.close();
                     }
                 }else{
-                    pv.setCurrent(pv.getCurrent()+1);
+                    if(flag)
+                        pv.setCurrent(pv.getCurrent()+1);
                 }
             }
             LOGGER.info("全量白名单："+ whiteUri+"    结束时间 "+System.currentTimeMillis());
