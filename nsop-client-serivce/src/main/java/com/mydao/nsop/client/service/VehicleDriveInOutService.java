@@ -20,6 +20,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +77,7 @@ public class VehicleDriveInOutService {
             rev.setPassTime(payEntryRec.getEntrytime());
             rev.setVehclassId(payEntryRec.getVehclass());
             rev.setFileId(payEntryRec.getRecid()+".jpg");
+            //上传图片到FTP
             ThreadPoolFtp.ftpThreadPool().execute(new FtpThread(fTPConfig,rev.getFileId()));
             //fileUploadService.fileUpload(fTPConfig,rev.getFileId());
             try {
@@ -112,9 +115,12 @@ public class VehicleDriveInOutService {
             rev.setPassTime(payExitRec.getExittime());
             rev.setVehclassId(payExitRec.getVehclass());
             rev.setEntryRecId("000000000000000000000".equals(payExitRec.getEntryRecid())?"":payExitRec.getEntryRecid());
+            //设置收费金额
+            //rev.setPayFare(format(payExitRec.getFaretotal()));
             rev.setPayFare("0.01");
             rev.setVehcolorId(payExitRec.getFarePlatecolor());
             rev.setFileId(payExitRec.getRecid()+".jpg");
+            //上传图片到FTP
             ThreadPoolFtp.ftpThreadPool().execute(new FtpThread(fTPConfig,rev.getFileId()));
             //fileUploadService.fileUpload(fTPConfig,rev.getFileId());
             try {
@@ -130,5 +136,11 @@ public class VehicleDriveInOutService {
                 LOGGER.error(e.getMessage());
             }
         }
+    }
+
+    private String format(BigDecimal money) {
+        DecimalFormat df = new DecimalFormat();
+        df.applyPattern("0.00");
+        return df.format(money);
     }
 }
