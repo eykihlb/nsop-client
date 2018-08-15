@@ -113,4 +113,11 @@
   <update id="updateById" parameterType="java.lang.String">
     update PAY_ENTRYREC set upflag = '1' where recid = #{recid}
   </update>
+
+  <update id="updateObjById" parameterType="java.lang.String">
+    update PAY_ENTRYREC set upflag = #{flag} where RECID = #{recId}
+  </update>
+  <select id="selectListByExceptFlag" resultMap="BaseResultMap">
+    select * from PAY_ENTRYREC where upflag = '2'
+  </select>
 </mapper>

@@ -126,8 +126,14 @@
   <select id="selectList" resultMap="BaseResultMap">
     select * from PAY_EXITREC where upflag = '0'
   </select>
+  <select id="selectListByExcepFlag" resultMap="BaseResultMap">
+    select * from PAY_EXITREC where upflag = '2' or upflag = '3'
+  </select>
   
   <update id="updateById" parameterType="java.lang.String">
     update PAY_EXITREC set upflag = '1' where RECID = #{recId}
+  </update>
+  <update id="updateObjById" parameterType="java.lang.String">
+    update PAY_EXITREC set upflag = #{flag} where RECID = #{recId}
   </update>
 </mapper>

@@ -26,14 +26,10 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author ZYW
- * @date 2018/5/7
- */
 @Component
-public class VehicleDriveInOutService {
+public class VehicleDriveInOutExceptionService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VehicleDriveInOutService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VehicleDriveInOutExceptionService.class);
     @Autowired
     private FTPConfig fTPConfig;
 
@@ -58,13 +54,13 @@ public class VehicleDriveInOutService {
     private Gson gson = new Gson();
 
     /**
-     * 驶入
+     * 异常处理
      */
-    @Scheduled(fixedRate = Constants.RETRY_TIMES)
-    public void driveIn(){
-        LOGGER.info("车辆驶入定时任务");
+    @Scheduled(fixedRate = Constants.EXCEPTION_CHECK_TIMES)
+    public void driveExceptCheckInOut(){
+        LOGGER.info("车辆驶入异常处理定时任务");
         final String entryUrl = trafficConfig.getUrl() + interFaceConfig.getEntry();
-        List<PayEntryRec> perList = payEntryRecMapper.selectList();
+        List<PayEntryRec> perList = payEntryRecMapper.selectListByExceptFlag();
         RoadEntryVo rev = new RoadEntryVo();
         String  recId = "";
         for (PayEntryRec payEntryRec : perList) {
@@ -88,52 +84,33 @@ public class VehicleDriveInOutService {
                 Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
                 if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
                     LOGGER.info(map.get("msg").toString());
-                    payEntryRecMapper.updateById(payEntryRec.getRecid());
-                } else if("201".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))) {
-                    LOGGER.error(map.get("msg").toString());
-                    String errorMsg = map.get("msg").toString();
-                    if(!StringUtils.isBlank(errorMsg)){
-                        String[] msgArray = errorMsg.split("@");
-                        if(msgArray[0].equals("1")){
-                            payEntryRecMapper.updateObjById("2",recId);
-                        }
-                    }
-                }else {
-                    LOGGER.info(map.get("msg").toString());
                 }
             }catch (Exception e){
                 LOGGER.error(e.getMessage());
             }
         }
-    }
 
-    /**
-     * 驶出
-     */
-    @Scheduled(fixedRate = Constants.RETRY_TIMES)
-    public void driveOut(){
-        LOGGER.info("车辆驶出定时任务");
+        LOGGER.info("车辆驶出异常处理定时任务");
         final String exitUrl = trafficConfig.getUrl() + interFaceConfig.getExit();
-        List<PayExitRec> perList = payExitRecMapper.selectList();
-        RoadExitVo rev = new RoadExitVo();
-        String  recId = "";
-        for (PayExitRec payExitRec : perList) {
+        List<PayExitRec> payList = payExitRecMapper.selectListByExcepFlag();
+        RoadExitVo revExit = new RoadExitVo();
+        for (PayExitRec payExitRec : payList) {
             recId = payExitRec.getRecid();
-            rev.setCameraNo(payExitRec.getCamerano());
-            rev.setExitRecId(payExitRec.getRecid());
-            rev.setTolllaneNo(payExitRec.getLaneno());
-            rev.setTollnetNo(payExitRec.getNetno());
-            rev.setTollsiteNo(payExitRec.getSiteno());
-            rev.setLprPlateNo(payExitRec.getLprPlateno());
-            rev.setFarePlateNo(payExitRec.getFarePlateno());
-            rev.setPassTime(payExitRec.getExittime());
-            rev.setVehclassId(payExitRec.getVehclass());
-            rev.setEntryRecId("000000000000000000000".equals(payExitRec.getEntryRecid())?"":payExitRec.getEntryRecid());
+            revExit.setCameraNo(payExitRec.getCamerano());
+            revExit.setExitRecId(payExitRec.getRecid());
+            revExit.setTolllaneNo(payExitRec.getLaneno());
+            revExit.setTollnetNo(payExitRec.getNetno());
+            revExit.setTollsiteNo(payExitRec.getSiteno());
+            revExit.setLprPlateNo(payExitRec.getLprPlateno());
+            revExit.setFarePlateNo(payExitRec.getFarePlateno());
+            revExit.setPassTime(payExitRec.getExittime());
+            revExit.setVehclassId(payExitRec.getVehclass());
+            revExit.setEntryRecId("000000000000000000000".equals(payExitRec.getEntryRecid())?"":payExitRec.getEntryRecid());
             //设置收费金额
             //rev.setPayFare(format(payExitRec.getFaretotal()));
-            rev.setPayFare("0.01");
-            rev.setVehcolorId(payExitRec.getFarePlatecolor());
-            rev.setFileId(payExitRec.getRecid()+".jpg");
+            revExit.setPayFare("0.01");
+            revExit.setVehcolorId(payExitRec.getFarePlatecolor());
+            revExit.setFileId(payExitRec.getRecid()+".jpg");
             //上传图片到FTP
             ThreadPoolFtp.ftpThreadPool().execute(new FtpThread(fTPConfig,rev.getFileId()));
             //fileUploadService.fileUpload(fTPConfig,rev.getFileId());
@@ -142,19 +119,6 @@ public class VehicleDriveInOutService {
                 Map<String,Object> map = gson.fromJson(getEntity.getBody().toString(),Map.class);
                 if ("200".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
                     LOGGER.info(map.get("msg").toString());
-                    payExitRecMapper.updateById(payExitRec.getRecid());
-                } else if("201".equals(map.get("code").toString().substring(0,map.get("code").toString().indexOf(".")))){
-                    String errorMsg = map.get("msg").toString();
-                    if(!StringUtils.isBlank(errorMsg)){
-                        String[] msgArray = errorMsg.split("@");
-                        if(msgArray[0].equals("1")){
-                            payExitRecMapper.updateObjById("2",recId);
-                        }else if(msgArray[0].equals("2")){
-                            payExitRecMapper.updateObjById("3",recId);
-                        }
-                    }
-                }else{
-                    LOGGER.error(map.get("msg").toString());
                 }
             }catch (Exception e){
 

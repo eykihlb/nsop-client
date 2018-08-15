@@ -35,6 +35,8 @@ public class StartAllThread {
 
     @Autowired
     private VehicleWhiteService vehicleWhiteService;
+    @Autowired
+    private VehicleDriveInOutExceptionService vehicleDriveInOutExceptionService;
     Future<String> future = null;
     @PostConstruct
     public void start() {
@@ -56,5 +58,7 @@ public class StartAllThread {
         vehicleBlackService.addDelBlack();
         //白名单
         vehicleWhiteService.addDelWhite();
+        //异常驶入驶出
+        vehicleDriveInOutExceptionService.driveExceptCheckInOut();
     }
 }
