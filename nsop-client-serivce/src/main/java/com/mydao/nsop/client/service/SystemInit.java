@@ -56,6 +56,7 @@ public class SystemInit {
         boolean blackFlag = false;
         boolean flag = true;
         SqlSession sqlSession =null;
+        try {
             String blackUri = trafficConfig.getUrl() + interFaceConfig.getFull_quantity_black();
             LOGGER.info("全量黑名单：" + blackUri + "    开始时间 " + System.currentTimeMillis());
             if (trafficConfig.getBlackOn()) {
@@ -77,40 +78,48 @@ public class SystemInit {
                         LOGGER.error("全量黑名单拉取失败！");
                         break;
                     }
-                     data = map.get("data");
+                    data = map.get("data");
                     if (data == null) {
                         LOGGER.warn("没有全量黑名单！");
                         break;
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     flag = false;
-                    LOGGER.error("黑名单拉取失败！ErrorMsg:"+e.getMessage());
+                    LOGGER.error("黑名单拉取失败！ErrorMsg:" + e.getMessage());
                 }
                 PayBlackListMapper blackMapper = sqlSession.getMapper(PayBlackListMapper.class);
                 List<LinkedHashMap<String, Object>> list = (List<LinkedHashMap<String, Object>>) data;
-                    for (LinkedHashMap<String, Object> red : list) {
-                        pbl.setVehclass(Objects.toString(red.get("vehclass"), ""));
-                        pbl.setUptime(DateTime.parse(Objects.toString(red.get("uptime"), ""), DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")).toDate());
-                        pbl.setPlateno(red.get("plateno").toString());
-                        pbl.setPlatecolor(red.get("platecolor").toString());
-                        pbl.setBand(red.get("band").toString());
-                        pbl.setVehclass(red.get("vehclass").toString());
-                        pbl.setBodycolor(red.get("bodycolor").toString());
-                        pbl.setSubBand(red.get("subBand").toString());
-                        blackMapper.insertSelective(pbl);
-                    }
-                    sqlSession.commit();
-                if (list.size() < pv.getSize()) {
+                for (LinkedHashMap<String, Object> red : list) {
+                    pbl.setVehclass(Objects.toString(red.get("vehclass"), ""));
+                    pbl.setUptime(DateTime.parse(Objects.toString(red.get("uptime"), ""), DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")).toDate());
+                    pbl.setPlateno(Objects.toString(red.get("plateno"), ""));
+                    pbl.setPlatecolor(Objects.toString(red.get("platecolor")));
+                    pbl.setBand(Objects.toString(red.get("band"), ""));
+                    pbl.setVehclass(Objects.toString(red.get("vehclass"), ""));
+                    pbl.setBodycolor(Objects.toString(red.get("bodycolor"), ""));
+                    pbl.setSubBand(Objects.toString(red.get("subBand"), ""));
+                    blackMapper.insertSelective(pbl);
+                }
+                sqlSession.commit();
+                if (list.size() < pv.getSize()&&flag) {
                     blackFlag = false;
                     if (null != sqlSession) {
                         sqlSession.close();
                     }
                 } else {
-                    if(flag)
-                    pv.setCurrent(pv.getCurrent() + 1);
+                    if (flag)
+                        pv.setCurrent(pv.getCurrent() + 1);
                 }
             }
             LOGGER.info("全量黑名单：" + blackUri + "    结束时间 " + System.currentTimeMillis());
+        }catch (Exception e){
+            LOGGER.error("黑名单拉取失败！ErrorMsg:" + e.getMessage());
+        }finally {
+                if (null != sqlSession) {
+                    sqlSession.close();
+                }
+        }
+
     }
     @Async
     public void systemInitWhite(){
@@ -153,12 +162,12 @@ public class SystemInit {
                 List<LinkedHashMap<String,Object>> list = (List<LinkedHashMap<String,Object>>)data;
                 for (LinkedHashMap<String,Object> rad : list) {
                     pwl.setUptime(DateTime.parse(Objects.toString(rad.get("uptime"),""), DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")).toDate());
-                    pwl.setPlateno(rad.get("plateno").toString());
-                    pwl.setPlatecolor(rad.get("platecolor").toString());
-                    pwl.setBand(rad.get("band").toString());
-                    pwl.setVehclass(rad.get("vehclass").toString());
-                    pwl.setBodycolor(rad.get("bodycolor").toString());
-                    pwl.setSubBand(rad.get("subBand").toString());
+                    pwl.setPlateno(Objects.toString(rad.get("plateno"),""));
+                    pwl.setPlatecolor(Objects.toString(rad.get("platecolor"),""));
+                    pwl.setBand(Objects.toString(rad.get("band"),""));
+                    pwl.setVehclass(Objects.toString(rad.get("vehclass"),""));
+                    pwl.setBodycolor(Objects.toString(rad.get("bodycolor"),""));
+                    pwl.setSubBand(Objects.toString(rad.get("subBand"),""));
                     whiteMapper.insertSelective(pwl);
                 }
                 sqlSession.commit();
@@ -175,6 +184,10 @@ public class SystemInit {
             LOGGER.info("全量白名单："+ whiteUri+"    结束时间 "+System.currentTimeMillis());
         } catch (Exception e) {
             LOGGER.error("白名单拉取失败！ErrorMsg:"+e.getMessage());
+        }finally {
+                if (null != sqlSession) {
+                    sqlSession.close();
+                }
+          }
         }
-    }
 }
