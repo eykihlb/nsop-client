@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author ZYW
@@ -33,14 +34,23 @@ public class StartAllThread {
     @Autowired
     private VehicleDriveInOutExceptionService vehicleDriveInOutExceptionService;
 
+    private final CountDownLatch countDownLatch = new CountDownLatch(2);
+
     @PostConstruct
     public void start() {
         //创建订阅和队列
         createSubscriptionAndQueue.createSubQueue();
         //黑白初始化
-        systemInit.systemInitBlack();
+        systemInit.systemInitBlack(countDownLatch);
         //白名单初始化
-        systemInit.systemInitWhite();
+        systemInit.systemInitWhite(countDownLatch);
+
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         //驶入广播
         vehicleDriveInBroadcastService.vehicleDriveIn();
         //驶出广播

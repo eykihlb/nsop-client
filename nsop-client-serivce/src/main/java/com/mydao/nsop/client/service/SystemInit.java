@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 @Component
 public class SystemInit {
@@ -46,9 +47,8 @@ public class SystemInit {
     private PayWhiteListMapper payWhiteListMapper;
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
-
     @Async
-    public void systemInitBlack(){
+    public void systemInitBlack(CountDownLatch countDownLatch){
         PageVo pv = new PageVo(1,1500);
         boolean blackFlag = false;
         boolean flag = true;
@@ -115,11 +115,12 @@ public class SystemInit {
                 if (null != sqlSession) {
                     sqlSession.close();
                 }
+            countDownLatch.countDown();
         }
 
     }
     @Async
-    public void systemInitWhite(){
+    public void systemInitWhite(CountDownLatch countDownLatch){
         PageVo pv = new PageVo(1,1500);
         boolean whiteFlag = false;
         boolean flag = true;
@@ -185,6 +186,7 @@ public class SystemInit {
                 if (null != sqlSession) {
                     sqlSession.close();
                 }
+            countDownLatch.countDown();
           }
         }
 }
