@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * @author ZYW
@@ -14,9 +12,6 @@ import java.util.concurrent.Future;
  */
 @Component
 public class StartAllThread {
-
-//    @Autowired
-//    private VehicleDriveInOutService vehicleDriveInService;
 
     @Autowired
     private VehicleDriveInBroadcastService vehicleDriveInBroadcastService;
@@ -37,7 +32,7 @@ public class StartAllThread {
     private VehicleWhiteService vehicleWhiteService;
     @Autowired
     private VehicleDriveInOutExceptionService vehicleDriveInOutExceptionService;
-    Future<String> future = null;
+
     @PostConstruct
     public void start() {
         //创建订阅和队列
@@ -50,10 +45,6 @@ public class StartAllThread {
         vehicleDriveInBroadcastService.vehicleDriveIn();
         //驶出广播
         vehicleDriveOutBroadcastService.vehicleDriveOut();
-        //驶入
-        //vehicleDriveInService.driveIn();
-        //驶出
-        //vehicleDriveInService.driveOut();
         //黑名单
         vehicleBlackService.addDelBlack();
         //白名单
