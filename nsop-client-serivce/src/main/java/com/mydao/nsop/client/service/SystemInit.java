@@ -1,7 +1,5 @@
 package com.mydao.nsop.client.service;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import com.mydao.nsop.client.config.InterFaceConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.dao.PayBlackListMapper;
@@ -13,7 +11,6 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +20,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class SystemInit {
@@ -48,7 +46,6 @@ public class SystemInit {
     private PayWhiteListMapper payWhiteListMapper;
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
-    private Gson gson = new Gson();
 
     @Async
     public void systemInitBlack(){
