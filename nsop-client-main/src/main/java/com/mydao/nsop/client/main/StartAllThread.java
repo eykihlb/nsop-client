@@ -1,6 +1,7 @@
 package com.mydao.nsop.client.main;
 
 import com.mydao.nsop.client.service.*;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,8 @@ import java.util.concurrent.CountDownLatch;
  */
 @Component
 public class StartAllThread {
+
+    private final static Logger LOGGER = Logger.getLogger(StartAllThread.class);
 
     @Autowired
     private VehicleDriveInBroadcastService vehicleDriveInBroadcastService;
@@ -48,7 +51,7 @@ public class StartAllThread {
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error("CountDownLatch：" + e.getMessage());
         }
 
         //驶入广播
