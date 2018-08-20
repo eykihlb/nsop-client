@@ -76,6 +76,8 @@ nsop:
     exit_ex: roadExit/abnormal
     full_quantity_black: vehicleBlack/list
     full_quantity_white: vehicleWhite/list
+    heartbeat: sysHeartThrob/add
+    exceptInOut: roadAbnormalData/add
 
   ftpServer:
     download:

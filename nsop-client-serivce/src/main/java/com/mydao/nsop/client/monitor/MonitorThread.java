@@ -1,5 +1,6 @@
 package com.mydao.nsop.client.monitor;
 
+import com.mydao.nsop.client.config.InterFaceConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
 import com.mydao.nsop.client.service.VehicleBlackService;
 import com.mydao.nsop.client.service.VehicleDriveInBroadcastService;
@@ -7,9 +8,15 @@ import com.mydao.nsop.client.service.VehicleDriveOutBroadcastService;
 import com.mydao.nsop.client.service.VehicleWhiteService;
 import com.mydao.nsop.client.util.ClientBeanHolder;
 import com.mydao.nsop.client.util.IpUtil;
+import com.mydao.nsop.client.util.ThreadPoolFtp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 public class MonitorThread implements  Runnable {
@@ -21,12 +28,19 @@ public class MonitorThread implements  Runnable {
     @Override
     public void run() {
             while(!Thread.interrupted()){
-                logger.info("监控线程睡眠10秒");
+                logger.info("监控线程睡眠30秒");
                 try {
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (InterruptedException e) {
+                    TimeUnit.SECONDS.sleep(30);
+                    //心跳
+                    OAuth2RestTemplate oAuthRestTemplate = ClientBeanHolder.getBean("oAuthRestTemplate",OAuth2RestTemplate.class);
+                    TrafficConfig trafficConfig = ClientBeanHolder.getBean("trafficConfig",TrafficConfig.class);
+                    InterFaceConfig interFaceConfig = ClientBeanHolder.getBean("interFaceConfig",InterFaceConfig.class);
+                    String heartUrl = trafficConfig.getUrl()+interFaceConfig.getHeartbeat();
+                    MultiValueMap<String, String> requestEntity = new LinkedMultiValueMap<>();
+                    requestEntity.add("tollsiteNo", trafficConfig.getClientNum());
+                    ResponseEntity<Map> blackEntity = oAuthRestTemplate.postForEntity(heartUrl,requestEntity,Map.class);
+                } catch (Exception e) {
                     logger.error(e.getMessage());
-                    e.printStackTrace();
                 }
                 boolean sign = false;
                 if(blackFlag||whiteFlag||inFlag||outFlag){

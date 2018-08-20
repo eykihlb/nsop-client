@@ -13,6 +13,25 @@ public class InterFaceConfig {
     private String full_quantity_white;
     private String exit;
     private String exit_ex;
+    private String heartbeat;
+    private String exceptInOut;
+
+    public String getExceptInOut() {
+        return exceptInOut;
+    }
+
+    public void setExceptInOut(String exceptInOut) {
+        this.exceptInOut = exceptInOut;
+    }
+
+
+    public String getHeartbeat() {
+        return heartbeat;
+    }
+
+    public void setHeartbeat(String heartbeat) {
+        this.heartbeat = heartbeat;
+    }
 
     public String getFull_quantity_black() {
         return full_quantity_black;

@@ -146,5 +146,5 @@ public final class Constants {
     /**
      * 重复读取驶入驶出记录频率(ms)
      */
-    public static final int EXCEPTION_CHECK_TIMES = 300000;
+    public static final int EXCEPTION_CHECK_TIMES = 30000;
 }
