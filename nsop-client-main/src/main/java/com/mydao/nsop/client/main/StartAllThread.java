@@ -63,6 +63,6 @@ public class StartAllThread {
         //白名单
         vehicleWhiteService.addDelWhite();
         //异常驶入驶出
-        vehicleDriveInOutExceptionService.driveExceptCheckInOut();
+        //vehicleDriveInOutExceptionService.driveExceptCheckInOut();
     }
 }
