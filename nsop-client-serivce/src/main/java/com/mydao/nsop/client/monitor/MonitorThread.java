@@ -2,10 +2,7 @@ package com.mydao.nsop.client.monitor;
 
 import com.mydao.nsop.client.config.InterFaceConfig;
 import com.mydao.nsop.client.config.TrafficConfig;
-import com.mydao.nsop.client.service.VehicleBlackService;
-import com.mydao.nsop.client.service.VehicleDriveInBroadcastService;
-import com.mydao.nsop.client.service.VehicleDriveOutBroadcastService;
-import com.mydao.nsop.client.service.VehicleWhiteService;
+import com.mydao.nsop.client.service.*;
 import com.mydao.nsop.client.util.ClientBeanHolder;
 import com.mydao.nsop.client.util.IpUtil;
 import com.mydao.nsop.client.util.ThreadPoolFtp;
@@ -32,13 +29,13 @@ public class MonitorThread implements  Runnable {
                 try {
                     TimeUnit.SECONDS.sleep(30);
                     //心跳
-                    OAuth2RestTemplate oAuthRestTemplate = ClientBeanHolder.getBean("oAuthRestTemplate",OAuth2RestTemplate.class);
-                    TrafficConfig trafficConfig = ClientBeanHolder.getBean("trafficConfig",TrafficConfig.class);
-                    InterFaceConfig interFaceConfig = ClientBeanHolder.getBean("interFaceConfig",InterFaceConfig.class);
-                    String heartUrl = trafficConfig.getUrl()+interFaceConfig.getHeartbeat();
-                    MultiValueMap<String, String> requestEntity = new LinkedMultiValueMap<>();
-                    requestEntity.add("tollsiteNo", trafficConfig.getClientNum());
-                    ResponseEntity<Map> blackEntity = oAuthRestTemplate.postForEntity(heartUrl,requestEntity,Map.class);
+//                    OAuth2RestTemplate oAuthRestTemplate = ClientBeanHolder.getBean("oAuthRestTemplate",OAuth2RestTemplate.class);
+//                    TrafficConfig trafficConfig = ClientBeanHolder.getBean("trafficConfig",TrafficConfig.class);
+//                    InterFaceConfig interFaceConfig = ClientBeanHolder.getBean("interFaceConfig",InterFaceConfig.class);
+//                    String heartUrl = trafficConfig.getUrl()+interFaceConfig.getHeartbeat();
+//                    MultiValueMap<String, String> requestEntity = new LinkedMultiValueMap<>();
+//                    requestEntity.add("tollsiteNo", trafficConfig.getClientNum());
+//                    ResponseEntity<Map> blackEntity = oAuthRestTemplate.postForEntity(heartUrl,requestEntity,Map.class);
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
