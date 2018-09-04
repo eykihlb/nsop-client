@@ -40,7 +40,7 @@ public class ThriftServer {
             //tpsArgs.protocolFactory(new TCompactProtocol.Factory());
             tpsArgs.protocolFactory(new TBinaryProtocol.Factory());
             tpsArgs.minWorkerThreads(5);
-            tpsArgs.maxWorkerThreads(10);
+            tpsArgs.maxWorkerThreads(20);
 
             TServer server = new TThreadPoolServer(tpsArgs);
             LOGGER.info("start thrift server at: " + thriftServerPort);
