@@ -31,7 +31,7 @@ public class CreateSubscriptionAndQueue {
         meta2.pollingWaitSeconds = 10;
         meta2.visibilityTimeout = 10;
         meta2.maxMsgSize = 65536;
-        meta2.msgRetentionSeconds = 345600;
+        meta2.msgRetentionSeconds = 1296000;  //15天
         Account accountQueue = config.accountQueue();
         Account accountTopic = config.accountTopic();
         //创建车辆驶入通知队列
