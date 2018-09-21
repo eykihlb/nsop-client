@@ -11,11 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
-import java.io.*;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -64,7 +60,7 @@ public class ThresholdCheckAndSetSchedule {
                    }
                }
                if(!sign){
-                   logger.error("当前阈值为"+time+"网络连接异常不更新，阈值日期。");
+                   logger.error("当前阈值为"+time+"网络连接异常不更新阈值日期。");
                }
 
     }
