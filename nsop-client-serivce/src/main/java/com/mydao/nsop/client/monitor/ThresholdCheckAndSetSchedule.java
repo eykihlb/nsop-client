@@ -23,10 +23,6 @@ import java.util.Date;
 @Component
 public class ThresholdCheckAndSetSchedule {
     private static final Logger logger = LoggerFactory.getLogger(ThresholdCheckAndSetSchedule.class);
-    @Autowired
-    private SystemInit systemInit;
-
-
 
     @Scheduled(cron="0 0/2 * * * ?")
     public void stateCheckSetSchedule(){
