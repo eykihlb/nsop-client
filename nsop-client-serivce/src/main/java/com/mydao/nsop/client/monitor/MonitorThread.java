@@ -57,7 +57,7 @@ public class MonitorThread implements  Runnable {
                                 ConfigFileUtil config = new ConfigFileUtil();
                                 String time = config.readTimeFromFile();
                                 boolean flag = DateUtil.compareTwoDate(time);
-                                if(flag){
+                                if(flag) {
                                     SystemInit systemInit = ClientBeanHolder.getBean("systemInit", SystemInit.class);
                                     //黑白初始化
                                     systemInit.systemInitBlack(countDownLatch);
@@ -70,6 +70,9 @@ public class MonitorThread implements  Runnable {
                                     } catch (InterruptedException e) {
                                         logger.error("CountDownLatch：" + e.getMessage());
                                     }
+                                }else{
+                                    //不大于阀值修改状态为true
+                                    initFinishFlag(true);
                                 }
                             }
                         }
