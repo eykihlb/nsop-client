@@ -1,5 +1,6 @@
 package com.mydao.nsop.client.main;
 
+import com.mydao.nsop.client.monitor.MonitorThread;
 import com.mydao.nsop.client.service.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,6 @@ public class StartAllThread {
         //白名单
         vehicleWhiteService.addDelWhite();
         //异常驶入驶出
-        //vehicleDriveInOutExceptionService.driveExceptCheckInOut();
+        vehicleDriveInOutExceptionService.driveExceptCheckInOut();
     }
 }

@@ -94,7 +94,7 @@
   </update>
 
   <delete id="deleteAll">
-    delete from PAY_WHITELIST
+    truncate table  PAY_WHITELIST
   </delete>
 
   <select id="selectByPlateNo" resultType="int" parameterType="java.lang.String" >
